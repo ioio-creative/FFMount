@@ -1,3 +1,11 @@
+/*
+ * Arduino Ver 1.8.1
+ * 
+ * AccelStepper Library (1.57)
+ * http://www.airspayce.com/mikem/arduino/AccelStepper/AccelStepper-1.57.zip
+ */
+
+
 #include <AccelStepper.h>
 
 int speedL1 = 3500;
