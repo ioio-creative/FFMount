@@ -1,8 +1,6 @@
 /*
 
 */
-
-
 #define DI1_SERVO_ON_lx 14
 #define DI1_SERVO_ON_ly 15
 #define DI1_SERVO_ON_rx 16
