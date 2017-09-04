@@ -1,6 +1,6 @@
 #include <AccelStepper.h>
 
-const long MAX_SPEED = 100000;
+const long MAX_SPEED = 200000;
 
 bool isStepper1Stopped = false;
 bool isStepper2Stopped = false;
