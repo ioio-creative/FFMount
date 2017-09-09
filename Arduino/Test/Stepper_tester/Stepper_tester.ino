@@ -51,8 +51,8 @@ int prevReading2 = 0;
 int prevReading3 = 0;
 //========= STEPPER ========
 #include <AccelStepper.h>
-int st = 9;
-int dir = 8;
+int st = 5;
+int dir = 4;
 AccelStepper stepper (AccelStepper::DRIVER, st, dir);
 
 // L == up
@@ -61,6 +61,9 @@ bool goHome = true;
 
 long homeSpeed = -250;
 long homeMaxSpeed = 250;
+
+long motorSpeed = 5000000;
+long motorAccel = 4000;
 
 bool triggerState = true;
 bool finish = false;
@@ -164,8 +167,8 @@ void loop() {
     digitalWrite(ledPin, buttonState);
     if (stepper.distanceToGo() == 0) {
 
-      stepper.setMaxSpeed(200);
-      stepper.setAcceleration(800);
+      stepper.setMaxSpeed(motorSpeed);
+      stepper.setAcceleration(motorAccel);
       if (isLeft) {
         stepper.moveTo(-moveToPos);
       } else {
