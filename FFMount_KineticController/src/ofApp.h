@@ -132,5 +132,9 @@ class ofApp : public ofBaseApp{
     long currMillis;
     
     
+    //================Parameteres================
+        vector<ofParameter<bool>> working_cable;
+        vector<ofParameter<int>> EEPROM;
+    
     
 };

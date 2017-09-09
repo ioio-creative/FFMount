@@ -182,6 +182,207 @@ vector<bool> ofApp::serialSetup(){ //int give the connection status of each cabl
     
 }
 
+void ofApp::serialWrite(int arduinoID, string sw){
+    
+    
+    
+#ifdef USEOSC
+    if(arduinoID == -1){
+        
+        for(int i=0; i< NUM_OF_WINGS; i++){
+            sendOSC(arduino[i], sw);
+        }
+    }else if (arduinoID >= 0 && working_cable[arduinoID] && arduinoID<arduino.size()){
+        sendOSC(arduino[arduinoID], sw);
+    }
+    
+    
+#else
+    
+    if(arduinoID == -1){
+        
+        int arraySize = 0;
+        if(arduino.size() <= NUM_OF_WINGS){
+            arraySize = arduino.size();
+        }else{
+            arraySize = NUM_OF_WINGS;
+        }
+        for(int i=0; i< arraySize; i++){
+            //    for(int i=0; i< arduino.size(); i++){
+            if(working_cable[i]){
+                // The serial device can throw exceptions.
+                try
+                {
+                    std::string text = sw;
+                    
+                    
+                    
+                    
+                    ofx::IO::ByteBuffer textBuffer(text);
+                    
+                    arduino[i].writeBytes(textBuffer);
+                    arduino[i].writeByte('\n');
+                    
+                }
+                catch (const std::exception& exc)
+                {
+                    ofLogError("ofApp::update") << exc.what();
+                }
+            }
+        }
+        
+    }
+    else if (isArduinoConnected[arduinoID]==TRUE && arduinoID >= 0 && working_cable[arduinoID])
+    {
+        
+        // The serial device can throw exeptions.
+        try
+        {
+            std::string text = sw;
+            
+            ofx::IO::ByteBuffer textBuffer(text);
+            
+            arduino[arduinoID].writeBytes(textBuffer);
+            arduino[arduinoID].writeByte('\n');
+            
+        }
+        catch (const std::exception& exc)
+        {
+            ofLogError("ofApp::update") << exc.what();
+        }
+        
+        
+    }
+    else{ ofLog() << "Arduino: " <<arduinoID << "not connected";} // todo put in gui
+    
+    ofLog() << "Arduino Write: " <<arduinoID <<  ":  "<<sw;
+#endif
+}
+
+string ofApp::serialRead(int a){
+    
+    string combinedStr = "";
+    // for(int i=0; i< arduino.size(); i++){
+    
+    // The serial device can throw exeptions.
+#ifdef USEOSC
+    
+    
+    
+#else
+    try
+    {
+        // Read all bytes from the device;
+        uint8_t buffer[1024];
+        vector<uint8_t> finalBuffer;
+        finalBuffer.clear();
+        while (arduino[a].available() > 0)
+        {
+            std::size_t sz = arduino[a].readBytes(buffer, 1024);
+            ofLog() << "buffer size: " << sz;
+            for (std::size_t j = 0; j < sz; ++j)
+            {
+                // std::cout << buffer[j];
+                //ofLog() << "buf: " << buffer[j];
+                if(isalnum(buffer[j]) || buffer[j] == '|' || buffer[j] == '-' ){
+                    finalBuffer.push_back(buffer[j]);
+                }
+                
+                
+            }
+            for(int i = 0; i< finalBuffer.size();i++){
+                ofLog() << "New Buf : " << finalBuffer[i];
+                combinedStr += ofToString(finalBuffer[i]);
+            }
+        }
+        
+    }
+    catch (const std::exception& exc)
+    {
+        ofLogError("ofApp::update") << exc.what();
+    }
+    //  }
+    
+#endif
+    return combinedStr;
+}
+
+//--------------------------------------------------------------
+vector<int> ofApp::stringDecode(string s){
+    
+    vector<int> sToIntArray;
+    
+    
+    for (int i=0; i<s.length(); i++)
+    {
+        if (s[i] == '-')
+            s[i] = ' ';
+    }
+    
+    vector<string> seglist;
+    stringstream ss(s);
+    string temp;
+    while (ss >> temp)
+        seglist.push_back(temp);
+    
+    //ofLog() << "seglist.size() " << seglist.size();
+    /* for(int i=0; i<seglist.size(); i++){
+     seglist[i].erase(seglist[i].find_last_not_of(" \n\r\t")+1);
+     
+     //  ofLog() << "seglist[i] : " << seglist[i];
+     
+     }*/
+    bool isContainParameter = false;
+    
+    for(int i=0; i < seglist.size(); i++){
+        for(int j=0; j < SERIAL_PARAMETERES.size(); j++){
+            if(seglist[i] == SERIAL_PARAMETERES[j]){ //check if anything match with SERIAL_PARAMETERS
+                ofLog() << "SERIAL_PARAMETERES[j]" << SERIAL_PARAMETERES[j];
+                sToIntArray.push_back(j);
+                isContainParameter= true;
+            }
+        }
+        if(isContainParameter){
+            if(i!=0 && is_number(seglist[i])){
+                sToIntArray.push_back(std::stoi( seglist[i] ));
+            }
+        }
+    }
+    //LOAD
+    for(int i=0; i < sToIntArray.size(); i++){
+        ofLog() << "sToIntArray " << i << " : " << sToIntArray[i];
+    }
+    if(sToIntArray.size() == EEPROM.size()+1){
+        //currentdisplayLog = ofToString(currentDebugArduinoID) +" EEPROM LOADED";
+        return sToIntArray;
+    }
+    else{
+        // vector<int> sToIntArray;
+        return sToIntArray;
+    }
+    
+}
+
+//--------------------------------------------------------------
+
+void ofApp::onSerialBuffer(const ofx::IO::SerialBufferEventArgs& args)
+{
+    // Buffers will show up here when the marker character is found.
+    SerialMessage message(args.getBuffer().toString(), "", 500);
+    serialMessages.push_back(message);
+    ofLog() << "SERIALLLLLLLL : " << message.message;
+}
+
+//--------------------------------------------------------------
+
+void ofApp::onSerialError(const ofx::IO::SerialBufferErrorEventArgs& args)
+{
+    // Errors and their corresponding buffer (if any) will show up here.
+    SerialMessage message(args.getBuffer().toString(),
+                          args.getException().displayText(),
+                          500);
+    serialMessages.push_back(message);
+}
 
 
 //--------------------------------------------------------------
