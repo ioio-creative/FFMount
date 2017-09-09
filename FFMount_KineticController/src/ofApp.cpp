@@ -308,6 +308,30 @@ string ofApp::serialRead(int a){
 }
 
 //--------------------------------------------------------------
+
+void ofApp::onSerialBuffer(const ofx::IO::SerialBufferEventArgs& args)
+{
+    // Buffers will show up here when the marker character is found.
+    SerialMessage message(args.getBuffer().toString(), "", 500);
+    serialMessages.push_back(message);
+    ofLog() << "SERIALLLLLLLL : " << message.message;
+}
+
+//--------------------------------------------------------------
+
+void ofApp::onSerialError(const ofx::IO::SerialBufferErrorEventArgs& args)
+{
+    // Errors and their corresponding buffer (if any) will show up here.
+    SerialMessage message(args.getBuffer().toString(),
+                          args.getException().displayText(),
+                          500);
+    serialMessages.push_back(message);
+}
+
+
+//--------------------------------------------------------------
+//--------------------------------------------------------------
+//--------------------------------------------------------------
 vector<int> ofApp::stringDecode(string s){
     
     vector<int> sToIntArray;
@@ -361,27 +385,6 @@ vector<int> ofApp::stringDecode(string s){
         return sToIntArray;
     }
     
-}
-
-//--------------------------------------------------------------
-
-void ofApp::onSerialBuffer(const ofx::IO::SerialBufferEventArgs& args)
-{
-    // Buffers will show up here when the marker character is found.
-    SerialMessage message(args.getBuffer().toString(), "", 500);
-    serialMessages.push_back(message);
-    ofLog() << "SERIALLLLLLLL : " << message.message;
-}
-
-//--------------------------------------------------------------
-
-void ofApp::onSerialError(const ofx::IO::SerialBufferErrorEventArgs& args)
-{
-    // Errors and their corresponding buffer (if any) will show up here.
-    SerialMessage message(args.getBuffer().toString(),
-                          args.getException().displayText(),
-                          500);
-    serialMessages.push_back(message);
 }
 
 
