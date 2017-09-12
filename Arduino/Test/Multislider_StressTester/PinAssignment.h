@@ -1,20 +1,31 @@
+#define BAUD 57600
+
+
 // ============ STEPPER ================
 
-#define lyStep 3
-#define lyDir 2
-#define ryStep 5
-#define ryDir 4
+#define lxStep 3
+#define lxDir 2
+#define lyStep 5
+#define lyDir 4
+#define rxStep 7
+#define rxDir 6
+#define ryStep 9
+#define ryDir 8
 
 // ============ Limit Switch / IR Sensor ================
 
-#define LimitSwitchLy A0 //TODO
+#define LimitSwitchLx A0
+#define LimitSwitchLy A1
+#define LimitSwitchRx A2
 #define LimitSwitchRy A3
 
 // ============ Brake ================
-
-#define BrakeLy A5//TODO
+/*
+#define BrakeLx A4
+#define BrakeLy A5
+#define BrakeRx A6
 #define BrakeRy A7
-
+*/
 // ============ Encoder ================
 
 #define encoderLxA 22

@@ -10,8 +10,6 @@
 #include "ofxSerial.h"
 #include "ofxGui.h"
 
-
-
 //OSC is essential for final kinetic work connection. keep here
 
 #ifdef USEOSC

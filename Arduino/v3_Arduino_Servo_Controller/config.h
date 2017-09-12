@@ -9,7 +9,7 @@ long interval = 5000; //TODO - Interval to check connection staus
 #define Input_size 14  //define number of inputs value(s)
 
  // ============ STEPPER ================
-const int numOfStepper = 4;
+const int numOfStepper = 2;
 
 
 

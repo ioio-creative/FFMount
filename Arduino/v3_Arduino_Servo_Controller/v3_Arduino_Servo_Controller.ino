@@ -7,13 +7,11 @@
    y -> Vertical Movement
 
     __________________
-   | 1  2  ....... 20 |
+   | 1  2  ....... 6  |
    |                  |
-   | Lx Lx ....... Lx |
    | Ly Ly ....... Ly |
-   |                  |
-   | Rx Rx ....... Rx |
    | Ry Ry ....... Ry |
+   |                  |
    |__________________|
             |
             |
@@ -46,24 +44,23 @@ long input_value[Input_size];
 #include <AccelStepper.h>
 
 
-long stepperSpeed[numOfStepper]  = {0, 0, 0, 0};
-long stepperAccel[numOfStepper]  = {0, 0, 0, 0};
-long stepperPos[numOfStepper]  = {0, 0, 0, 0};
+long stepperSpeed[numOfStepper]  = {0, 0};
+long stepperAccel[numOfStepper]  = {0, 0};
+long stepperPos[numOfStepper]  = {0, 0};
 
-AccelStepper stepperLx (AccelStepper::DRIVER, lxStep, lxDir);
+
 AccelStepper stepperLy (AccelStepper::DRIVER, lyStep, lyDir);
-AccelStepper stepperRx (AccelStepper::DRIVER, rxStep, rxDir);
 AccelStepper stepperRy (AccelStepper::DRIVER, ryStep, ryDir);
 
-AccelStepper* steppers[numOfStepper] = { &stepperLx, &stepperLy, &stepperRx, &stepperRy};
+AccelStepper* steppers[numOfStepper] = { &stepperLy, &stepperRy };
 
 bool isEmergencyStop = false;
 
 //variables
-long inverseDir[numOfStepper]  = {0, 0, 0, 0};
-long maxPos[numOfStepper]  = {0, 0, 0, 0};
-long maxSpeed[numOfStepper] = {0, 0, 0, 0};
-long maxAccel[numOfStepper] = {0, 0, 0, 0};
+long inverseDir[numOfStepper]  = {0, 0};
+long maxPos[numOfStepper]  = {0, 0 };
+long maxSpeed[numOfStepper] = {0, 0};
+long maxAccel[numOfStepper] = {0, 0};
 
 
 
