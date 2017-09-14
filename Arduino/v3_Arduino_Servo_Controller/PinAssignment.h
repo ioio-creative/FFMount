@@ -7,41 +7,31 @@
 
 // ============ Limit Switch / IR Sensor ================
 
-#define LimitSwitchLy A0 //TODO
-#define LimitSwitchRy A3
+#define LimitSwitchLy A0 
+#define LimitSwitchRy A1
 
 // ============ Brake ================
 
-#define BrakeLy A5//TODO
-#define BrakeRy A7
+#define BrakeLy A6 // NOT EXIST
+#define BrakeRy A7 // NOT EXIST
 
 // ============ Encoder ================
 
-#define encoderLxA 22
-#define encoderLxB 23
-#define encoderLyA 25
-#define encoderLyB 26
-#define encoderRxA 28
-#define encoderRxB 29
-#define encoderRyA 31
-#define encoderRyB 32
+#define encoderLyA 22
+#define encoderLyB 23
+#define encoderRyA 25
+#define encoderRyB 26
 
 // ============ SERVO CONTROLLER ================
 
-#define DI1_SERVO_ON_lx 14
-#define DI1_SERVO_ON_ly 15
-#define DI1_SERVO_ON_rx 16
-#define DI1_SERVO_ON_ry 17
+#define DI1_SERVO_ON_ly 14
+#define DI1_SERVO_ON_ry 15
 
-#define DI2_ALARM_RESET_lx 50
-#define DI2_ALARM_RESET_ly 51
-#define DI2_ALARM_RESET_rx 52
-#define DI2_ALARM_RESET_ry 53
+#define DI2_ALARM_RESET_ly 50
+#define DI2_ALARM_RESET_ry 51
 
-#define DO1_SERVO_READY_lx 34
-#define DO1_SERVO_READY_ly 35
-#define DO1_SERVO_READY_rx 36
-#define DO1_SERVO_READY_ry 37
+#define DO1_SERVO_READY_ly 34
+#define DO1_SERVO_READY_ry 35
 
 //Zero-speed reached
 #define DO2_ZSPD_lx 38
@@ -50,16 +40,12 @@
 #define DO2_ZSPD_ry 41
 
 //Reach the target position
-#define DO4_TPOS_lx 42
-#define DO4_TPOS_ly 43
-#define DO4_TPOS_rx 44
-#define DO4_TPOS_ry 45
+#define DO4_TPOS_ly 42
+#define DO4_TPOS_ry 43
 
 //Servo Alarm
-#define DO5_ALRM_lx 46
-#define DO5_ALRM_ly 47
-#define DO5_ALRM_rx 48
-#define DO5_ALRM_ry 49
+#define DO5_ALRM_ly 46
+#define DO5_ALRM_ry 47
 
 // ============ SERIAL ================
 

@@ -67,16 +67,14 @@ long maxAccel[numOfStepper] = {0, 0};
 // ============ ENCODER ================
 #include <Encoder.h>
 
-Encoder encoderLx(encoderLxA, encoderLxB);
 Encoder encoderLy(encoderLyA, encoderLyB);
-Encoder encoderRx(encoderRxA, encoderRxB);
 Encoder encoderRy(encoderRyA, encoderRyB);
 
-Encoder* encoder[numOfStepper] = {&encoderLx, &encoderLy, &encoderRx, &encoderLy};
+Encoder* encoder[numOfStepper] = {&encoderLy, &encoderRy};
 
 // ============ LIMIT SWITCH ================
-const byte limitSwitch[numOfStepper]  = {LimitSwitchLx, LimitSwitchLy, LimitSwitchRx, LimitSwitchRy};
-bool homeDone[numOfStepper]  = {false, false, false, false};
+const byte limitSwitch[numOfStepper]  = {LimitSwitchLy, LimitSwitchRy};
+bool homeDone[numOfStepper]  = {false, false};
 int home_speed = 100;
 int home_accel = 100;
 //================ Style ================
@@ -110,45 +108,34 @@ void setup() {
 
   }
 
+  // ============ LED ================
+  setupLED();
+
   // ============ SERIAL ================
   Serial.begin(BAUD);
   Serial1.begin(BAUD);
   pinMode(RX1, INPUT_PULLUP);
   // ============  ================
 
-  pinMode(BrakeLx, OUTPUT);
+
   pinMode(BrakeLy, OUTPUT);
-  pinMode(BrakeRx, OUTPUT);
   pinMode(BrakeRy, OUTPUT);
 
-  digitalWrite(BrakeLx, LOW);
   digitalWrite(BrakeLy, LOW);
-  digitalWrite(BrakeRx, LOW);
   digitalWrite(BrakeRy, LOW);
 
-  pinMode(DI1_SERVO_ON_lx, OUTPUT);
   pinMode(DI1_SERVO_ON_ly, OUTPUT);
-  pinMode(DI1_SERVO_ON_rx, OUTPUT);
   pinMode(DI1_SERVO_ON_ry, OUTPUT);
 
-  digitalWrite(DI1_SERVO_ON_lx, HIGH);
   digitalWrite(DI1_SERVO_ON_ly, HIGH);
-  digitalWrite(DI1_SERVO_ON_rx, HIGH);
   digitalWrite(DI1_SERVO_ON_ry, HIGH);
 
-
-  digitalWrite(DI2_ALARM_RESET_lx, HIGH);
   digitalWrite(DI2_ALARM_RESET_ly, HIGH);
-  digitalWrite(DI2_ALARM_RESET_rx, HIGH);
   digitalWrite(DI2_ALARM_RESET_ry, HIGH);
 
   delay(500);
-
-
-
-  digitalWrite(DI2_ALARM_RESET_lx, LOW);
+  
   digitalWrite(DI2_ALARM_RESET_ly, LOW);
-  digitalWrite(DI2_ALARM_RESET_rx, LOW);
   digitalWrite(DI2_ALARM_RESET_ry, LOW);
   /*
     #define DI2_ALARM_RESET_lx 50
@@ -156,9 +143,7 @@ void setup() {
     #define DI2_ALARM_RESET_rx 52
     #define DI2_ALARM_RESET_ry 53*/
 
-  pinMode(DO5_ALRM_lx, INPUT);
   pinMode(DO5_ALRM_ly, INPUT);
-  pinMode(DO5_ALRM_rx, INPUT);
   pinMode(DO5_ALRM_ry, INPUT);
 }
 
@@ -177,17 +162,14 @@ void loop() {
   }
   else if (GO_HOME) { //TODO
 
-    digitalWrite(BrakeLx, HIGH);
     digitalWrite(BrakeLy, HIGH);
-    digitalWrite(BrakeRx, HIGH);
     digitalWrite(BrakeRy, HIGH);
 
-    digitalWrite(DI1_SERVO_ON_lx, HIGH);
+
     digitalWrite(DI1_SERVO_ON_ly, HIGH);
-    digitalWrite(DI1_SERVO_ON_rx, HIGH);
     digitalWrite(DI1_SERVO_ON_ry, HIGH);
 
-    int limitSwitchReading[numOfStepper]  = {0, 0, 0, 0};
+    int limitSwitchReading[numOfStepper]  = {0, 0};
 
     for (int stepperNumber = 0; stepperNumber < numOfStepper; stepperNumber++) {
       limitSwitchReading[stepperNumber] = analogRead(limitSwitch[stepperNumber]);
@@ -195,13 +177,10 @@ void loop() {
       if (homeDone[stepperNumber]) {
         steppers[stepperNumber]->setSpeed(0);
       } else {
-        if (stepperNumber == 1 || stepperNumber == 3) {
-          steppers[stepperNumber]->setMaxSpeed((inverseDir[stepperNumber])*home_speed * 2);
-          steppers[stepperNumber]->setSpeed(-1 * (inverseDir[stepperNumber])*home_speed * 2);
-        } else {
+      //  if (stepperNumber == 1 || stepperNumber == 3) { //TODO
           steppers[stepperNumber]->setMaxSpeed((inverseDir[stepperNumber])*home_speed);
-          steppers[stepperNumber]->setSpeed(-1 * (inverseDir[stepperNumber])*home_speed);
-        }
+          steppers[stepperNumber]->setSpeed((inverseDir[stepperNumber])*home_speed);
+       // }
       }
       if (limitSwitchReading[stepperNumber] > 500 && !homeDone[stepperNumber]) {
 
@@ -214,7 +193,7 @@ void loop() {
       steppers[stepperNumber]->runSpeed();
     }
 
-    if (homeDone[0] && homeDone[1] && homeDone[2] && homeDone[3]) {
+    if (homeDone[0] && homeDone[1]) {
       GO_HOME = false; //done with go home
       Serial.print("allhm");
       Serial.println("|");
@@ -222,7 +201,8 @@ void loop() {
 
   } else {
 
-
+  // ============ LED ================
+  loopLED();
 
     // ============ STEPPER ================
 

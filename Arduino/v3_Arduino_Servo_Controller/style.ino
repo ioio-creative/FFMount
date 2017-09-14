@@ -35,11 +35,6 @@ void stepper_style() {
     stepperPos1[1] = input_value[7];
     stepperPos2[1] = input_value[8];
 
-    stepperPos1[2] = input_value[9];
-    stepperPos2[2] = input_value[10];
-
-    stepperPos1[3] = input_value[11];
-    stepperPos2[3] = input_value[12];
 
 
     for (int stepperNumber = 0; stepperNumber < numOfStepper; stepperNumber++) {
@@ -71,20 +66,13 @@ void stepper_style() {
     stepperAccel[1] = input_value[5];
     stepperPos[1] = input_value[6];
 
-    stepperSpeed[2] = input_value[7];
-    stepperAccel[2] = input_value[8];
-    stepperPos[2] = input_value[9];
-
-    stepperSpeed[3] = input_value[10];
-    stepperAccel[3] = input_value[11];
-    stepperPos[3] = input_value[12];
-
     for (int stepperNumber = 0; stepperNumber < numOfStepper; stepperNumber++) {
       if (steppers[stepperNumber]->distanceToGo() == 0) {
         if (stepperPos[stepperNumber] >= 0 && stepperAccel[stepperNumber] > 0 && stepperSpeed[stepperNumber] > 0) {
           steppers[stepperNumber]->setMaxSpeed(stepperSpeed[stepperNumber]);
           steppers[stepperNumber]->setAcceleration(stepperAccel[stepperNumber]);
-          steppers[stepperNumber]->moveTo((inverseDir[stepperNumber])*stepperPos[stepperNumber]);
+          //steppers[stepperNumber]->moveTo((inverseDir[stepperNumber])*stepperPos[stepperNumber]);
+          steppers[stepperNumber]->moveTo(-1*stepperPos[stepperNumber]);
         }
       }
     }

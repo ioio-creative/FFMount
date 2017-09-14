@@ -1,7 +1,16 @@
 #pragma once
 
-#define NUM_OF_WINGS 12 //Todo Transfer definition /variables to xml
+#define NUM_OF_WINGS 6 //Todo Transfer definition /variables to xml
 #define BAUD 57600 //Todo Transfer definition /variables to xml
+
+#define MAX_X_POS 5000
+#define MAX_Y_POS 30000
+
+#define MAX_X_SPEED 1000
+#define MAX_Y_SPEED 1000
+
+#define MAX_X_ACCEL 1000
+#define MAX_Y_ACCEL 1000
 
 //INCLUDES
 
@@ -70,15 +79,22 @@ class ofApp : public ofBaseApp{
     
     //================== Serial ==================
     
+    
+    vector<string> SERIAL_PARAMETERES;
+    
     vector<bool> serialSetup();
+    
     string serialRead(int a);
     vector<int> stringDecode(string s);
+    
+    void serialWrite(int arduinoID, string sw);
+
     bool is_number(const std::string& s);
     vector<bool> isArduinoConnected;
     vector<bool> isArduinoConnectedBySerial;
-    void serialWrite(int arduinoID, string sw);
+
     void checkArduinoIsConnected();
-    bool initOnUpdate;
+    bool initOnUpdate; //to check for arduino in update() after setup()
     long checkArduinoMillis; //todo
     
 #ifdef USEOSC
@@ -105,8 +121,7 @@ class ofApp : public ofBaseApp{
     
     //function
     void removeSubstrs(string& s, string& p);
-    
-    vector<string> SERIAL_PARAMETERES;
+
 
     
 
@@ -124,15 +139,93 @@ class ofApp : public ofBaseApp{
 #endif
     
     
+    
+    //================== GUI ==================
+    
+
+    void guiSetup();
+    void guiDraw();
+    
+    bool debugMode;
+    ofxPanel guiDebug;
+    ofxPanel guiDebug2;
+    ofParameterGroup parametersDebug;
+    ofXml settings;
+
+    ofxButton style_Btn;
+    ofxButton style_Btn_all_same;
+    ofxButton style_Btn_all;
+    ofxButton reset_Btn;
+    ofxButton home_Btn;
+    ofxToggle all_Tog;
+    vector<ofParameter<bool>> working_cable;
+    vector<ofParameter<bool>> input_pts;
+    vector<ofParameter<bool>> output_pts;
+    
+    //EEPROM
+    
+    vector<ofParameter<int>> EEPROM;
+    vector<ofxButton> EEPROM_btn;
+    
+    ofxButton EEPROM_saveBtn;
+    ofxButton EEPROM_loadBtn;
+    
+        void loadButtonPressed();
+
+    
+    
+    //Cable Pos
+    ofxPanel guiCablePosLy;
+    ofxPanel guiCablePosRy;
+    ofParameterGroup parametersCablePos;
+
+    vector<ofParameter<int>> cablePosLy;
+    vector<ofParameter<int>> cablePosRy;
+    
+    //Cable Pos Offset
+    ofxPanel guiCablePosLyOffset;
+    ofxPanel guiCablePosRyOffset;
+    ofParameterGroup parametersCablePosOffset;
+    vector<ofParameter<int>> cablePosLyOffset;
+    vector<ofParameter<int>> cablePosRyOffset;
+    
+    bool showOffset;
+    
+    
+    //Cable Accel
+    ofxPanel guiCableAccelLy;
+    ofxPanel guiCableAccelRy;
+    ofParameterGroup parametersCableAccel;
+    vector<ofParameter<int>> cableAccelLy;
+    vector<ofParameter<int>> cableAccelRy;
+    
+    //Cable Speed
+    ofxPanel guiCableSpeedLy;
+    ofxPanel guiCableSpeedRy;
+    ofParameterGroup parametersCableSpeed;
+    vector<ofParameter<int>> cableSpeedLy;
+    vector<ofParameter<int>> cableSpeedRy;
+    
+
+    
+    //in Draw
+    int page;
+    int numOfPages;
+
+    
+    
     //================== MISC ==================
     bool serialTrigger; //TO avoid ofxButton cause multiple click and send mutiple serial command;
     long prevSerialTriggerMillis; //TO avoid ofxButton cause multiple click and send mutiple serial command;
     long currMillis;
     
+    bool isEmergencyStop;
+
     
     //================Parameteres================
-        vector<ofParameter<bool>> working_cable;
-        vector<ofParameter<int>> EEPROM;
-    
+
+    ofParameter<int> currentScene;
+    ofParameter<int> currentDebugArduinoID;
+    ofParameter<int> currentStyle;
     
 };
