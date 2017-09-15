@@ -135,7 +135,6 @@ void loop()
   }
 }
 
-// 0 <= progress <= 1
 float computeLinearAccl(long totDist, long totTime)
 {
     return (4.0 * totDist) / (totTime * totTime);
