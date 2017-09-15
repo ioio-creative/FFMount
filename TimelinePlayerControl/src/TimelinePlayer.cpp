@@ -42,19 +42,21 @@ void TimelinePlayer::setup() {
 	layerSlide.addListener(this, &TimelinePlayer::layerChanged);
 	graphSlide.addListener(this, &TimelinePlayer::graphScrollChanged);
 	graphVScaleSlide.addListener(this, &TimelinePlayer::graphVScaleChanged);
+	graphHScaleSlide.addListener(this, &TimelinePlayer::graphHScaleChanged);
 	keyframeSlider.addListener(this, &TimelinePlayer::keyframeSliderChanged);
 	saveButton.addListener(this, &TimelinePlayer::saveButtonPressed);
 	loadButton.addListener(this, &TimelinePlayer::loadButtonPressed);
 
 	gui.setup("panel");
-	gui.setDefaultWidth(200);
+	gui.setDefaultWidth(300);
 	gui.add(playButton.setup("Play From Start"));
 	gui.add(pauseButton.setup("Pause/Resume"));
 	gui.add(repeatThisToggle.setup("Loop", false));
 	gui.add(layerSlide.setup("Layer to Draw", 0, 0, NUM_TIMELINE-1));
 	gui.add(multiSlide.setup("Velocity Multiplier", 1, 0, 10));
 	gui.add(graphSlide.setup("Graph ScrollX", 0, 0, 1));
-	gui.add(graphVScaleSlide.setup("Graph V Scale", 1, 0.1, 5));
+	gui.add(graphVScaleSlide.setup("Graph VScale Cubic", 0.15f, 0.001f, 1));
+	gui.add(graphHScaleSlide.setup("Graph HScale Cubic", 0.5f, 0.01f, 1));
 	//gui.add(trackFileName.setup("Now Playing", ""));
 	gui.add(saveButton.setup("Save Timeline"));
 	gui.add(loadButton.setup("Load Timeline"));
@@ -163,7 +165,7 @@ void TimelinePlayer::draw() {
 
 	//draw the timeline
 	for (int i = 0; i < timelines.size(); i++) {
-		timelines[i].setPos(0, offsetY+20 + i * 20, graphWidth, graphScrollX * graphWidth, i);
+		timelines[i].setPos(0, offsetY+20 + i * 20, graphWidth, graphScrollX * graphWidth, i, graphScale);
 		timelines[i].draw();
 	}
 
@@ -382,6 +384,19 @@ void TimelinePlayer::mouseReleased(int x, int y, int button) {
 }
 
 void TimelinePlayer::saveButtonPressed() {
+	for (int i = 0; i < timelines.size(); i++) {
+		Timeline timeline = timelines[i];
+		csvRecorder.clear();
+		for (int j = 0; j < timeline.frames.size(); j++) {
+			ofxCsvRow row;
+			row.setFloat(0, timeline.frames[j].x);
+			row.setFloat(1, timeline.frames[j].val);
+			csvRecorder.addRow(row);
+		}
+		string fn = "t" + ofToString(i) + ".csv";
+		csvRecorder.save(fn);
+	}
+	/*
 	ofxXmlSettings track;
 	track.addTag("track");
 	track.pushTag("track");
@@ -403,6 +418,7 @@ void TimelinePlayer::saveButtonPressed() {
 	}
 	track.popTag(); //pop position
 	track.saveFile("TimelineData" + ofToString(".xml"));
+	*/
 }
 
 void TimelinePlayer::loadButtonPressed() {
@@ -414,7 +430,15 @@ void TimelinePlayer::reloadTimelineFromSave() {
 	for (int i = 0; i < timelines.size(); i++) {
 		timelines[i].reset();
 	}
-
+	for (int n = 0; n < timelines.size(); n++) {
+		string fn = "t" + ofToString(n) + ".csv";
+		if (csv.load(fn)) {
+			for (int i = 0; i < csv.getNumRows(); i++) {
+				timelines[n].addKeyframeByVal(csv[i].getFloat(1), csv[i].getFloat(0));
+			}
+		}
+	}
+	/*
 	//This is how you would load that very same file    
 	ofxXmlSettings track;
 	if (track.loadFile("TimelineData" + ofToString(".xml"))) {
@@ -437,6 +461,7 @@ void TimelinePlayer::reloadTimelineFromSave() {
 	else {
 		ofLogError("Track Save file did not load!");
 	}
+	*/
 }
 
 //--------------------------------------------------------------
@@ -453,7 +478,11 @@ void TimelinePlayer::graphScrollChanged(float &setScroll) {
 }
 
 void TimelinePlayer::graphVScaleChanged(float &setVScale) {
-	graphVScale = setVScale;
+	graphVScale = setVScale*setVScale*setVScale;
+}
+
+void TimelinePlayer::graphHScaleChanged(float &setHScale) {
+	graphScale = setHScale*setHScale*setHScale;
 }
 
 void TimelinePlayer::resetGraph() {

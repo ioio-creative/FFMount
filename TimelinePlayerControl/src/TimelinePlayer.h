@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include "ofMain.h"
 #include "ofxGui.h"
+#include "ofxCsv.h"
 #include "Timeline.h"
 #include "ofxXmlSettings.h"
 
@@ -17,10 +18,12 @@ class
 			void setup();
 			void update();
 			void draw();
-
-
+			//----------------------   CSV   ---------------------
+			ofxCsv csv;
+			ofxCsv csvRecorder;
+			
 			//-----------------------     Timeline Player      -------------------
-			int duration = 10 * 1000;//the duration of the graph in ms
+			int duration = 3 * 60 * 1000;//the duration of the graph in ms
 			int isPlaying;
 			int currentTime;
 			int lastMaxPlayerTime; // record the last max sound time, used for prevent redraw the graph when song looped
@@ -63,6 +66,7 @@ class
 			ofxFloatSlider multiSlide;
 			ofxFloatSlider graphSlide;
 			ofxFloatSlider graphVScaleSlide;
+			ofxFloatSlider graphHScaleSlide;
 			ofxButton addKeyButton;
 			ofxButton removeKeyButton;
 			ofxButton selectKeyButton;
@@ -85,6 +89,7 @@ class
 			void multiChanged(float &setMulti);
 			void graphScrollChanged(float &setScroll);
 			void graphVScaleChanged(float &setVScale);
+			void graphHScaleChanged(float &setHScale);
 			void keyframeSliderChanged(float &val);
 			void keyFrameSelected(Keyframe &kf);
 			void keyFrameDeselected(int &i);

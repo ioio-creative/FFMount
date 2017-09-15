@@ -169,6 +169,12 @@
     <ClCompile Include="src\TimelinePlayer.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Documents\of_v0.9.8_vs_release\addons\ofxCsv\src\ofxCsv.cpp">
+      <Filter>addons\ofxCsv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Documents\of_v0.9.8_vs_release\addons\ofxCsv\src\ofxCsvRow.cpp">
+      <Filter>addons\ofxCsv\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -284,6 +290,12 @@
     </Filter>
     <Filter Include="addons\ofxXmlSettings\libs">
       <UniqueIdentifier>{687714A8-1662-FA1C-261F-50F0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxCsv">
+      <UniqueIdentifier>{90f7ed3b-198c-46f0-a820-df90ca6f5c73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxCsv\src">
+      <UniqueIdentifier>{74e59340-6f4c-43bd-ab70-4a5ce5cd0050}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -496,6 +508,12 @@
     </ClInclude>
     <ClInclude Include="src\TimelinePlayer.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Documents\of_v0.9.8_vs_release\addons\ofxCsv\src\ofxCsv.h">
+      <Filter>addons\ofxCsv\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Documents\of_v0.9.8_vs_release\addons\ofxCsv\src\ofxCsvRow.h">
+      <Filter>addons\ofxCsv\src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -22,6 +22,7 @@ public:
 	ofRectangle rect;
 	Keyframe selectedKeyframe; //the selected keyframes (select keyframe for editing its value)
 
+	float scale;
 	float xPos;
 	float yPos;
 	float width;
@@ -30,7 +31,7 @@ public:
 	bool doAddKeyframeOnClick;
 	bool doRemoveKeyframeOnClick;	
 
-	void setPos(float x, float y, float w, float scroll, int id); //set the position of timeline, scroll is the scroll amount of the graph
+	void setPos(float x, float y, float w, float scroll, int id, float sc); //set the position of timeline, scroll is the scroll amount of the graph
 	void addKeyframeOnClick(); //enable add keyframe mode
 	void addKeyframeByVal(float val, float x); //enable add keyframe mode
 	void removeKeyframeOnClick(); //enable remove keyframe mode
