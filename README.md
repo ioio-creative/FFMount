@@ -11,6 +11,7 @@ ofxIO https://github.com/bakercp/ofxIO <br/>
 ofxSerial https://github.com/bakercp/ofxSerial <br/>
 ofxXmlSettings (buildin)<br/>
 ofxInputField https://github.com/fx-lange/ofxInputField <br/>
+ofxCsv https://github.com/paulvollmer/ofxCsv <br/>
 <br/>
 Put this in /apps folder<br/>
 
