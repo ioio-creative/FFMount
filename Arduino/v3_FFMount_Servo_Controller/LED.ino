@@ -1,3 +1,5 @@
+// ref https://github.com/FastLED/FastLED/wiki/Pixel-reference#chsv
+
 #include <FastLED.h>
 
 #define LED_PIN_1     6
