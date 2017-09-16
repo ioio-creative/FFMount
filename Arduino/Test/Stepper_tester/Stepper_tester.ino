@@ -51,8 +51,8 @@ int prevReading2 = 0;
 int prevReading3 = 0;
 //========= STEPPER ========
 #include <AccelStepper.h>
-int st = 3;
-int dir = 2;
+int st = 5;
+int dir =4;
 AccelStepper stepper (AccelStepper::DRIVER, st, dir);
 
 

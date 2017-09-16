@@ -1,16 +1,13 @@
 #pragma once
 
 #define NUM_OF_WINGS 6 //Todo Transfer definition /variables to xml
+#define NUM_OF_SERIAL_TO_INIT 8  //Com port device size
 #define BAUD 57600 //Todo Transfer definition /variables to xml
 
-#define MAX_X_POS 5000
-#define MAX_Y_POS 30000
 
-#define MAX_X_SPEED 1000
-#define MAX_Y_SPEED 1000
-
-#define MAX_X_ACCEL 1000
-#define MAX_Y_ACCEL 1000
+#define MAX_Y_POS 5000
+#define MAX_Y_SPEED 2000
+#define MAX_Y_ACCEL 2000
 
 //INCLUDES
 
@@ -18,6 +15,8 @@
 
 #include "ofxSerial.h"
 #include "ofxGui.h"
+
+
 
 //OSC is essential for final kinetic work connection. keep here
 
@@ -89,7 +88,6 @@ class ofApp : public ofBaseApp{
     
     void serialWrite(int arduinoID, string sw);
 
-    bool is_number(const std::string& s);
     vector<bool> isArduinoConnected;
     vector<bool> isArduinoConnectedBySerial;
 
@@ -170,7 +168,7 @@ class ofApp : public ofBaseApp{
     ofxButton EEPROM_saveBtn;
     ofxButton EEPROM_loadBtn;
     
-        void loadButtonPressed();
+    void loadButtonPressed();
 
     
     
@@ -226,6 +224,12 @@ class ofApp : public ofBaseApp{
 
     ofParameter<int> currentScene;
     ofParameter<int> currentDebugArduinoID;
+    
+    //================Style ====================
     ofParameter<int> currentStyle;
+    void writeStyle(int s);
+    
+    //================Other Functions ====================
+    bool is_number(const std::string& s);
     
 };

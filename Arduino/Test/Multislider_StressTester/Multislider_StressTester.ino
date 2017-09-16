@@ -1,6 +1,3 @@
-
-
-
 #include "PinAssignment.h" //Pin Config
 
 /*
@@ -55,8 +52,8 @@ int prevReading1 = 0;
 int prevReading2 = 0;
 int prevReading3 = 0;
 
-int minPos = 0;
-int maxPos = 5000;
+int minPos = 1000;
+int maxPos = 4000;
 //========= STEPPER ========
 #include <AccelStepper.h>
 

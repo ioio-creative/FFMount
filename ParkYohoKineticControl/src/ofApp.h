@@ -43,11 +43,11 @@
 #define MAX_X_POS 5000
 #define MAX_Y_POS 5000
 
-#define MAX_X_SPEED 50000
-#define MAX_Y_SPEED 50000
+#define MAX_X_SPEED 5000
+#define MAX_Y_SPEED 5000
 
-#define MAX_X_ACCEL 50000
-#define MAX_Y_ACCEL 50000
+#define MAX_X_ACCEL 5000
+#define MAX_Y_ACCEL 5000
 
 #define HOME_MAXSPEED     int_array[0]
 

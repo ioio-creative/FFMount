@@ -620,7 +620,7 @@ void ofApp::guiSetup(){
     guiDebug.add(EEPROM_loadBtn.setup(EEPROM_saveLoad_names[1]));
     EEPROM_loadBtn.addListener(this, &ofApp::loadButtonPressed);
     guiDebug.add(textField.setup("Serial:", "0-0-0-0-0"));
-    guiDebug.add(currentStyle.set("Style",11,0,NUM_OF_CABLES)); //TODO
+    guiDebug.add(currentStyle.set("Style",3,0,NUM_OF_CABLES)); //TODO
     guiDebug.add(style_Btn.setup("Set Position:"));
     guiDebug.add(style_Btn_all_same.setup("Set Position ALL Same:"));
     guiDebug.add(style_Btn_all.setup("Set Position ALL:"));
@@ -1271,7 +1271,7 @@ void ofApp::song(){
         }
         
     }else if(currentSong == 4){ //ricci mode, debug one by one
-        currentStyle = 11;
+        currentStyle = 3;
         
         output_pts[0] = false;
         output_pts[2] = false;
@@ -1290,7 +1290,7 @@ void ofApp::writeStyle(int s){
 
     if (s==0){
         
-        if(currentStyle == 11){
+        if(currentStyle == 3){
             
             string writeInTotal = "LX : ";
             
@@ -1504,7 +1504,7 @@ void ofApp::writeStyle(int s){
         
     }else if (s ==2){
             if(currentDebugArduinoID <= NUM_OF_CABLES-1 && currentDebugArduinoID >= 0){
-        if(currentStyle == 11){
+        if(currentStyle == 3){
             
             string writeInTotal = "LX : ";
             
