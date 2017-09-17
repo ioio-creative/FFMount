@@ -19,6 +19,9 @@ void ofApp::setup(){
     }
     initOnUpdate = true;
     
+    //================== Timeline Player ==================
+    timelinePlayer.setup();
+    
 #ifdef USEOSC
     //================== OSC ==================
     // listen on the given port
@@ -35,6 +38,8 @@ void ofApp::setup(){
     prevSerialTriggerMillis = ofGetElapsedTimeMillis();
     isEmergencyStop = false;
     
+    page = 0;
+    numOfPages = 2;
     for(int i=0; i < NUM_OF_SERIAL_TO_INIT; i++){
         receivedString.push_back("");
         receivedStringBuffer.push_back("");
@@ -314,6 +319,10 @@ void ofApp::update(){
         
     }
     
+    
+    //================== Timeline Player ==================
+    timelinePlayer.update();
+    
 }
 
 void ofApp::guiDraw(){
@@ -452,12 +461,21 @@ void ofApp::draw(){
             
         }
         
+        if(page == 0){
+            //======== GUI =========
+            guiDraw();
         
-        //======== GUI =========
-        guiDraw();
+        }else{
+            
+            //======== GUI =========
+            guiDraw();
+            //================== Timeline Player ==================
+            timelinePlayer.draw();
+        
+        }
+
     }
-    
-    
+
 }
 
 //--------------------------------------------------------------
@@ -473,7 +491,6 @@ void ofApp::loadButtonPressed(){
 //--------------------------------------------------------------
 //--------------------------------------------------------------
 
-//--------------------------------------------------------------
 void ofApp::checkArduinoIsConnected(){
     
     if(ofGetFrameNum() < 200){
@@ -1194,17 +1211,17 @@ void ofApp::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-    
+    timelinePlayer.mouseDragged(x, y, button);
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-    
+    timelinePlayer.mousePressed(x, y, button);
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
-    
+    timelinePlayer.mouseReleased(x, y, button);
 }
 
 //--------------------------------------------------------------

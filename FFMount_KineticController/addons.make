@@ -1,3 +1,4 @@
+ofxCsv
 ofxGui
 ofxIO
 ofxOsc

@@ -48,6 +48,7 @@ long input_value[Input_size];
 
 long stepperSpeed[numOfStepper]  = {0, 0};
 long stepperAccel[numOfStepper]  = {0, 0};
+long stepperTime[numOfStepper]  = {0, 0};  // Travel Time to POS
 long stepperPos[numOfStepper]  = {0, 0};
 
 
@@ -77,8 +78,8 @@ Encoder* encoder[numOfStepper] = {&encoderLy, &encoderRy};
 // ============ LIMIT SWITCH ================
 const byte limitSwitch[numOfStepper]  = {LimitSwitchLy, LimitSwitchRy};
 bool homeDone[numOfStepper]  = {false, false};
-int home_speed = 100;
-int home_accel = 100;
+int home_speed = 200;
+int home_accel = 200;
 //================ Style ================
 int style = 0; //0 command to go
 
