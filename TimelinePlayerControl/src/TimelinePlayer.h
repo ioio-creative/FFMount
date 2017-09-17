@@ -7,6 +7,7 @@
 #include "ofxCsv.h"
 #include "Timeline.h"
 #include "ofxXmlSettings.h"
+#include "ofEventUtils.h"
 
 
 // A class that wrap the music player, fft graph, timeline
@@ -28,7 +29,9 @@ class
 			int currentTime;
 			int lastMaxPlayerTime; // record the last max sound time, used for prevent redraw the graph when song looped
 			int lastPausePlayerTime; //record the time when the sound is paused
-			int lastFrameTime;
+			int lastFrameTime;// previous frame's time (will update event not playing)
+			int previousPlayTime;// previous played frame time (update only when playing)
+			int currentPlayTime;// current played frame time (update only when playing)
 			int doLoop = 1;
 			int resumeAfterRelease = 0;
 			
@@ -46,7 +49,7 @@ class
 
 			//-----------------------     Timeline      -------------------
 			vector <Timeline> timelines;
-
+			ofEvent<Keyframe> onKeyFrameEntered; //event to listen for keyframe entered
 
 			//-----------------------     GUI      -------------------
 			ofxButton saveGUIButton;
@@ -93,9 +96,12 @@ class
 			void keyframeSliderChanged(float &val);
 			void keyFrameSelected(Keyframe &kf);
 			void keyFrameDeselected(int &i);
+			void OnKeyFrameEnteredEvent(Keyframe &kf);//Sample event function to handle the keyframe enter
 
 			//Use this function to get the tween value of timeline
 			vector<float> getTimelineTweenValues();//every first value is the distance, every second value is the velocity
+			float getTimelineValue(int id, float t);//get the timeline value at speicfic time
+			bool getIsKeyframe(int id, float t);//return if the speific time is a keyframe
 
 			//Use this function to get the velocity of timeline
 			//vector<float> getTimelineVelocity();
@@ -108,8 +114,13 @@ class
 			void resetGraph(); //reset the fft sum graph and the timelines when playing a new sound
 			Keyframe *selectedKeyframe; //selected keyframe for editing its value
 			Keyframe nullKeyframe; //a keyframe that is null, i.e. no selected key frame
+<<<<<<< HEAD
 			const float KEYFRAME_MIN_VALUE = 0.f; //THe minimum value for a keyframe in slider
 			const float KEYFRAME_MAX_VALUE = 5000.0f; //the maximum value for a keyframe in slider
+=======
+			const float KEYFRAME_MIN_VALUE = -30000.0f; //THe minimum value for a keyframe in slider
+			const float KEYFRAME_MAX_VALUE = 30000.0f; //the maximum value for a keyframe in slider
+>>>>>>> origin/master
 			const int NUM_TIMELINE = 24;
 			void reloadTimelineFromSave();//load the timeline save file
 			
