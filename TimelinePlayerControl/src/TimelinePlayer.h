@@ -114,13 +114,10 @@ class
 			void resetGraph(); //reset the fft sum graph and the timelines when playing a new sound
 			Keyframe *selectedKeyframe; //selected keyframe for editing its value
 			Keyframe nullKeyframe; //a keyframe that is null, i.e. no selected key frame
-<<<<<<< HEAD
-			const float KEYFRAME_MIN_VALUE = 0.f; //THe minimum value for a keyframe in slider
-			const float KEYFRAME_MAX_VALUE = 5000.0f; //the maximum value for a keyframe in slider
-=======
+        
 			const float KEYFRAME_MIN_VALUE = -30000.0f; //THe minimum value for a keyframe in slider
 			const float KEYFRAME_MAX_VALUE = 30000.0f; //the maximum value for a keyframe in slider
->>>>>>> origin/master
+
 			const int NUM_TIMELINE = 24;
 			void reloadTimelineFromSave();//load the timeline save file
 			
