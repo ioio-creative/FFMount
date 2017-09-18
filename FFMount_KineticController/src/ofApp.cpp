@@ -22,6 +22,11 @@ void ofApp::setup(){
     //================== Timeline Player ==================
     timelinePlayer.setup();
     
+    //================== Video ==================
+    ffMovie.load("ffmount.mov");
+    ffMovie.setLoopState(OF_LOOP_NORMAL);
+    ffMovie.play();
+    
 #ifdef USEOSC
     //================== OSC ==================
     // listen on the given port
@@ -323,6 +328,10 @@ void ofApp::update(){
     //================== Timeline Player ==================
     timelinePlayer.update();
     
+    
+    //================== Video ==================
+    ffMovie.update();
+    
 }
 
 void ofApp::guiDraw(){
@@ -471,6 +480,10 @@ void ofApp::draw(){
             guiDraw();
             //================== Timeline Player ==================
             timelinePlayer.draw();
+            
+            //================== Video ==================
+            ofSetHexColor(0xFFFFFF);
+            ffMovie.draw(0,0,320,180);
         
         }
 

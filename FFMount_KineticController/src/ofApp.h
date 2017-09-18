@@ -235,4 +235,7 @@ class ofApp : public ofBaseApp{
     //================Other Functions ====================
     bool is_number(const std::string& s);
     
+    //================ Video ====================
+    ofVideoPlayer 		ffMovie;
+    
 };
