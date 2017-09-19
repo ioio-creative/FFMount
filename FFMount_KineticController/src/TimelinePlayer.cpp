@@ -8,6 +8,8 @@ void TimelinePlayer::setup() {
 	lastMaxPlayerTime = 0;
 	currentTime = 0;
 	lastFrameTime = ofGetElapsedTimef()* 1000.0f;
+	previousPlayTime = -1;
+	currentPlayTime = -1;
 	//-----------------------     FFT      -------------------
 
 	graphValue = 0.0f;
@@ -68,6 +70,9 @@ void TimelinePlayer::setup() {
 	gui.add(loadGUIButton.setup("Load GUI"));
 
 	//gui.loadFromFile("TimelinePlayerSettings.xml");
+
+	//Sample code to Listen to Keyframe event
+	ofAddListener(this->onKeyFrameEntered, this, &TimelinePlayer::OnKeyFrameEnteredEvent);
 }
 
 //--------------------------------------------------------------
@@ -76,11 +81,13 @@ void TimelinePlayer::update() {
 	ofBackground(80, 20, 20);
 	
 	doLoop = repeatThisToggle;
+	float elapsedTime = ofGetElapsedTimef() *1000.0f;
+
 
 	//record the history if sound is playig. Skip drawing if the sound is looped ( where the currnetTime < lastMaxSoundTime)
 	if (isPlaying) {
 		//advance the currentTime
-		currentTime = currentTime + (ofGetElapsedTimef() *1000.0f - lastFrameTime);
+		currentTime = currentTime + (elapsedTime - lastFrameTime);
 		//loop the player timeline
 		if (currentTime >= duration ) {
 			if (doLoop) {
@@ -102,7 +109,7 @@ void TimelinePlayer::update() {
 			playheadPos = graphWidth*(lastPausePlayerTime*1.0f / duration);
 		}
 
-		if (isPlaying && currentTime >= lastMaxPlayerTime) {
+		if (currentTime >= lastMaxPlayerTime) {
 			graphValue = getTimelineTweenValues()[layerToDraw];
 			//graphValue = timelines[0].getValueAtPos(playheadPos);
 			graphHistory.push_back(graphValue);
@@ -110,14 +117,37 @@ void TimelinePlayer::update() {
 			if (currentTime > lastMaxPlayerTime)
 				lastMaxPlayerTime = currentTime;
 		}
+
+		//keyframe events
+		if (previousPlayTime > currentPlayTime) {
+			previousPlayTime = -1;
+		}
+		else {
+			previousPlayTime = currentPlayTime;
+		}
+		currentPlayTime = currentTime;
+
+		for (int n = 0; n < timelines.size(); n++) {
+			Keyframe kf;
+			int size = timelines[n].frames.size();
+			for (int i = 0; i < size; i++) {
+				kf = timelines[n].frames[i];
+				if (kf.x > previousPlayTime && kf.x <= currentPlayTime) {
+					//ofLog() << "onEnterKeyFrame : " << n << ", " << kf.x << ", " << kf.val;
+					ofNotifyEvent(onKeyFrameEntered, kf);
+				}
+			}
+			
+		}
 	}
-	lastFrameTime = ofGetElapsedTimef()* 1000.0f;
+	lastFrameTime = elapsedTime;
 	
 
 	//-----------------------     Timeline      -------------------
 	for (int i = 0; i < timelines.size(); i++) {
 		timelines[i].update();
 	}
+	
 	
 }
 
@@ -148,6 +178,31 @@ void TimelinePlayer::draw() {
 	ofFill();
 	ofSetColor(125);
 	ofDrawRectangle(0, offsetY, graphWidth, 20);
+	
+	//draw time indicators
+
+	//each 1 seconds
+	ofSetColor(30);
+	for (int i = 1000; i < duration; i += 1000) {
+		ofDrawRectangle(i*graphScale, offsetY+10.0f, 1.0f, 10.0f);
+	}
+	//each 5 seconds
+	ofSetColor(30);
+	for (int i = 5000; i < duration; i += 5000) {
+		ofDrawRectangle(i*graphScale, offsetY, 1.0f, 20.0f);
+	}
+	//each 10 seconds
+	ofSetColor(250, 0, 0);
+	for (int i = 10000; i < duration; i += 10000) {
+		ofDrawRectangle(i*graphScale, offsetY, 1.0f, 20.0f);
+	}
+	//each 60 seconds
+	ofSetColor(0, 250, 250);
+	for (int i = 60000; i < duration; i += 60000) {
+		ofDrawRectangle(i*graphScale, offsetY, 1.0f, 20.0f);
+	}
+	
+
 	ofSetColor(100, 200, 100);
 	if (graphHistory.size() > 0) {
 		ofBeginShape();
@@ -191,16 +246,29 @@ void TimelinePlayer::draw() {
 	ofSetColor(255, 255, 255);
 	ofDrawBitmapString(reportString, 5, 865);
 
+
+
+	//test timeline functions
+
+	reportString = "getTimelineValue(0, 1001): " + ofToString(getTimelineValue(0, 1001)) + "\ngetIsKeyframe(0, 1001): " + ofToString(getIsKeyframe(0, 1001));
+	ofDrawBitmapString(reportString, 5, 825);
+
+
 	ofPopStyle();
 	//-----------------------     GUI      -------------------
 
 	gui.draw();
-
 }
 
 
 
 //---------------- Timeline functions ----------------
+
+//Sample event function to handle the keyframe enter
+void TimelinePlayer::OnKeyFrameEnteredEvent(Keyframe &kf) {
+	ofLog() << "onEnterKeyFrame : " << kf.timelineId <<","<<kf.val <<", " << kf.x;
+}
+
 
 //function for other classes to get the timeline's keyframes tweening value
 vector<float> TimelinePlayer::getTimelineTweenValues() {
@@ -226,6 +294,34 @@ vector<float> TimelinePlayer::getTimelineTweenValues() {
 	}
 
 	return rslt;
+}
+
+//function for other classes to get the timeline's keyframes tweening value
+float TimelinePlayer::getTimelineValue(int id, float t) {
+	float val = timelines[id].getValueAtPos(t* graphScale);
+	if (id % 2) {
+		//every second row will store velocity, which multiply by the multiplier
+		val = multiplier*val;
+	}
+	return val;
+}
+
+bool TimelinePlayer::getIsKeyframe(int id, float t) {
+	int size = timelines[id].frames.size();
+	for (int i = 0; i < size; i++) {
+		if (timelines[id].frames[i].x == t) {
+			return true;
+		}
+	}
+	return false;
+}
+
+int TimelinePlayer::getCurrentTime() {
+    return currentTime;
+}
+
+void TimelinePlayer::setDuration(int d) {
+    duration = d;
 }
 
 /*

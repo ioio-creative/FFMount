@@ -316,6 +316,14 @@ bool TimelinePlayer::getIsKeyframe(int id, float t) {
 	return false;
 }
 
+int TimelinePlayer::getCurrentTime() {
+    return currentTime;
+}
+
+void TimelinePlayer::setDuration(int d) {
+    duration = d;
+}
+
 /*
 //function for other classes to get the timeline's velocity
 vector<float> TimelinePlayer::getTimelineVelocity() {

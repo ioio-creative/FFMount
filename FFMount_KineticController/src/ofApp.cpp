@@ -19,13 +19,16 @@ void ofApp::setup(){
     }
     initOnUpdate = true;
     
-    //================== Timeline Player ==================
-    timelinePlayer.setup();
-    
+
     //================== Video ==================
     ffMovie.load("ffmount.mov");
     ffMovie.setLoopState(OF_LOOP_NORMAL);
-    ffMovie.play();
+    ffMovie.stop();
+    
+    //================== Timeline Player ==================
+    timelinePlayer.setup();
+    ofLog() << "ffMovie.getDuration() : " << ffMovie.getDuration();
+    timelinePlayer.setDuration(ffMovie.getDuration()*1000);
     
 #ifdef USEOSC
     //================== OSC ==================
@@ -327,10 +330,10 @@ void ofApp::update(){
     
     //================== Timeline Player ==================
     timelinePlayer.update();
-    
-    
+
     //================== Video ==================
     ffMovie.update();
+    ffMovie.setPosition(timelinePlayer.getCurrentTime()/(ffMovie.getDuration()*1000));
     
 }
 
@@ -483,7 +486,7 @@ void ofApp::draw(){
             
             //================== Video ==================
             ofSetHexColor(0xFFFFFF);
-            ffMovie.draw(0,0,320,180);
+            ffMovie.draw(400,0,320,180);
         
         }
 

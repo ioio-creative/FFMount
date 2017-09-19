@@ -122,6 +122,7 @@ void Timeline::mousePressed(int x, int y, int button) {
 			}
 			//if not clicking on any keyframe, add a new keyframe
 			Keyframe newKf;
+			newKf.timelineId = id;
 			newKf.x = (scroll + x)/scale;
 			//newKf.selected = true;
 			frames.push_back(newKf);
@@ -150,6 +151,7 @@ void Timeline::addKeyframeByVal(float val, float x) {
 	Keyframe newKf;
 	newKf.x = x;
 	newKf.val = val;
+	newKf.timelineId = id;
 	//newKf.selected = true;
 	frames.push_back(newKf);
 	sortKeyframes();
@@ -264,6 +266,13 @@ float Timeline::getValueAtPos(float posX) {
 
 	//easeOutSine
 	val = c * sin(t / d * (PI / 2)) + b;
+
+	//easeInoutSine
+
+	t /= d/2;
+	if (t < 1) return c/2 * pow( 2, 10 * (t - 1) ) + b;
+	t--;
+	val = c/2 * ( -pow( 2, -10 * t) + 2 ) + b;
 	*/
 	return val;
 

@@ -102,6 +102,8 @@ class
 			vector<float> getTimelineTweenValues();//every first value is the distance, every second value is the velocity
 			float getTimelineValue(int id, float t);//get the timeline value at speicfic time
 			bool getIsKeyframe(int id, float t);//return if the speific time is a keyframe
+            int getCurrentTime();
+            void setDuration(int d);
 
 			//Use this function to get the velocity of timeline
 			//vector<float> getTimelineVelocity();
