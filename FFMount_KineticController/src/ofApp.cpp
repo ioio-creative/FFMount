@@ -30,13 +30,18 @@ void ofApp::setup(){
     ofLog() << "ffMovie.getDuration() : " << ffMovie.getDuration();
     timelinePlayer.setDuration(ffMovie.getDuration()*1000);
     
+        //================== Simulation ==================
+    wing.setup();
+    
 #ifdef USEOSC
+    
     //================== OSC ==================
     // listen on the given port
     cout << "listening for osc messages on port " << R_PORT << "\n";
     receiver.setup(R_PORT);
     // open an outgoing connection to HOST:PORT
     sender.setup(S_HOST, S_PORT);
+    
 #else
     
 #endif
@@ -151,7 +156,6 @@ void ofApp::guiSetup(){
     
     //textField.addListener(this,&ofApp::serialTextInput);
     //--- Cable Position Control ---
-    
     
     parametersCablePos.setName("cablePosition");
     guiCablePosLy.setup("EEPROMReadWrite", "settings.xml", ofGetWidth() - 200, 0);
@@ -472,6 +476,9 @@ void ofApp::draw(){
             
             
         }
+        //================== Simulation ==================
+        wing.draw();
+        wing.setRotate(1,mouseX);
         
         if(page == 0){
             //======== GUI =========

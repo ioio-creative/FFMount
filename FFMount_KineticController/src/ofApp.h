@@ -16,6 +16,7 @@
 #include "ofxSerial.h"
 #include "ofxGui.h"
 #include "TimelinePlayer.h"
+#include "Simulation.h"
 
 
 //OSC is essential for final kinetic work connection. keep here
@@ -213,6 +214,11 @@ class ofApp : public ofBaseApp{
     //================== Timeline player ==================
     
     TimelinePlayer timelinePlayer;
+    
+    
+    //================== Simulation ==================
+    
+    Simulation wing;
     
     
     //================== MISC ==================
