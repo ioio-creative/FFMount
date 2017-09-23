@@ -1,15 +1,20 @@
 #pragma once
 
+
+//======== DEFINITION ===========
+
+//#define USEOSC
+//#define RECEIVER_IS_WINDOWS         // lattePanda / Win10
+
 #define NUM_OF_WINGS 6 //Todo Transfer definition /variables to xml
 #define NUM_OF_SERIAL_TO_INIT 8  //Com port device size
 #define BAUD 57600 //Todo Transfer definition /variables to xml
-
 
 #define MAX_Y_POS 5000
 #define MAX_Y_SPEED 2000
 #define MAX_Y_ACCEL 2000
 
-//INCLUDES
+//======== INCLUDES ===========
 
 #include "ofMain.h"
 
@@ -18,14 +23,14 @@
 #include "TimelinePlayer.h"
 #include "Simulation.h"
 
-
+//======== OSC COMMUNICATION ===========
 //OSC is essential for final kinetic work connection. keep here
 
 #ifdef USEOSC
 #include "ofxOsc.h"
 #define R_PORT 12346
 
-#define S_HOST "192.168.0.101"
+#define S_HOST "192.168.1.101"
 //#define S_HOST "localhost"
 #define S_PORT 12345
 
@@ -120,9 +125,6 @@ class ofApp : public ofBaseApp{
     
     //function
     void removeSubstrs(string& s, string& p);
-
-
-    
 
 
 #ifdef USEOSC

@@ -54,8 +54,8 @@ int prevReading1 = 0;
 int prevReading2 = 0;
 int prevReading3 = 0;
 
-int minPos = 1000;
-int maxPos = 4000;
+int minPos = 000;
+int maxPos = 5000;
 
 int stageLMotor = 0;
 int stageRMotor = 0;
@@ -74,7 +74,7 @@ bool goHome2 = true;
 long homeSpeed = -250;
 long homeMaxSpeed = 250;
 
-long motorSpeed = 500 * 1000;
+long motorSpeed = 500 * 5000;
 long motorAccel = 80 * 10;
 
 //long motorSpeed = 500 * 10;
@@ -239,6 +239,7 @@ void loop() {
       if (buttonState) {
 
         Serial.println("Reached Home L MOTOR");
+        stepper.setSpeed(0);
         stepper.setCurrentPosition(0);
         goHome = false;
       }
@@ -258,6 +259,7 @@ void loop() {
       if (buttonState2) {
 
         Serial.println("Reached Home R MOTOR");
+        stepper2.setSpeed(0);
         stepper2.setCurrentPosition(0);
         goHome2 = false;
       }

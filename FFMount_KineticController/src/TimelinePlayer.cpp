@@ -46,6 +46,7 @@ void TimelinePlayer::setup() {
 	graphVScaleSlide.addListener(this, &TimelinePlayer::graphVScaleChanged);
 	graphHScaleSlide.addListener(this, &TimelinePlayer::graphHScaleChanged);
 	keyframeSlider.addListener(this, &TimelinePlayer::keyframeSliderChanged);
+    keyframeTimeSlider.addListener(this, &TimelinePlayer::keyframeTimeSliderChanged);
 	saveButton.addListener(this, &TimelinePlayer::saveButtonPressed);
 	loadButton.addListener(this, &TimelinePlayer::loadButtonPressed);
 
@@ -66,6 +67,7 @@ void TimelinePlayer::setup() {
 	gui.add(removeKeyButton.setup("Remove Keyframe Mode"));
 	gui.add(selectKeyButton.setup("Select Keyframe Mode"));
 	gui.add(keyframeSlider.set("Keyframe Value", 0, 0, 0));//the slider is disabled at start, enabled when a keyframe is selected
+    gui.add(keyframeTimeSlider.set("Time Value", 0, 0, 0));//the slider is disabled at start, enabled when a keyframe is selected
 	gui.add(saveGUIButton.setup("Save GUI"));
 	gui.add(loadGUIButton.setup("Load GUI"));
 
@@ -359,6 +361,12 @@ void TimelinePlayer::keyframeSliderChanged(float &val) {
 	}
 }
 
+void TimelinePlayer::keyframeTimeSliderChanged(float &x) {
+    if (selectedKeyframe->x != nullKeyframe.x) {
+        selectedKeyframe->x = x;
+    }
+}
+
 void TimelinePlayer::keyFrameSelected(Keyframe &kf) {
 	//ofLog() << "select keyframe : " << kf.x;
 
@@ -375,6 +383,15 @@ void TimelinePlayer::keyFrameSelected(Keyframe &kf) {
 	keyframeSlider.setMax(KEYFRAME_MAX_VALUE);
 	keyframeSlider.setMin(KEYFRAME_MIN_VALUE);
 	keyframeSlider.set(kf.val);
+    
+    keyframeTimeSlider.setMax(kf.x + 10000);
+    if (kf.x - 10000 >= 0){
+        keyframeTimeSlider.setMin(kf.x - 10000);
+    }else{
+        keyframeTimeSlider.setMin(0);
+    }
+
+    keyframeTimeSlider.set(kf.x);
 
 }
 
@@ -384,6 +401,10 @@ void TimelinePlayer::keyFrameDeselected(int &i) {
 	keyframeSlider.setMax(0);
 	keyframeSlider.setMin(0);
 	keyframeSlider.set(0);
+    
+    keyframeTimeSlider.setMax(0);
+    keyframeTimeSlider.setMin(0);
+    keyframeTimeSlider.set(0);
 }
 
 void TimelinePlayer::addKeyButtonPressed() {

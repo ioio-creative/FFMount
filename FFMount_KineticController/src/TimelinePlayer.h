@@ -9,10 +9,14 @@
 #include "ofxXmlSettings.h"
 #include "ofEventUtils.h"
 
+#define KEYFRAME_MIN_VALUE 0
+#define KEYFRAME_MAX_VALUE 5000
+
 
 // A class that wrap the music player, fft graph, timeline
 // set the KEYFRAME_MIN_VALUE, KEYFRAME_MAX_VALUE for the keyframe's max/min value
 // "getTimelineTweenValues()" will return all the timelines's values in a vector
+
 class
 	TimelinePlayer {
 		public:
@@ -74,7 +78,8 @@ class
 			ofxButton removeKeyButton;
 			ofxButton selectKeyButton;
 			ofParameter<float> keyframeSlider;
-
+            ofParameter<float> keyframeTimeSlider;
+        
 			ofxPanel gui;
 
 
@@ -94,6 +99,7 @@ class
 			void graphVScaleChanged(float &setVScale);
 			void graphHScaleChanged(float &setHScale);
 			void keyframeSliderChanged(float &val);
+            void keyframeTimeSliderChanged(float &val);
 			void keyFrameSelected(Keyframe &kf);
 			void keyFrameDeselected(int &i);
 			void OnKeyFrameEnteredEvent(Keyframe &kf);//Sample event function to handle the keyframe enter
@@ -117,8 +123,8 @@ class
 			Keyframe *selectedKeyframe; //selected keyframe for editing its value
 			Keyframe nullKeyframe; //a keyframe that is null, i.e. no selected key frame
         
-			const float KEYFRAME_MIN_VALUE = -30000.0f; //THe minimum value for a keyframe in slider
-			const float KEYFRAME_MAX_VALUE = 30000.0f; //the maximum value for a keyframe in slider
+			//const float KEYFRAME_MIN_VALUE = -30000.0f; //THe minimum value for a keyframe in slider
+			//const float KEYFRAME_MAX_VALUE = 30000.0f; //the maximum value for a keyframe in slider
 
 			const int NUM_TIMELINE = 24;
 			void reloadTimelineFromSave();//load the timeline save file
