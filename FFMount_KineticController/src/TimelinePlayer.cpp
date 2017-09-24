@@ -2,6 +2,13 @@
 
 //--------------------------------------------------------------
 void TimelinePlayer::setup() {
+    
+    movie.load("ffmount.mp4");
+    movie.setLoopState(OF_LOOP_NORMAL);
+    movie.stop();
+    
+    ofLog() << "ffMovie.getDuration() : " << movie.getDuration();
+    setDuration(movie.getDuration()*1000);
 	//--- Player property
 	isPlaying = 0;
 	lastPausePlayerTime = 0;
@@ -79,7 +86,7 @@ void TimelinePlayer::setup() {
 
 //--------------------------------------------------------------
 void TimelinePlayer::update() {
-
+    movie.update();
 	ofBackground(80, 20, 20);
 	
 	doLoop = repeatThisToggle;
@@ -260,6 +267,8 @@ void TimelinePlayer::draw() {
 	//-----------------------     GUI      -------------------
 
 	gui.draw();
+    ofSetColor(255);
+    movie.draw(400,0,320,180);
 }
 
 
@@ -435,6 +444,8 @@ void TimelinePlayer::playButtonPressed() {
 	//reloadTimelineFromSave();
 	isPlaying = true;
 	currentTime = 0;
+    movie.play();
+    movie.setPosition(0);
 }
 
 //--------------------------------------------------------------
@@ -454,9 +465,13 @@ void TimelinePlayer::pauseButtonPressed() {
 	if (isPlaying) {
 		isPlaying = !isPlaying;
 		lastPausePlayerTime = currentTime;
+        movie.setPaused(true);
+        movie.setPosition((float)currentTime/duration);
 	} else {
 		isPlaying = !isPlaying;
 		currentTime = lastPausePlayerTime;
+        movie.setPaused(false);
+       // movie.setPosition((float)currentTime/duration);
 	}
 }
 
@@ -492,6 +507,8 @@ void TimelinePlayer::mouseDragged(int x, int y, int button) {
 			lastPausePlayerTime = time;
 		}
 	}
+    movie.setPaused(true);
+    movie.setPosition((float)currentTime/duration);
 }
 
 void TimelinePlayer::mouseReleased(int x, int y, int button) {

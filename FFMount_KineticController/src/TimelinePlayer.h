@@ -130,6 +130,8 @@ class
 			void reloadTimelineFromSave();//load the timeline save file
 			
 			float graphScale = 0.05f; //draw scale for the graph  // for 0.05f , scale = 1/20
+        
+        ofVideoPlayer movie;
 	};
 
 

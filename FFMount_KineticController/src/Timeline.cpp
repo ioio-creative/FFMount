@@ -43,10 +43,10 @@ void Timeline::draw() {
 	ofSetColor(50, 50, 50);
 	string str;
 	if (id % 2) {
-		str = ofToString(id/2) + "v";
+		str = ofToString(id/2) + " Travel Time";
 	}
 	else {
-		str = ofToString(id/2) + "s";
+		str = ofToString(id/2) + " Position";
 	}
 	
 	ofDrawBitmapString(str, xPos, yPos + 15.0f);

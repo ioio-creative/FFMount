@@ -23,6 +23,8 @@ class
         
         void setRotate(int id, float r);
         ofEasyCam cam;
+        
+        ofFbo fbo;
 
 	};
 

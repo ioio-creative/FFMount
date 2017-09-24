@@ -137,12 +137,12 @@ void setup() {
   digitalWrite(DI1_SERVO_ON_ry, HIGH);
 
 
-
+  alarm_check();
 
 }
 
 void loop() {
-  alarm_check();
+
 
   if (manualMode) {
 

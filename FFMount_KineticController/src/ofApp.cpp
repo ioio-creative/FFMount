@@ -3,7 +3,6 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofSetFrameRate(25);
-    
     //================== GUI ==================
     
     guiSetup();
@@ -19,16 +18,16 @@ void ofApp::setup(){
     }
     initOnUpdate = true;
     
-
+/*
     //================== Video ==================
-    ffMovie.load("ffmount.mov");
+    ffMovie.load("ffmount.mp4");
     ffMovie.setLoopState(OF_LOOP_NORMAL);
     ffMovie.stop();
-    
+    */
     //================== Timeline Player ==================
     timelinePlayer.setup();
-    ofLog() << "ffMovie.getDuration() : " << ffMovie.getDuration();
-    timelinePlayer.setDuration(ffMovie.getDuration()*1000);
+   // ofLog() << "ffMovie.getDuration() : " << ffmovie.getDuration();
+   // timelinePlayer.setDuration(ffMovie.getDuration()*1000);
     
         //================== Simulation ==================
     wing.setup();
@@ -121,7 +120,7 @@ void ofApp::guiSetup(){
         ofParameter<bool> b;
         string c = "";
         if(i==0){
-            c+= "Lr";
+            c+= "Ly";
         }
         if(i==1){
             c+= "Ry";
@@ -334,11 +333,23 @@ void ofApp::update(){
     
     //================== Timeline Player ==================
     timelinePlayer.update();
-
+    vector<float> a;
+    for(int i = 0; i < 12; i++){
+        timelinePlayer.getIsKeyframe(i, timelinePlayer.getCurrentTime());
+        timelinePlayer.getTimelineValue(i, timelinePlayer.getCurrentTime());
+        a = timelinePlayer.getTimelineTweenValues();
+        if(i%2){
+            cablePosRy[i] = a[i];
+        }else{
+            cablePosLy[i] = a[i*2];
+        }
+    }
+/*
     //================== Video ==================
-    ffMovie.update();
     ffMovie.setPosition(timelinePlayer.getCurrentTime()/(ffMovie.getDuration()*1000));
-    
+    ffMovie.update();
+
+    */
 }
 
 void ofApp::guiDraw(){
@@ -442,10 +453,9 @@ void ofApp::draw(){
         ofBackground(100, 0, 150);
         
         ofSetColor(255);
-        
-        
+
         //================== Debug Gui ==================
-        
+    
         std::stringstream ss;
         ss << "debugMode : "<< debugMode << endl;
         ss << "FrameRate : "<< ofGetFrameRate() << endl;
@@ -491,14 +501,13 @@ void ofApp::draw(){
             //================== Timeline Player ==================
             timelinePlayer.draw();
             
-            //================== Video ==================
-            ofSetHexColor(0xFFFFFF);
+          /*  //================== Video ==================
+            ofSetColor(255);
             ffMovie.draw(400,0,320,180);
+*/
         
         }
-
     }
-
 }
 
 //--------------------------------------------------------------

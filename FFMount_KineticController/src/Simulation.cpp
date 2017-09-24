@@ -10,6 +10,7 @@ void Simulation::setup() {
         svg.push_back(s);
         rotate.push_back(0);
         
+        fbo.allocate(800, 800, GL_RGBA);
     }
 }
 
@@ -20,6 +21,10 @@ void Simulation::update() {
 
 //--------------------------------------------------------------
 void Simulation::draw() {
+    
+    fbo.begin();
+    ofClear(255,255,255, 0);
+
     
     cam.begin();
     for(int i=0; i < 6; i++){
@@ -39,7 +44,8 @@ void Simulation::draw() {
         ofPopMatrix();
     }
     cam.end();
-    
+    fbo.end();
+    fbo.draw(0,200,800,800);
 }
 
 void Simulation::setRotate(int id, float r) {
