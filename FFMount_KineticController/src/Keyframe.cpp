@@ -3,6 +3,6 @@
 Keyframe::Keyframe()
 {
 	val = 0.0f;
-	x = -1.0f;
+	x = -1;
 	selected = false;
 }

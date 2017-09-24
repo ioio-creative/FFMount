@@ -334,15 +334,19 @@ void ofApp::update(){
     //================== Timeline Player ==================
     timelinePlayer.update();
     vector<float> a;
-    for(int i = 0; i < 12; i++){
-        timelinePlayer.getIsKeyframe(i, timelinePlayer.getCurrentTime());
-        timelinePlayer.getTimelineValue(i, timelinePlayer.getCurrentTime());
-        a = timelinePlayer.getTimelineTweenValues();
-        if(i%2){
-            cablePosRy[i] = a[i];
-        }else{
-            cablePosLy[i] = a[i*2];
+    a = timelinePlayer.getTimelineTweenValues();
+    
+    for(int i = 0; i < NUM_OF_WINGS; i++){
+        if(timelinePlayer.getIsKeyframe(i*2, timelinePlayer.getCurrentTime())){
+            ofLog() << "Keyframe reached : " << i*2;
         }
+        if(timelinePlayer.getIsKeyframe(i*2, timelinePlayer.getCurrentTime()) && a.size()){
+            cablePosLy[i] = a[i*2];
+            cablePosRy[i] = a[i*2+(2*NUM_OF_WINGS)];
+        };
+        timelinePlayer.getTimelineValue(i, timelinePlayer.getCurrentTime());
+
+    
     }
 /*
     //================== Video ==================

@@ -335,6 +335,8 @@ void TimelinePlayer::setDuration(int d) {
     duration = d;
 }
 
+
+
 /*
 //function for other classes to get the timeline's velocity
 vector<float> TimelinePlayer::getTimelineVelocity() {
@@ -370,7 +372,7 @@ void TimelinePlayer::keyframeSliderChanged(float &val) {
 	}
 }
 
-void TimelinePlayer::keyframeTimeSliderChanged(float &x) {
+void TimelinePlayer::keyframeTimeSliderChanged(int &x) {
     if (selectedKeyframe->x != nullKeyframe.x) {
         selectedKeyframe->x = x;
     }

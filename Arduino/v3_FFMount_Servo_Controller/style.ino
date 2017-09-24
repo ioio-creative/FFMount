@@ -94,7 +94,7 @@ void stepper_style() {
       if (steppers[stepperNumber]->distanceToGo() == 0) {
         if (stepperPos[stepperNumber] >= 0 && stepperAccel[stepperNumber] > 0 && stepperSpeed[stepperNumber] > 0) {
           steppers[stepperNumber]->setMaxSpeed(stepperSpeed[stepperNumber]);
-          steppers[stepperNumber]->setAcceleration(computeAcceleration(-1*stepperPos[stepperNumber], stepperTime[stepperNumber]));
+          steppers[stepperNumber]->setAcceleration(computeAcceleration(-1*abs(steppers[stepperNumber]->currentPosition() - stepperPos[stepperNumber]), stepperTime[stepperNumber]));
           //steppers[stepperNumber]->moveTo(-1*stepperPos[stepperNumber]);
           steppers[stepperNumber]->moveTo(-1*stepperPos[stepperNumber]);
         }

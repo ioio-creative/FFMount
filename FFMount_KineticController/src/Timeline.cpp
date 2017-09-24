@@ -43,10 +43,21 @@ void Timeline::draw() {
 	ofSetColor(50, 50, 50);
 	string str;
 	if (id % 2) {
-		str = ofToString(id/2) + " Travel Time";
+		//str = ofToString(id/2) + " Travel Time";
+        if(id < 12){
+        str = "Lx" + ofToString(id/2) + " Dur";
+        }else{
+        str = "Rx" + ofToString(id/2 - 6) + " Dur";
+        }
 	}
 	else {
-		str = ofToString(id/2) + " Position";
+		//str = ofToString(id/2) + " Position";
+        
+        if(id < 12){
+            str = "Lx" + ofToString(id/2) + " Position";
+        }else{
+            str = "Rx" + ofToString(id/2 - 6) + " Position";
+        }
 	}
 	
 	ofDrawBitmapString(str, xPos, yPos + 15.0f);

@@ -11,7 +11,7 @@ public:
 	int timelineId;
 	bool selected; //a state whethter this keyframe is selected by user 
 	float val; //value of this keyframe
-	float x; //x position of the keyframe
+	int x; //x position of the keyframe
 
 };
 

@@ -78,7 +78,7 @@ class
 			ofxButton removeKeyButton;
 			ofxButton selectKeyButton;
 			ofParameter<float> keyframeSlider;
-            ofParameter<float> keyframeTimeSlider;
+            ofParameter<int> keyframeTimeSlider;
         
 			ofxPanel gui;
 
@@ -99,7 +99,7 @@ class
 			void graphVScaleChanged(float &setVScale);
 			void graphHScaleChanged(float &setHScale);
 			void keyframeSliderChanged(float &val);
-            void keyframeTimeSliderChanged(float &val);
+            void keyframeTimeSliderChanged(int &val);
 			void keyFrameSelected(Keyframe &kf);
 			void keyFrameDeselected(int &i);
 			void OnKeyFrameEnteredEvent(Keyframe &kf);//Sample event function to handle the keyframe enter
