@@ -1,6 +1,12 @@
 /*
 
 */
+bool goHome = true;
+
+#define LimitSwitchLy A0
+#define LimitSwitchRy A1
+
+
 #define DI1_SERVO_ON_lx 14
 #define DI1_SERVO_ON_ly 15
 #define DI1_SERVO_ON_rx 16
@@ -33,12 +39,6 @@
 #define DO5_ALRM_rx 48
 #define DO5_ALRM_ry 49
 
-
-
-const int buttonPin0 = A0;     // the number of the pushbutton pin
-const int buttonPin1 = A1;     // the number of the pushbutton pin
-const int buttonPin2 = A2;     // the number of the pushbutton pin
-const int buttonPin3 = A3;     // the number of the pushbutton pin
 const int ledPin =  13;      // the number of the LED pin
 
 // Variables will change:
@@ -51,16 +51,16 @@ int prevReading2 = 0;
 int prevReading3 = 0;
 //========= STEPPER ========
 #include <AccelStepper.h>
-int st = 9;
-int dir = 8;
+int st = 5;
+int dir =4;
 AccelStepper stepper (AccelStepper::DRIVER, st, dir);
-
-// L == up
-bool goHome = true;
 
 
 long homeSpeed = -250;
 long homeMaxSpeed = 250;
+
+long motorSpeed = 500 * 100000;
+long motorAccel = 800 * 10000;
 
 bool triggerState = true;
 bool finish = false;
@@ -73,10 +73,8 @@ void setup() {
   //========= Serial ========
   Serial.begin(57600);
 
-  pinMode(buttonPin0, INPUT);
-  pinMode(buttonPin1, INPUT);
-  pinMode(buttonPin2, INPUT);
-  pinMode(buttonPin3, INPUT);
+  pinMode(LimitSwitchLy, INPUT);
+  pinMode(LimitSwitchRy, INPUT);
   pinMode(ledPin, OUTPUT);
 
 
@@ -89,10 +87,10 @@ void setup() {
   pinMode(DI1_SERVO_ON_rx, OUTPUT);
   pinMode(DI1_SERVO_ON_ry, OUTPUT);
 
-  digitalWrite(DI1_SERVO_ON_lx, LOW);
-  digitalWrite(DI1_SERVO_ON_ly, LOW);
-  digitalWrite(DI1_SERVO_ON_rx, LOW);
-  digitalWrite(DI1_SERVO_ON_ry, LOW);
+  digitalWrite(DI1_SERVO_ON_lx, HIGH);
+  digitalWrite(DI1_SERVO_ON_ly, HIGH);
+  digitalWrite(DI1_SERVO_ON_rx, HIGH);
+  digitalWrite(DI1_SERVO_ON_ry, HIGH);
 
   digitalWrite(BrakeLx, LOW);
   digitalWrite(BrakeLy, LOW);
@@ -122,14 +120,30 @@ void setup() {
 
 void loop() {
   alarm_check();
+  
+  if (goHome) {
+    int reading = digitalRead(LimitSwitchLy);
+    buttonState = reading;
+    digitalWrite(ledPin, buttonState);
+    stepper.setMaxSpeed(homeMaxSpeed);
+    if (isLeft) {
+      stepper.setSpeed(-homeSpeed);
+    }
+    else {
+      stepper.setSpeed(homeSpeed);
+    }
+    if (buttonState) {
 
-  if (manualMode) {
+      Serial.println("Reached Home");
+      stepper.setCurrentPosition(0);
+      goHome = false;
+    }
+    stepper.runSpeed();
+  }else if (manualMode) {
 
     //int reading = digitalRead(buttonPin);
-    int reading0 = analogRead(buttonPin0);
-    int reading1 = analogRead(buttonPin1);
-    int reading2 = analogRead(buttonPin2);
-    int reading3 = analogRead(buttonPin3);
+    int reading0 = analogRead(LimitSwitchLy);
+    int reading1 = analogRead(LimitSwitchRy);
 
     /*   Serial.print("A0: ");
        Serial.print(reading0);
@@ -150,22 +164,13 @@ void loop() {
       Serial.println(reading1);
       prevReading1 = reading1;
     }
-    if (reading2 > prevReading2) {
-      Serial.print("A2: ");
-      Serial.println(reading2);
-      prevReading2 = reading2;
-    }
-    if (reading3 > prevReading3) {
-      Serial.print("A3: ");
-      Serial.println(reading3);
-      prevReading3 = reading3;
-    }
+
     // buttonState = reading;
     digitalWrite(ledPin, buttonState);
     if (stepper.distanceToGo() == 0) {
 
-      stepper.setMaxSpeed(200);
-      stepper.setAcceleration(800);
+      stepper.setMaxSpeed(motorSpeed);
+      stepper.setAcceleration(motorAccel);
       if (isLeft) {
         stepper.moveTo(-moveToPos);
       } else {
@@ -182,41 +187,20 @@ void loop() {
 
       } else
     */
-    if (reading3 > 500) {
-  //    stepper.setCurrentPosition(0);
+    //   if (reading3 > 500) {
+    //    stepper.setCurrentPosition(0);
     //  Serial.println(reading3);
-   //  moveToPos = 0;
-      Serial.println("Reached Home A3");
-  // stepper.run();
-    }
-    else {
-      stepper.run();
-    }
+    //  moveToPos = 0;
+    // Serial.println("Reached Home A3");
+    // stepper.run();
+    //    }
+    //   else {
+    stepper.run();
+    //    }
 
   }
   else {
-    if (goHome) {
-      int reading = digitalRead(buttonPin0);
-      buttonState = reading;
-      digitalWrite(ledPin, buttonState);
-      stepper.setMaxSpeed(homeMaxSpeed);
-      if (isLeft) {
-        stepper.setSpeed(-homeSpeed);
-      }
-      else {
-        stepper.setSpeed(homeSpeed);
-      }
-      if (buttonState) {
 
-        Serial.println("Reached Home");
-        stepper.setCurrentPosition(0);
-        goHome = false;
-      }
-      stepper.runSpeed();
-    }
-    else
-    {
-    }
   }
   while (Serial.available() > 0)
   {

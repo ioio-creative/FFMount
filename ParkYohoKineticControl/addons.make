@@ -1,0 +1,8 @@
+ofxAudioDecoder
+ofxDmx
+ofxGui
+ofxIO
+ofxInputField
+ofxOsc
+ofxSerial
+ofxXmlSettings
