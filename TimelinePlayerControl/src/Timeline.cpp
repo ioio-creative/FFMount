@@ -120,16 +120,22 @@ void Timeline::mousePressed(int x, int y, int button) {
 				selectedKeyframe = nullKeyframe;
 				keyframeDeselectedEvent.notify(this, NULL_FRAME);
 			}
+
 			//if not clicking on any keyframe, add a new keyframe
 			Keyframe newKf;
 			newKf.timelineId = id;
-			newKf.x = (scroll + x)/scale;
+			newKf.x = (scroll + x) / scale;
 			//newKf.selected = true;
 			frames.push_back(newKf);
 			sortKeyframes();
 			//selectedKeyframe = newKf;
 			//keyframeSelectedEvent.notify(this, newKf);
 			//doAddKeyframeOnClick = false;
+
+			//odd number of timeline add keyframes will add to even number of timeline
+			if (id % 2 == 0) {
+				keyframeAddedEvent.notify(this, newKf);
+			}
 		}else {
 			//deselect the keyframe if there is a selected
 			if (nullKeyframe.x != selectedKeyframe.x) {

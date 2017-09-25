@@ -14,6 +14,7 @@
 class Timeline
 {
 public:
+	ofEvent<Keyframe> keyframeAddedEvent; //a event for other class to listen to keyframe added
 	ofEvent<Keyframe> keyframeSelectedEvent; //a event for other class to listen to keyframe selected
 	ofEvent<int> keyframeDeselectedEvent; //a event for other class to listen to keyframe deselected
 

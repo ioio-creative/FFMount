@@ -94,6 +94,7 @@ class
 			void graphVScaleChanged(float &setVScale);
 			void graphHScaleChanged(float &setHScale);
 			void keyframeSliderChanged(float &val);
+			void keyFrameAdded(Keyframe &kf); //dispatched when a keyframe is added to odd number of timeline
 			void keyFrameSelected(Keyframe &kf);
 			void keyFrameDeselected(int &i);
 			void OnKeyFrameEnteredEvent(Keyframe &kf);//Sample event function to handle the keyframe enter

@@ -26,6 +26,7 @@ void TimelinePlayer::setup() {
 		timeline.setup();
 		ofAddListener(timeline.keyframeSelectedEvent, this, &TimelinePlayer::keyFrameSelected);
 		ofAddListener(timeline.keyframeDeselectedEvent, this, &TimelinePlayer::keyFrameDeselected);
+		ofAddListener(timeline.keyframeAddedEvent, this, &TimelinePlayer::keyFrameAdded);
 		timelines.push_back(timeline);
 	}
 	
@@ -376,6 +377,26 @@ void TimelinePlayer::keyFrameSelected(Keyframe &kf) {
 	keyframeSlider.setMin(KEYFRAME_MIN_VALUE);
 	keyframeSlider.set(kf.val);
 
+}
+
+void TimelinePlayer::keyFrameAdded(Keyframe &kf) {
+	int ind = kf.timelineId+1;
+
+	//search if there is already a keyframe at the same time
+	bool keyframeExist = false;
+	int size = timelines[ind].frames.size();
+	for (int i = 0; i < size; i++) {
+		if (timelines[ind].frames[i].x == kf.x) {
+			keyframeExist = true;
+			break;
+		}
+	}
+
+	//if no keyframe with same time, add a keyframe
+	if (!keyframeExist) {
+		timelines[ind].addKeyframeByVal(kf.val, kf.x);
+	}
+	
 }
 
 void TimelinePlayer::keyFrameDeselected(int &i) {
