@@ -23,5 +23,6 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
     
 		TimelinePlayer timelinePlayer;
+        void kf(Keyframe &kf);//Sample event function to handle the keyframe enter
 };
 

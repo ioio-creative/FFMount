@@ -26,6 +26,8 @@ void ofApp::setup(){
     */
     //================== Timeline Player ==================
     timelinePlayer.setup();
+    ofAddListener(timelinePlayer.onKeyFrameEntered, this, &ofApp::onKeyframe);
+    
    // ofLog() << "ffMovie.getDuration() : " << ffmovie.getDuration();
    // timelinePlayer.setDuration(ffMovie.getDuration()*1000);
     
@@ -59,6 +61,15 @@ void ofApp::setup(){
         updateColor.push_back(255);
     }
     
+}
+
+void ofApp::onKeyframe(Keyframe &kf){
+    if(kf.timelineId < NUM_OF_WINGS *2  && kf.timelineId%2==0){
+        ofLog() << "LY HAS KEYFRAME : " << kf.timelineId << " " << kf.val << " " << kf.x;
+    }else if(kf.timelineId >= NUM_OF_WINGS *2  && kf.timelineId%2==0){
+        ofLog() << "RY HAS KEYFRAME : " << kf.timelineId << " " << kf.val << " " << kf.x;
+    }
+
 }
 
 void ofApp::guiSetup(){

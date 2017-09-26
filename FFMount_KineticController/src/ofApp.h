@@ -216,6 +216,7 @@ class ofApp : public ofBaseApp{
     //================== Timeline player ==================
     
     TimelinePlayer timelinePlayer;
+    void onKeyframe(Keyframe &kf);
     
     
     //================== Simulation ==================

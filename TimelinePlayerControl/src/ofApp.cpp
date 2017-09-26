@@ -5,7 +5,12 @@ void ofApp::setup(){
     
     ofSetFrameRate(60);
 	timelinePlayer.setup();
+    ofAddListener(timelinePlayer.onKeyFrameEntered, this, &ofApp::kf);
     
+}
+
+void ofApp::kf(Keyframe &kf){
+    ofLog() << "HAS KEYFRAME : " << kf.timelineId << " " << kf.val << " " << kf.x;
 }
 
 //--------------------------------------------------------------
