@@ -285,7 +285,7 @@ void TimelinePlayer::draw() {
 
 //Sample event function to handle the keyframe enter
 void TimelinePlayer::OnKeyFrameEnteredEvent(Keyframe &kf) {
-    ofLog() << "onEnterKeyFrame : " << kf.timelineId <<","<<kf.val <<", " << kf.x;
+    //ofLog() << "onEnterKeyFrame : " << kf.timelineId <<","<<kf.val <<", " << kf.x;
 }
 
 
@@ -395,7 +395,7 @@ void TimelinePlayer::keyFrameSelected(Keyframe &kf) {
     keyframeSlider.setMax(KEYFRAME_MAX_VALUE);
     keyframeSlider.setMin(KEYFRAME_MIN_VALUE);
     }else{
-        keyframeSlider.setMax(30);
+        keyframeSlider.setMax(300);
         keyframeSlider.setMin(0);
     }
     keyframeSlider.set(kf.val);

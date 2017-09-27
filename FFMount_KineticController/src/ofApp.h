@@ -14,6 +14,8 @@
 #define MAX_Y_SPEED 2000
 #define MAX_Y_ACCEL 2000
 
+#define MAX_Y_DUR 300 // 30.0 s
+
 //======== INCLUDES ===========
 
 #include "ofMain.h"
@@ -183,6 +185,14 @@ class ofApp : public ofBaseApp{
     vector<ofParameter<int>> cablePosLy;
     vector<ofParameter<int>> cablePosRy;
     
+    //Cable Duration
+    ofxPanel guiCableDurLy;
+    ofxPanel guiCableDurRy;
+    ofParameterGroup parametersCableDur;
+    
+    vector<ofParameter<int>> cableDurLy;
+    vector<ofParameter<int>> cableDurRy;
+    
     //Cable Pos Offset
     ofxPanel guiCablePosLyOffset;
     ofxPanel guiCablePosRyOffset;
@@ -235,8 +245,8 @@ class ofApp : public ofBaseApp{
     //================Parameteres================
 
     ofParameter<int> currentScene;
-    ofParameter<int> currentDebugArduinoID;
-    
+    ofParameter<int> currentArduinoID;
+    ofParameter<int> currentMotor;
     //================Style ====================
     ofParameter<int> currentStyle;
     void writeStyle(int s);

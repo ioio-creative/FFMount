@@ -1,4 +1,4 @@
-bool GO_HOME = 1; //set 0 or 1 //GO HOME ON STARTUP
+bool GO_HOME = 0; //set 0 or 1 //GO HOME ON STARTUP
 // ============ SERIAL SETUP================
 
 #define BAUD 57600

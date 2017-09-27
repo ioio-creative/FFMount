@@ -14,9 +14,9 @@ class
 	Simulation {
 		public:
         Simulation(){};
-			void setup();
+			void setup(int w);
 			void update();
-			void draw();
+			void draw(int x, int y, int w, int h);
         
             vector<ofxSVG> svg;
             vector<float> rotate;
