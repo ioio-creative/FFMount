@@ -51,3 +51,9 @@
 #define TX1 18
 
 
+// ============ LED ================
+
+#define LED_ly 6
+#define LED_ry 7
+
+
