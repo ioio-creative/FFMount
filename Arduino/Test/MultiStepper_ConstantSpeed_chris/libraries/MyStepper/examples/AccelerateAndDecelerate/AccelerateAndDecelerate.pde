@@ -22,7 +22,6 @@ void setup()
 
 void loop()
 {
-  // Use compareAbs to cater for negative distances
   if (!stepper1.isCompleteTotDist())
   {
     stepper1.myRun();

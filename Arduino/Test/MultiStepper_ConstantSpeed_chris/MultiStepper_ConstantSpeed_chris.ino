@@ -34,8 +34,7 @@ void setup()
 
 void loop()
 {
-  // Use compareAbs to cater for negative distances
-  if (compareAbs(stepper1.currentPosition(), stepper1.getTotDist()) == -1)
+  if (!stepper1.isCompleteTotDist())
   {
     stepper1.myRun();
   }
@@ -45,10 +44,8 @@ void loop()
     Serial.println("Stepper 1 stopped");
     isStepper1Stopped = true;
   }
-
   
-  // Use compareAbs to cater for negative distances
-  if (compareAbs(stepper2.currentPosition(), stepper2.getTotDist()) == -1)
+  if (!stepper2.isCompleteTotDist())
   {
     stepper2.myRun();
   }
