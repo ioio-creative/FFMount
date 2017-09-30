@@ -19,7 +19,7 @@ void loop() {
     float dx = newStepperPos[i] - stepperPos[i] ;//swap X and Y for orientation
     //if (abs(dx) > 20) {
     if (t < 1) {
-      stepperPos[i] += dx * easeInOut(t += 0.0005);
+      stepperPos[i] += dx * easeInOut(t += 0.0002);
     } else {
       if (newStepperPos[i] >= 2500) {
         newStepperPos[i] = random(0, 2000);

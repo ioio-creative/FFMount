@@ -36,11 +36,16 @@ void led_style(int s)
     if (currentMillis - previousMillis2 > 30) {
       previousMillis2 = currentMillis;
       for (int i = 0; i < NUM_LEDS; i++) {
-        leds_ly[i].fadeToBlackBy( 40 );
+        leds_ly[i].fadeToBlackBy( 30 );
       }
     }
   } else if (s == 1) { //fade in
-
+    if (currentMillis - previousMillis2 > 30) {
+      previousMillis2 = currentMillis;
+      for (int i = 0; i < NUM_LEDS; i++) {
+        leds_ly[i]++;
+      }
+    }
   }
   else if (s == 2) { //brightness according to motor val
     int m;
@@ -52,7 +57,7 @@ void led_style(int s)
   else if (s == 3) {//brightness according to motor val, furthest LED brightest
     int m;
     for (int i = 0; i < NUM_LEDS; i++) {
-      leds_ly.fadeToBlackBy(4);
+      leds_ly.fadeToBlackBy(10);
       m  = map(stepperPos[0], 0, 5000, 0, 255);
       leds_ly[i] = CRGB(m * ((float)i / NUM_LEDS), m * ((float)i / NUM_LEDS), m * ((float)i / NUM_LEDS));
     }
@@ -71,12 +76,29 @@ void led_style(int s)
     if (currentMillis - previousMillis2 > 30) {
       previousMillis2 = currentMillis;
 
-      leds_ly.fadeToBlackBy(10);
-      leds_ly[map(stepperPos[0],0,5000,0,NUM_LEDS)] = CRGB(255, 255, 255);
+      leds_ly.fadeToBlackBy(50); // larger is faster
+      leds_ly[map(stepperPos[0], 0, 5000, 0, NUM_LEDS)] = CRGB(255, 255, 255);
     }
   }
-  else if (s == 6) {  //one glowing spot, pos according to motor
+  else if (s == 6) {  //many glowing spot, pos according to motor
 
+    if (currentMillis - previousMillis2 > 30) {
+      previousMillis2 = currentMillis;
+
+      leds_ly.fadeToBlackBy(25);
+      if (currLED > NUM_LEDS - 1) {
+        currLED = 0;
+      }
+      int multiplyRate = 15;
+      leds_ly[random(0,NUM_LEDS)] *= multiplyRate;
+      for (int i = 0; i < NUM_LEDS; i++) {
+        if (leds_ly[i].r == 0 && leds_ly[i].g == 0 && leds_ly[i].b == 0) {
+          leds_ly[i++] = CRGB(255/multiplyRate, 255/multiplyRate, 255/multiplyRate);
+        }
+      }
+
+
+    }
   }
 
 }
