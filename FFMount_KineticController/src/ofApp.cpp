@@ -2,11 +2,10 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    
     ofSetFrameRate(25);
     //================== GUI ==================
-    
     guiSetup();
-    
     //================== Serial ==================
     
     isArduinoConnected = serialSetup();
@@ -127,6 +126,8 @@ void ofApp::guiSetup(){
     EEPROM_loadBtn.addListener(this, &ofApp::loadButtonPressed);
     //Style
     guiDebug.add(currentStyle.set("Style",4,0,NUM_OF_WINGS)); //TODO
+    guiDebug.add(LEDStyle.set("LED Style",0,0,6));
+    guiDebug.add(LEDParameter.set("LED Parameter",0,0,MAX_Y_POS));
     guiDebug.add(style_Btn.setup("Set Position:"));
     guiDebug.add(style_Btn_all_same.setup("Set Position ALL Same:"));
     guiDebug.add(style_Btn_all.setup("Set Position ALL:"));
@@ -380,16 +381,18 @@ void ofApp::update(){
     a = timelinePlayer.getTimelineTweenValues();
     
     for(int i = 0; i < NUM_OF_WINGS; i++){
-
-        //if(timelinePlayer.getIsKeyframe(i*2, timelinePlayer.getCurrentTime()) && a.size()){
             cablePosLy[i] = a[i*2];
             cablePosRy[i] = a[i*2+(2*NUM_OF_WINGS)];
-      //  };
+        
+
+            
     }
-    
-    
+    if(a.size() >=26){
+        LEDStyle =(int)a[24]/100;
+        LEDParameter =a[25]*10;
+    }
     //================== Simulation ==================
-    wing.update();
+   // wing.update();
     
     
 /*
@@ -565,7 +568,7 @@ void ofApp::draw(){
             
             //================== Simulation ==================
             //wing.setRotate(1,mouseX);
-            wing.draw(400,0,450,450);
+         //   wing.draw(400,0,450,450);
             
           /*  //================== Video ==================
             ofSetColor(255);
@@ -1342,12 +1345,6 @@ bool ofApp::is_number(const std::string& s)
 }
 
 
-
-//--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y ){
-    
-}
-
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
     timelinePlayer.mouseDragged(x, y, button);
@@ -1361,6 +1358,11 @@ void ofApp::mousePressed(int x, int y, int button){
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
     timelinePlayer.mouseReleased(x, y, button);
+}
+
+//--------------------------------------------------------------
+void ofApp::mouseMoved(int x, int y ){
+    
 }
 
 //--------------------------------------------------------------

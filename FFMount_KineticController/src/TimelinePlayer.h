@@ -11,6 +11,7 @@
 
 #define KEYFRAME_MIN_VALUE 0
 #define KEYFRAME_MAX_VALUE 5000
+#define NUM_TIMELINE 26
 
 
 // A class that wrap the music player, fft graph, timeline
@@ -125,7 +126,7 @@ class
        // const float KEYFRAME_MIN_VALUE = -30000.0f; //THe minimum value for a keyframe in slider
         //const float KEYFRAME_MAX_VALUE = 30000.0f; //the maximum value for a keyframe in slider
         
-        const int NUM_TIMELINE = 24;
+        //const int NUM_TIMELINE = 24;
         void reloadTimelineFromSave();//load the timeline save file
         
         float graphScale = 0.05f; //draw scale for the graph  // for 0.05f , scale = 1/20

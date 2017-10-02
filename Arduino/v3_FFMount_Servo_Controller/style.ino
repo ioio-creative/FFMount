@@ -4,6 +4,10 @@ void stepper_style() {
 
   if (style >= 20) {
     curLEDStyle  = style - 20;
+    LEDFactor0 = input_value[1];
+    LEDFactor1 = input_value[2];
+    LEDFactor2 = input_value[3];
+    LEDFactor3 = input_value[4];
   }
   else {
 

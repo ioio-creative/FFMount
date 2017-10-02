@@ -83,7 +83,11 @@ int home_accel = 200;
 //================ Style ================
 //Motor
 int style = 0; //0 command to go
-
+//LED
+int LEDFactor0;
+int LEDFactor1;
+int LEDFactor2;
+int LEDFactor3;
 
 //style 2
 long stepperPos1[numOfStepper];

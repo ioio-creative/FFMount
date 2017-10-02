@@ -247,9 +247,15 @@ class ofApp : public ofBaseApp{
     ofParameter<int> currentScene;
     ofParameter<int> currentArduinoID;
     ofParameter<int> currentMotor;
+    
+    //================ LED ====================
+    ofParameter<int> LEDStyle;
+    ofParameter<int> LEDParameter;
+    
     //================Style ====================
     ofParameter<int> currentStyle;
     void writeStyle(int s);
+
     
     //================Other Functions ====================
     bool is_number(const std::string& s);

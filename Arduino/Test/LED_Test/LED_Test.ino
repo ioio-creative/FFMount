@@ -1,11 +1,9 @@
 int curLEDStyle;
 
-
 const int numOfStepper = 1;
 long stepperPos[numOfStepper]  = {0};
 long prevStepperPos[numOfStepper]  = {0};
 long newStepperPos[numOfStepper]  = {0};
-
 
 int inByte;
 
