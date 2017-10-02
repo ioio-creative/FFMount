@@ -81,6 +81,7 @@ bool homeDone[numOfStepper]  = {false, false};
 int home_speed = 200;
 int home_accel = 200;
 //================ Style ================
+//Motor
 int style = 0; //0 command to go
 
 

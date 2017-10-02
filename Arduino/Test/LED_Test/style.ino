@@ -21,7 +21,7 @@ void setupLED() {
 void loopLED() {
   currentMillis = millis();
 
-  led_style(currentStyle);
+  led_style(curLEDStyle);
 
   if (currentMillis - previousMillis1 > (1000 / FRAMES_PER_SECOND)) {
     previousMillis1 = currentMillis;

@@ -1,8 +1,11 @@
+int curLEDStyle;
+
+
 const int numOfStepper = 1;
 long stepperPos[numOfStepper]  = {0};
 long prevStepperPos[numOfStepper]  = {0};
 long newStepperPos[numOfStepper]  = {0};
-int currentStyle;
+
 
 int inByte;
 
@@ -46,7 +49,7 @@ void loop() {
     inByte = Serial.parseInt();
     char inByte2 = Serial.read();
     Serial.println(inByte);
-    currentStyle = inByte ;
+    curLEDStyle = inByte ;
   }
 }
 
