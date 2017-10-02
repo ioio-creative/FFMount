@@ -51,3 +51,12 @@ void Simulation::draw(int x, int y, int w, int h) {
 void Simulation::setRotate(int id, float r) {
     rotate[id] = r;
 }
+
+void Simulation::setMouseControllable(bool t){
+    if(t){
+        cam.enableMouseInput();
+    }else{
+        cam.disableMouseInput();
+    }
+
+}

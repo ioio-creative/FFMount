@@ -250,11 +250,16 @@ class ofApp : public ofBaseApp{
     
     //================ LED ====================
     ofParameter<int> LEDStyle;
-    ofParameter<int> LEDParameter;
+    ofParameter<int> LEDParameter0;
+    ofParameter<int> LEDParameter1;
+    ofParameter<int> LEDParameter2;
+    ofParameter<int> LEDParameter3;
+    
     
     //================Style ====================
     ofParameter<int> currentStyle;
     void writeStyle(int s);
+    void writeLEDStyle(int s, int ss);
 
     
     //================Other Functions ====================

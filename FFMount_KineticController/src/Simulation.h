@@ -18,6 +18,8 @@ class
 			void update();
 			void draw(int x, int y, int w, int h);
         
+            void setMouseControllable(bool t);
+        
             vector<ofxSVG> svg;
             vector<float> rotate;
         
