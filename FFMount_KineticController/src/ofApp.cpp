@@ -130,7 +130,7 @@ void ofApp::guiSetup(){
     //Style
     guiDebug.add(currentStyle.set("Style",4,0,NUM_OF_WINGS)); //TODO
     guiDebug.add(LEDStyle.set("LED Style",0,0,6));
-    guiDebug.add(LEDParameter.set("LED Parameter",0,0,MAX_Y_POS));
+    guiDebug.add(LEDParameter0.set("LED Parameter",0,0,MAX_Y_POS));
     guiDebug.add(style_Btn.setup("Set Position:"));
     guiDebug.add(style_Btn_all_same.setup("Set Position ALL Same:"));
     guiDebug.add(style_Btn_all.setup("Set Position ALL:"));

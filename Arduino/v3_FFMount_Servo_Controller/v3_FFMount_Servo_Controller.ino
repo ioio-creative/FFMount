@@ -43,8 +43,8 @@ long previousMillis = 0;        // will store last time LED was updated
 long input_value[Input_size];
 
 // ============ STEPPER ================
-#include <AccelStepper.h>
-
+//#include <AccelStepper.h>
+#include <MyStepper.h>
 
 long stepperSpeed[numOfStepper]  = {0, 0};
 long stepperAccel[numOfStepper]  = {0, 0};
