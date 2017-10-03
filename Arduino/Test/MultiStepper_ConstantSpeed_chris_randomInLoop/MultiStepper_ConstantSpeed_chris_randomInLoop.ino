@@ -1,6 +1,9 @@
 #include <MyStepper.h>
 
-MyStepper stepper1(MyStepper::DRIVER, 3, 2);
+//MyStepper stepper1(MyStepper::DRIVER, 3, 2);
+//MyStepper stepper2(MyStepper::DRIVER, 9, 8);
+
+MyStepper stepper1(MyStepper::DRIVER, 7, 6);
 MyStepper stepper2(MyStepper::DRIVER, 9, 8);
 
 const int timeStep = 1000;  // ms
@@ -10,7 +13,7 @@ const int timeStep = 1000;  // ms
 // stepper 1 parameters
 const long stepper1DistanceToMove = 3000;
 const long stepper1TimeToComplete = 5;  // s
-bool isStepper1PrintTimeStepToSerial = true;
+bool isStepper1PrintTimeStepToSerial = false;
 bool isStepper1Stopped = false;
 
 // stepper 2 parameters
@@ -40,24 +43,22 @@ long interval = 1000;           // interval at which to blink (milliseconds)
 
 void loop()
 {
-  unsigned long currentMillis = millis();
+//  unsigned long currentMillis = millis();
 
-  if (currentMillis - previousMillis > interval) {
-    previousMillis = currentMillis;
+//  if (currentMillis - previousMillis > interval) {
+//    previousMillis = currentMillis;
+//    
+//    Serial.print("distanceToGo : ");
+//    Serial.println(stepper1.distanceToGo());
+//  }
     
-    Serial.print("distanceToGo : ");
-    Serial.println(stepper1.distanceToGo());
-  }
-    stepper1.myRun();
   if (!stepper1.isCompleteTotDist())
   {
-
+    stepper1.myRun();
   }
   else {
-    stepper1.reset(random(5000,6000), millis() + random(2000, 8000));
-    stepper1.setTimeStepInMillis(timeStep);
-    stepper1.setIsPrintTimeStepToSerial(isStepper1PrintTimeStepToSerial);
     Serial.println("Stepper 1 stopped");
+    stepper1.reset(random(5000,6000), random(2, 8));    
   }
   
   /*
@@ -70,14 +71,14 @@ void loop()
     }
   */
 
-  if (!stepper2.isCompleteTotDist())
-  {
-    stepper2.myRun();
-  }
-  else if (!isStepper2Stopped)
-  {
-    stepper2.printStatusToSerial();
-    Serial.println("Stepper 2 stopped");
-    isStepper2Stopped = true;
-  }
+//  if (!stepper2.isCompleteTotDist())
+//  {
+//    stepper2.myRun();
+//  }
+//  else if (!isStepper2Stopped)
+//  {
+//    stepper2.printStatusToSerial();
+//    Serial.println("Stepper 2 stopped");
+//    isStepper2Stopped = true;
+//  }
 }
