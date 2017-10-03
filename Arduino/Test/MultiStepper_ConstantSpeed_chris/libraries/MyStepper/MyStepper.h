@@ -13,6 +13,20 @@
 class MyStepper
 {
   public:
+    
+    typedef enum
+    {
+        FUNCTION  = 0, ///< Use the functional interface, implementing your own driver functions (internal use only)
+        DRIVER    = 1, ///< Stepper Driver, 2 driver pins required
+        FULL2WIRE = 2, ///< 2 wire stepper, 2 motor pins required
+        FULL3WIRE = 3, ///< 3 wire stepper, such as HDD spindle, 3 motor pins required
+        FULL4WIRE = 4, ///< 4 wire full stepper, 4 motor pins required
+        HALF3WIRE = 6, ///< 3 wire half stepper, such as HDD spindle, 3 motor pins required
+        HALF4WIRE = 8  ///< 4 wire half stepper, 4 motor pins required
+    } MotorInterfaceType;
+    
+    MyStepper(uint8_t interface = MyStepper::FULL4WIRE, uint8_t pin1 = 2, uint8_t pin2 = 3, uint8_t pin3 = 4, uint8_t pin4 = 5, bool enable = true);
+    
     MyStepper(uint8_t pin1, uint8_t pin2);	
 	
 	bool myRun();
@@ -36,6 +50,13 @@ class MyStepper
 	bool isCompleteTotDist();
 	
 	bool isCompleteHalfTotDist();
+    
+    //From AcceleStepper
+    long distanceToGo();
+    void setCurrentPosition(long position);
+    long targetPosition();
+    void stop();
+    void setSpeed(float speed);
 	
   private:
     AccelStepper _accelStepper;
@@ -49,11 +70,9 @@ class MyStepper
 	bool _isPrintTimeStepToSerial;
 	long _processStartTimeStampInMillis;
 	long _processStartPosition;
-	
-	void setSpeed(float speed);
+
 	void setMaxSpeed(float speed);
-	void setCurrentPosition(long position);	
-	
+
 	float computeLinearAccl(long totDist, long totTime);
 	float computeMaxSpeedForLinearAccl(long totDist, long totTime);	
 };

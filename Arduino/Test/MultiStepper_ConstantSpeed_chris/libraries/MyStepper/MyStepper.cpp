@@ -10,6 +10,10 @@
 
 /* constructors */
 
+MyStepper::MyStepper(uint8_t interface, uint8_t pin1, uint8_t pin2, uint8_t pin3, uint8_t pin4, bool enable){
+    _accelStepper = AccelStepper(interface,  pin1,  pin2,  pin3,  pin4, enable);
+}
+
 MyStepper::MyStepper(uint8_t pin1, uint8_t pin2)
 {
 	_accelStepper = AccelStepper(AccelStepper::DRIVER, pin1, pin2);
@@ -120,24 +124,42 @@ bool MyStepper::isCompleteHalfTotDist()
 	return compareAbs(currentPosition() - _processStartPosition, _halfTotDist) != -1;
 }
 
+
+
+
+long MyStepper::distanceToGo()
+{
+    return _accelStepper.distanceToGo();
+}
+
+long MyStepper::targetPosition()
+{
+    return _accelStepper.targetPosition();
+}
+
+void MyStepper::setCurrentPosition(long position)
+{
+    _accelStepper.setCurrentPosition(position);
+}
+
+void MyStepper::stop()
+{
+    _accelStepper.stop();
+}
+
+void MyStepper::setSpeed(float speed)
+{
+    _accelStepper.setSpeed(speed);
+}
 /* end of public methods */
 
 
 /* private methods */
 
-void MyStepper::setSpeed(float speed)
-{
-	_accelStepper.setSpeed(speed);
-}
 
 void MyStepper::setMaxSpeed(float speed)
 {
 	_accelStepper.setMaxSpeed(speed);
-}
-
-void MyStepper::setCurrentPosition(long position)
-{
-	_accelStepper.setCurrentPosition(position);
 }
 
 float MyStepper::computeLinearAccl(long totDist, long totTime)
