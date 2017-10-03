@@ -43,8 +43,8 @@ long previousMillis = 0;        // will store last time LED was updated
 long input_value[Input_size];
 
 // ============ STEPPER ================
-#include <AccelStepper.h>
-
+//#include <AccelStepper.h>
+#include <MyStepper.h>
 
 long stepperSpeed[numOfStepper]  = {0, 0};
 long stepperAccel[numOfStepper]  = {0, 0};
@@ -81,8 +81,13 @@ bool homeDone[numOfStepper]  = {false, false};
 int home_speed = 200;
 int home_accel = 200;
 //================ Style ================
+//Motor
 int style = 0; //0 command to go
-
+//LED
+int LEDFactor0;
+int LEDFactor1;
+int LEDFactor2;
+int LEDFactor3;
 
 //style 2
 long stepperPos1[numOfStepper];

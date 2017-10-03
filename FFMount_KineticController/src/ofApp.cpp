@@ -2,11 +2,10 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    
     ofSetFrameRate(25);
     //================== GUI ==================
-    
     guiSetup();
-    
     //================== Serial ==================
     
     isArduinoConnected = serialSetup();
@@ -72,12 +71,15 @@ void ofApp::onKeyframe(Keyframe &kf){
         currentMotor = 0;
         writeStyle(2);
         
-    }else if(kf.timelineId >= NUM_OF_WINGS *2  && kf.timelineId%2==0){ //RY
+    }else if(kf.timelineId >= NUM_OF_WINGS *2  && kf.timelineId%2==0 && kf.timelineId < NUM_OF_WINGS *4){ //RY
         currentArduinoID = kf.timelineId /2 - NUM_OF_WINGS;
         currentMotor = 1;
         cableDurRy[currentArduinoID] = timelinePlayer.getTimelineValue(kf.timelineId + 1, kf.x);
         writeStyle(2);
         ofLog() << "RY HAS KEYFRAME : " << kf.timelineId << " " << kf.val << " " << kf.x;
+    }else{
+        writeLEDStyle(LEDStyle,LEDParameter0);
+        ofLog() << "LED " << LEDStyle;
     }
 
 }
@@ -127,6 +129,8 @@ void ofApp::guiSetup(){
     EEPROM_loadBtn.addListener(this, &ofApp::loadButtonPressed);
     //Style
     guiDebug.add(currentStyle.set("Style",4,0,NUM_OF_WINGS)); //TODO
+    guiDebug.add(LEDStyle.set("LED Style",0,0,6));
+    guiDebug.add(LEDParameter0.set("LED Parameter",0,0,MAX_Y_POS));
     guiDebug.add(style_Btn.setup("Set Position:"));
     guiDebug.add(style_Btn_all_same.setup("Set Position ALL Same:"));
     guiDebug.add(style_Btn_all.setup("Set Position ALL:"));
@@ -195,8 +199,8 @@ void ofApp::guiSetup(){
     //--- Cable Duration Control ---
     
     parametersCableDur.setName("cableDuration");
-    guiCableDurLy.setup("EEPROMReadWrite", "settings.xml", ofGetWidth() - 200, 200);
-    guiCableDurRy.setup("EEPROMReadWrite", "settings.xml", ofGetWidth() - 100, 200);
+    guiCableDurLy.setup("EEPROMReadWrite", "settings.xml", ofGetWidth() - 200, 170);
+    guiCableDurRy.setup("EEPROMReadWrite", "settings.xml", ofGetWidth() - 100, 170);
     for(int i=0; i< NUM_OF_WINGS; i++){
         ofParameter<int> a;
         a.set("Dur Ly" + ofToString(i),0,0,MAX_Y_DUR);
@@ -380,14 +384,13 @@ void ofApp::update(){
     a = timelinePlayer.getTimelineTweenValues();
     
     for(int i = 0; i < NUM_OF_WINGS; i++){
-
-        //if(timelinePlayer.getIsKeyframe(i*2, timelinePlayer.getCurrentTime()) && a.size()){
             cablePosLy[i] = a[i*2];
             cablePosRy[i] = a[i*2+(2*NUM_OF_WINGS)];
-      //  };
     }
-    
-    
+    if(a.size() >=26){
+        LEDStyle =(int)a[24]/100;
+        LEDParameter0 =a[25]*10;
+    }
     //================== Simulation ==================
     wing.update();
     
@@ -553,7 +556,7 @@ void ofApp::draw(){
             guiDraw();
             //================== Simulation ==================
 
-
+            wing.setMouseControllable(true);
             wing.draw(0,0,800,800);
         
         }else{
@@ -565,6 +568,7 @@ void ofApp::draw(){
             
             //================== Simulation ==================
             //wing.setRotate(1,mouseX);
+            wing.setMouseControllable(false);
             wing.draw(400,0,450,450);
             
           /*  //================== Video ==================
@@ -1011,7 +1015,24 @@ void ofApp::keyReleased(int key){
 
 
 // =========== Style ================
+void ofApp::writeLEDStyle(int s, int ss){
+    //ofLog() << "LED Style " << s  << " current arduino " << currentArduinoID;
+   // for(int i=0; i< NUM_OF_WINGS; i++){
+        string writeInTotal = "LED : ";
+        
+        string toWrite = "";
+        
 
+        toWrite+= ofToString((int)s+20);
+        toWrite+= "-";
+        toWrite+= ofToString((int)ss);
+        toWrite+= "-";
+                             
+        writeInTotal=toWrite;
+        
+        serialWrite(-1, toWrite);
+  //  }
+}
 
 void ofApp::writeStyle(int s){
     ofLog() << "write Style " << s  << " current arduino " << currentArduinoID;
@@ -1342,12 +1363,6 @@ bool ofApp::is_number(const std::string& s)
 }
 
 
-
-//--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y ){
-    
-}
-
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
     timelinePlayer.mouseDragged(x, y, button);
@@ -1361,6 +1376,11 @@ void ofApp::mousePressed(int x, int y, int button){
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
     timelinePlayer.mouseReleased(x, y, button);
+}
+
+//--------------------------------------------------------------
+void ofApp::mouseMoved(int x, int y ){
+    
 }
 
 //--------------------------------------------------------------

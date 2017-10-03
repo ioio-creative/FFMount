@@ -1,7 +1,7 @@
 #include <MyStepper.h>
 
-MyStepper stepper1(7, 6);
-MyStepper stepper2(9, 8);
+MyStepper stepper1(MyStepper::DRIVER, 7, 6);
+MyStepper stepper2(MyStepper::DRIVER, 9, 8);
 
 const int timeStep = 100;  // ms
 

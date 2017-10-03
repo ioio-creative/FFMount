@@ -1,8 +1,9 @@
+int curLEDStyle;
+
 const int numOfStepper = 1;
 long stepperPos[numOfStepper]  = {0};
 long prevStepperPos[numOfStepper]  = {0};
 long newStepperPos[numOfStepper]  = {0};
-int currentStyle;
 
 int inByte;
 
@@ -19,7 +20,7 @@ void loop() {
     float dx = newStepperPos[i] - stepperPos[i] ;//swap X and Y for orientation
     //if (abs(dx) > 20) {
     if (t < 1) {
-      stepperPos[i] += dx * easeInOut(t += 0.0005);
+      stepperPos[i] += dx * easeInOut(t += 0.0002);
     } else {
       if (newStepperPos[i] >= 2500) {
         newStepperPos[i] = random(0, 2000);
@@ -46,7 +47,7 @@ void loop() {
     inByte = Serial.parseInt();
     char inByte2 = Serial.read();
     Serial.println(inByte);
-    currentStyle = inByte ;
+    curLEDStyle = inByte ;
   }
 }
 

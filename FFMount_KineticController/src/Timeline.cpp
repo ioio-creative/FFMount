@@ -45,8 +45,10 @@ void Timeline::draw() {
     if (id % 2) {
         if (id < 12){
             str = "Lx" + ofToString(id/2) +" Time";
-        }else{
+        }else if(id >= 12 && id < 24){
             str = "Rx" + ofToString((id - 12)/2 ) +" Time";
+        }else{
+            str = "LED";
         }
         //str = ofToString(id/2) + d + "Time";
 
@@ -55,8 +57,10 @@ void Timeline::draw() {
     else {
         if (id < 12){
             str = "Lx" + ofToString(id/2) +" MoveTo";
-        }else{
+        }else if(id >= 12 && id < 24){
             str = "Rx" + ofToString((id - 12)/2 ) +" MoveTo";
+        }else{
+            str = "LED";
         }
         //str = ofToString(id/2) + "MoveTo";
     }

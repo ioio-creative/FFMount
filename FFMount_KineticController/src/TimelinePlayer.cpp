@@ -29,9 +29,7 @@ void TimelinePlayer::setup() {
         ofAddListener(timeline.keyframeAddedEvent, this, &TimelinePlayer::keyFrameAdded);
         timelines.push_back(timeline);
     }
-    
-    
-    
+
     //-----------------------     GUI      -------------------
     playButton.addListener(this, &TimelinePlayer::playButtonPressed);
     //nextButton.addListener(this, &TimelinePlayer::nextButtonPressed);
@@ -93,7 +91,10 @@ void TimelinePlayer::setup() {
 
 //--------------------------------------------------------------
 void TimelinePlayer::update() {
-          movie.update();
+    
+    movie.update();
+    
+    
     ofBackground(80, 20, 20);
     
     doLoop = repeatThisToggle;
@@ -188,7 +189,7 @@ void TimelinePlayer::draw() {
     ofTranslate(-graphScrollX * graphWidth , 0, 0);//translate graph to current scroll
     
     //draw the value as a line graph
-    int offsetY = 350;//offset Y for drawing the graph
+    int offsetY = 310;//offset Y for drawing the graph
     ofSetColor(225);
     ofSetLineWidth(1);
     ofFill();
@@ -472,6 +473,8 @@ void TimelinePlayer::playButtonPressed() {
     //reloadTimelineFromSave();
     isPlaying = true;
     currentTime = 0;
+    movie.setPosition(0);
+    movie.play();
 }
 
 //--------------------------------------------------------------
@@ -491,9 +494,14 @@ void TimelinePlayer::pauseButtonPressed() {
     if (isPlaying) {
         isPlaying = !isPlaying;
         lastPausePlayerTime = currentTime;
+        
+        movie.setPaused(true);
+        movie.setPosition((float)currentTime / duration);
     } else {
         isPlaying = !isPlaying;
         currentTime = lastPausePlayerTime;
+        
+        movie.setPaused(false);
     }
 }
 
@@ -527,6 +535,7 @@ void TimelinePlayer::mouseDragged(int x, int y, int button) {
         currentTime = time;
         if (!isPlaying) {
             lastPausePlayerTime = time;
+            movie.setPosition((float)currentTime / duration);
         }
     }
 }
