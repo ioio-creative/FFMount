@@ -1,12 +1,10 @@
 #include <MyStepper.h>
 #include "PinAssignment.h" //Pin Config
 
-
 // Variables will change:
 int ledState = HIGH;         // the current state of the output pin
 int buttonState;             // the current reading from the input pin
 int buttonState2;
-
 
 int prevReading0 = 0;
 int prevReading1 = 0;
@@ -61,10 +59,6 @@ const long MAX_SPEED = 200000;
 
 bool isStepper1Stopped = false;
 bool isStepper2Stopped = false;
-
-
-
-
 
 
 const int timeStep = 1000;  // ms
@@ -134,6 +128,11 @@ void loop() {
     }
   }
 
+  if (!stepper1.isCompleteTotDist())
+  {
+    stepper1.myRun();
+  }
+
   if (stepper2.distanceToGo() == 0) {
     // stepper2.setMaxSpeed(MAX_SPEED);
     // stepper2.setAcceleration(computeAcceleration(abs(stepper2.currentPosition() - moveToPos), timeToMove));
@@ -141,10 +140,7 @@ void loop() {
   }
   //stepper1.run();
   //stepper2.run();
-  if (!stepper1.isCompleteTotDist())
-  {
-    stepper1.myRun();
-  }
+
 
   while (Serial.available() > 0)
   {

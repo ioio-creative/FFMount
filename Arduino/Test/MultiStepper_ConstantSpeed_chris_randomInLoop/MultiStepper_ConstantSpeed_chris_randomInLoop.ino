@@ -8,7 +8,7 @@ const int timeStep = 1000;  // ms
 // about 1600 = 1 revolution for stepper 1
 
 // stepper 1 parameters
-const long stepper1DistanceToMove = 6000;
+const long stepper1DistanceToMove = 3000;
 const long stepper1TimeToComplete = 5;  // s
 bool isStepper1PrintTimeStepToSerial = true;
 bool isStepper1Stopped = false;
@@ -54,7 +54,7 @@ void loop()
 
   }
   else {
-    stepper1.reset(random(2000, 8000), random(2000, 8000));
+    stepper1.reset(random(5000,6000), millis() + random(2000, 8000));
     stepper1.setTimeStepInMillis(timeStep);
     stepper1.setIsPrintTimeStepToSerial(isStepper1PrintTimeStepToSerial);
     Serial.println("Stepper 1 stopped");
