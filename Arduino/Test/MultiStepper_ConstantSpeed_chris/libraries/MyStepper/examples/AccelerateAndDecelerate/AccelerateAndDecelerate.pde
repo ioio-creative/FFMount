@@ -2,14 +2,14 @@
 
 MyStepper stepper1(7, 6);
 
-const int timeStep = 1000;  // ms
+const int timeStep = 100;  // ms
 
 // about 1600 = 1 revolution for stepper 1
 
 // stepper 1 parameters
-const long stepper1PositionToGo = 16000;
-const long stepper1TimeToComplete = 20;  // s
-bool isPrintTimeStepToSerial = true;
+const long stepper1PositionToGo = 4000;
+const long stepper1TimeToComplete = 5.5;  // s
+bool isPrintTimeStepToSerial = false;
 
 void setup()
 {  
