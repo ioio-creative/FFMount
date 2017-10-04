@@ -47,23 +47,32 @@ void Timeline::draw() {
             str = "Lx" + ofToString(id/2) +" Time";
         }else if(id >= 12 && id < 24){
             str = "Rx" + ofToString((id - 12)/2 ) +" Time";
+        }else if(id >= 24 && id < 26){
+            str = "FAN";
         }else{
             str = "LED";
+
         }
         //str = ofToString(id/2) + d + "Time";
-
-        
     }
     else {
         if (id < 12){
             str = "Lx" + ofToString(id/2) +" MoveTo";
         }else if(id >= 12 && id < 24){
             str = "Rx" + ofToString((id - 12)/2 ) +" MoveTo";
+        }else if(id >= 24 && id < 26){
+            str = "FAN";
         }else{
             str = "LED";
+
         }
         //str = ofToString(id/2) + "MoveTo";
     }
+    if(id == 26){ str+= " Style";}
+    if(id == 27){ str+= " Interval";}
+    if(id == 28){ str+= " Fade";}
+    if(id == 29){ str+= " Min Range / Multiply";}
+    if(id == 30){ str+= " Max Range";}
     
     ofDrawBitmapString(str, xPos, yPos + 15.0f);
     
