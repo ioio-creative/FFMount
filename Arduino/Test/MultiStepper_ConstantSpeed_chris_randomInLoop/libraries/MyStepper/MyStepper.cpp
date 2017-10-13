@@ -97,6 +97,11 @@ float MyStepper::speed()
 	return _accelStepper.speed();
 }
 
+float MyStepper::maxSpeed()
+{
+	return _accelStepper.maxSpeed();
+}
+
 long MyStepper::currentPosition()
 {
 	return _accelStepper.currentPosition();
