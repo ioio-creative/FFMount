@@ -1354,6 +1354,92 @@ void ofApp::writeStyle(int s){
 
 
 
+//--------------------------------------------------------------
+//-------------------------- OSC -------------------------------
+//--------------------------------------------------------------
+#ifdef USEOSC
+
+//--------------------------------------------------------------
+void ofApp::sendOSC(int ar, string s){
+    ofxOscMessage m;
+    m.setAddress("/serial/");
+    m.addIntArg(ar);
+    m.addStringArg(s);
+    sender.sendMessage(m, false);
+    // ofLog() << "sending OSC : " << ar << " : " << s;
+}
+
+vector<string> ofApp::readOSC(){
+    
+    vector<string> read;
+    
+    for(int i=0; i< NUM_OF_SERIAL_TO_INIT; i++){
+        read.push_back("");
+    }
+    
+    int currentArduinoID = -1;
+    
+    // check for waiting messages
+    while(receiver.hasWaitingMessages()){
+        // get the next message
+        ofxOscMessage m;
+        receiver.getNextMessage(m);
+        
+        // check for mouse moved message
+        if(m.getAddress() == "/serial/in"){
+            // the single argument is a string
+            string mouseButtonState = m.getArgAsString(0);
+            ofLog() << mouseButtonState;
+            
+            receivedString[0] = mouseButtonState;
+            
+        }
+        // check for an image being sent (note: the size of the image depends greatly on your network buffer sizes - if an image is too big the message won't come through )
+        else{
+            // unrecognized message: display on the bottom of the screen
+            string msg_string;
+            string getString = "";
+            msg_string = m.getAddress();
+            msg_string += ": ";
+            for(int i = 0; i < m.getNumArgs(); i++){
+                // get the argument type
+                msg_string += m.getArgTypeName(i);
+                msg_string += ":";
+                // display the argument - make sure we get the right type
+                if(m.getArgType(i) == OFXOSC_TYPE_INT32){
+                    //msg_string += ofToString(m.getArgAsInt32(i));
+                    currentArduinoID = m.getArgAsInt32(i);
+                }
+                else if(m.getArgType(i) == OFXOSC_TYPE_FLOAT){
+                    msg_string += ofToString(m.getArgAsFloat(i));
+                }
+                else if(m.getArgType(i) == OFXOSC_TYPE_STRING){
+                    msg_string += m.getArgAsString(i);
+                    getString+= m.getArgAsString(i);
+                }
+                else{
+                    msg_string += "unknown";
+                }
+                
+            }
+            //  ofLog() << " currentArduinoID:  "<< currentArduinoID << " String: " << getString;
+            for(int i=0; i< NUM_OF_SERIAL_TO_INIT; i++){
+                if(arduino[i] == currentArduinoID){
+                    read[i] = getString;
+                }
+            }
+            
+            
+        }
+        
+    }
+    return read;
+    
+}
+#else
+#endif
+
+
     //================Other Functions ====================
 
 bool ofApp::is_number(const std::string& s)
