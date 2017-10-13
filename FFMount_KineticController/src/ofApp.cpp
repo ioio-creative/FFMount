@@ -97,8 +97,7 @@ void ofApp::guiSetup(){
     guiDebug.setWidthElements(100);
     
     vector<string> EEPROM_names = {"HOME_MAXSPEED","MAX_SPEED_Y","MAX_ACCELERATION_Y","INVERT_DIR_Y"};
-    
-    
+
     vector<int> EEPROM_min = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     vector<int> EEPROM_max = {500, 1000, 5000, 1000,5000, 1000, 1000, 1000, 1000, 1, 1, 1, 1}; //Todo Transfer definition /variables to xml
     
@@ -130,7 +129,10 @@ void ofApp::guiSetup(){
     //Style
     guiDebug.add(currentStyle.set("Style",4,0,NUM_OF_WINGS)); //TODO
     guiDebug.add(LEDStyle.set("LED Style",0,0,6));
-    guiDebug.add(LEDParameter0.set("LED Parameter",0,0,MAX_Y_POS));
+    guiDebug.add(LEDParameter0.set("Interval",0,0,500));
+    guiDebug.add(LEDParameter1.set("Fade",0,0,500));
+    guiDebug.add(LEDParameter2.set("MinRange / Multiply",0,0,MAX_Y_POS));
+    guiDebug.add(LEDParameter3.set("Max Range",0,0,MAX_Y_POS));
     guiDebug.add(style_Btn.setup("Set Position:"));
     guiDebug.add(style_Btn_all_same.setup("Set Position ALL Same:"));
     guiDebug.add(style_Btn_all.setup("Set Position ALL:"));
@@ -387,13 +389,15 @@ void ofApp::update(){
             cablePosLy[i] = a[i*2];
             cablePosRy[i] = a[i*2+(2*NUM_OF_WINGS)];
     }
-    if(a.size() >=26){
-        LEDStyle =(int)a[24]/100;
-        LEDParameter0 =a[25]*10;
+    if(a.size() >=31){
+        LEDStyle =(int)a[26]/100;
+        LEDParameter0 =a[27]/10;
+        LEDParameter1 =a[28]/10;
+        LEDParameter2 =a[29];
+        LEDParameter3 =a[30];
     }
     //================== Simulation ==================
     wing.update();
-    
     
 /*
     //================== Video ==================
@@ -759,10 +763,7 @@ void ofApp::serialWrite(int arduinoID, string sw){
                 try
                 {
                     std::string text = sw;
-                    
-                    
-                    
-                    
+
                     ofx::IO::ByteBuffer textBuffer(text);
                     
                     arduino[i].writeBytes(textBuffer);

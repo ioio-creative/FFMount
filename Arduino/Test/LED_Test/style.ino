@@ -33,12 +33,11 @@ void loopLED() {
   }
 
 }
-
-
+//FORMAT::: intervalTime(30) - fade(30) - MinRange / multiplyRate - MaxRange
 //20 - intervalTime(30) - fade(30) ||| fade out
 //21 - intervalTime(30) ||| fade in
-//22 - rangeMin - rangeMax(5000) ||| brightness according to motor val
-//23 - rangeMin - rangeMax(5000) - fade(30)||| brightness according to motor val, furthest LED brightest
+//22 - empty - empty - rangeMin - rangeMax(5000) ||| brightness according to motor val
+//23 - empty - fade(30) - rangeMin - rangeMax(5000)||| brightness according to motor val, furthest LED brightest
 //24 - intervalTime(30) - fade(10) ||| LED trail shooting out
 //25 - intervalTime(30) - fade(50) - rangeMin - rangeMax(5000) ||| one glowing spot, pos according to motor
 //26 - intervalTime(30) - fade(25) - multiplyRate (15) ||| many glowing spot, pos according to motor
@@ -86,8 +85,8 @@ void led_style(int s, long f0, long f1, long f2, long f3)
   }
   else if (s == 2) { //brightness according to motor val
 
-    int rangeMin = f0;
-    int rangeMax = f1;
+    int rangeMin = f2;
+    int rangeMax = f3;
 
     if (rangeMax == 0) {
       rangeMax = 5000;
@@ -102,10 +101,10 @@ void led_style(int s, long f0, long f1, long f2, long f3)
     }
   }
   else if (s == 3) {//brightness according to motor val, furthest LED brightest
-
-    int rangeMin = f0;
-    int rangeMax = f1;
-    int fade = f2;
+    int fade = f1;
+    int rangeMin = f2;
+    int rangeMax = f3;
+    
 
     if (rangeMax == 0) {
       rangeMax = 5000;

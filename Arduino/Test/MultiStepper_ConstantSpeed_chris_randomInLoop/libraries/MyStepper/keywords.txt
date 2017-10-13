@@ -1,0 +1,33 @@
+#######################################
+# Syntax Coloring Map For MyStepper
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+MyStepper	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+sgn	KEYWORD2
+compareAbs	KEYWORD2
+
+myRun    KEYWORD2
+reset	KEYWORD2
+setTimeStepInMillis	KEYWORD2
+setIsPrintTimeStepToSerial	KEYWORD2
+speed	KEYWORD2
+maxSpeed	KEYWORD2
+currentPosition	KEYWORD2
+getTotDist	KEYWORD2
+printStatusToSerial	KEYWORD2
+isCompleteTotDist	KEYWORD2
+isCompleteHalfTotDist	KEYWORD2
+setMinReturnSpeed	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################

@@ -7,6 +7,7 @@ MyStepper stepper1(MyStepper::DRIVER, 7, 6);
 MyStepper stepper2(MyStepper::DRIVER, 9, 8);
 
 const int timeStep = 100;  // ms
+const float minReturnSpeed = 50;
 
 // about 1600 = 1 revolution for stepper 1
 
@@ -26,10 +27,12 @@ void setup()
 {
   Serial.begin(9600);
 
+  stepper1.setMinReturnSpeed(minReturnSpeed);  // should be positive
   stepper1.reset(stepper1DistanceToMove, stepper1TimeToComplete);
   stepper1.setTimeStepInMillis(timeStep);
   stepper1.setIsPrintTimeStepToSerial(isStepper1PrintTimeStepToSerial);
 
+  stepper2.setMinReturnSpeed(minReturnSpeed);  // should be positive
   stepper2.reset(stepper2DistanceToMove, stepper2TimeToComplete);
   stepper2.setTimeStepInMillis(timeStep);
   stepper2.setIsPrintTimeStepToSerial(isStepper2PrintTimeStepToSerial);
@@ -37,6 +40,7 @@ void setup()
   digitalWrite(14, HIGH);
   digitalWrite(15, HIGH);
 }
+
 long previousMillis = 0;        // will store last time LED was updated
 long interval = 1000;           // interval at which to blink (milliseconds)
 
@@ -56,21 +60,20 @@ void loop()
   {
     stepper1.myRun();
   }
-  else {
-    Serial.println("Stepper 1 stopped");
+  else {    
     int nextPosition = random(5000,10000);
     int nextTimespan = random(5, 10);
-    stepper1.reset(nextPosition, nextTimespan);    
+    Serial.println("Next Pos: " + String(nextPosition, DEC) + ", Next Timespan:" + String(nextTimespan, DEC));
+    stepper1.reset(nextPosition, nextTimespan);
   }
-  
+
   /*
-    else if (!isStepper1Stopped)
-    {
+  else if (!isStepper1Stopped)
+  {
     stepper1.printStatusToSerial();
     Serial.println("Stepper 1 stopped");
     isStepper1Stopped = true;
-
-    }
+  }
   */
 
 //  if (!stepper2.isCompleteTotDist())

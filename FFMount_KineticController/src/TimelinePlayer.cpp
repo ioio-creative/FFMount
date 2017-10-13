@@ -189,7 +189,7 @@ void TimelinePlayer::draw() {
     ofTranslate(-graphScrollX * graphWidth , 0, 0);//translate graph to current scroll
     
     //draw the value as a line graph
-    int offsetY = 310;//offset Y for drawing the graph
+    int offsetY = 200;//offset Y for drawing the graph
     ofSetColor(225);
     ofSetLineWidth(1);
     ofFill();
