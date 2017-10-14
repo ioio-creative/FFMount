@@ -67,8 +67,8 @@ AccelStepper stepper2 (AccelStepper::DRIVER, ryStep, ryDir);
 //AccelStepper stepper (AccelStepper::DRIVER, st, dir);
 
 // L == up
-bool goHome = true;
-bool goHome2 = true;
+bool goHome = false;
+bool goHome2 = false;
 
 
 long homeSpeed = -250;

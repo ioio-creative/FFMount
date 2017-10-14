@@ -1,6 +1,6 @@
 /*  S200-200-200 for initi EEPROM
- *   
- *   AccelStepper Library
+
+     AccelStepper Library
    http://www.airspayce.com/mikem/arduino/AccelStepper/
    http://www.airspayce.com/mikem/arduino/AccelStepper/AccelStepper-1.56.zip
 
@@ -28,6 +28,11 @@
   -Test Actual code with 4 motor and switches
 
 */
+const int timeStep = 100;  // ms
+const float minReturnSpeed = 50;
+
+
+
 //#define ISMEGA
 
 //#include "SoftReset.h" //SoftReset function
@@ -52,10 +57,10 @@ long stepperTime[numOfStepper]  = {0, 0};  // Travel Time to POS
 long stepperPos[numOfStepper]  = {0, 0};
 
 
-AccelStepper stepperLy (AccelStepper::DRIVER, lyStep, lyDir);
-AccelStepper stepperRy (AccelStepper::DRIVER, ryStep, ryDir);
+MyStepper stepperLy (AccelStepper::DRIVER, lyStep, lyDir);
+MyStepper stepperRy (AccelStepper::DRIVER, ryStep, ryDir);
 
-AccelStepper* steppers[numOfStepper] = { &stepperLy, &stepperRy };
+MyStepper* steppers[numOfStepper] = { &stepperLy, &stepperRy };
 
 bool isEmergencyStop = false;
 
@@ -108,15 +113,18 @@ void setup() {
     steppers[stepperNumber]->setAcceleration(stepperAccel[stepperNumber]);
     steppers[stepperNumber]->moveTo(stepperPos[stepperNumber]);
 
+      steppers[stepperNumber]->setMinReturnSpeed(minReturnSpeed);  // should be positive
+  steppers[stepperNumber]->setTimeStepInMillis(timeStep);
+
     //steppers[stepperNumber]->setPinsInverted(true, true, true); //(directionInvert,stepInvert,enableInvert)
-     #ifdef ISMEGA
+#ifdef ISMEGA
     Load_Flash();
     Load_To_Variables();
-    #else
-    #endif
+#else
+#endif
 
     // ============ LIMIT SWITCH ================
-     pinMode(limitSwitch[stepperNumber], INPUT);
+    pinMode(limitSwitch[stepperNumber], INPUT);
 
   }
 
@@ -196,8 +204,10 @@ void loop() {
         steppers[stepperNumber]->setMaxSpeed(0);
         steppers[stepperNumber]->setSpeed(0);
       } else {
-        steppers[stepperNumber]->setMaxSpeed(-1 * home_speed);
-        steppers[stepperNumber]->setSpeed(-1 * home_speed);
+        //  steppers[stepperNumber]->setMaxSpeed(-1 * home_speed);
+        //   steppers[stepperNumber]->setSpeed(-1 * home_speed);
+        steppers[stepperNumber]->setMaxSpeed(1 * home_speed);
+        steppers[stepperNumber]->setSpeed(1 * home_speed);
       }
 
       steppers[stepperNumber]->runSpeed();
@@ -212,14 +222,21 @@ void loop() {
   } else {
 
     // ============ LED ================
-     loopLED();
+    loopLED();
 
     // ============ STEPPER ================
 
     stepper_style();
 
     for (int stepperNumber = 0; stepperNumber < numOfStepper; stepperNumber++) {
-      steppers[stepperNumber]->run();
+      if (style != 4) {
+        steppers[stepperNumber]->run();
+      } else {
+        if (!steppers[stepperNumber]->isCompleteTotDist()) {
+          steppers[stepperNumber]->myRun();
+        }
+
+      }
     }
     // ============ ENCODER ================
 

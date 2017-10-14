@@ -39,7 +39,7 @@ class MyStepper
 	
 	float speed();
 	
-	void maxSpeed();
+	float maxSpeed();
 	
 	long currentPosition();
 	
@@ -53,12 +53,18 @@ class MyStepper
 	
 	void setMinReturnSpeed(float speed);
     
+    
     //From AcceleStepper
     long distanceToGo();
     void setCurrentPosition(long position);
     long targetPosition();
     void stop();
     void setSpeed(float speed);
+    void setMaxSpeed(float speed);
+    void setAcceleration(float acceleration);
+    void moveTo(long absolute);
+    boolean runSpeed();
+    boolean run();
 	
   private:
     AccelStepper _accelStepper;
@@ -74,7 +80,7 @@ class MyStepper
 	long _processStartPosition;
 	float _minReturnSpeed;
 
-	void setMaxSpeed(float speed);
+
 
 	float computeLinearAccl(long totDist, long totTime);
 	float computeMaxSpeedForLinearAccl(long totDist, long totTime);	

@@ -3,7 +3,7 @@
 
 //======== DEFINITION ===========
 
-#define USEOSC
+//#define USEOSC
 //#define RECEIVER_IS_WINDOWS         // lattePanda / Win10
 
 #define NUM_OF_WINGS 6 //Todo Transfer definition /variables to xml

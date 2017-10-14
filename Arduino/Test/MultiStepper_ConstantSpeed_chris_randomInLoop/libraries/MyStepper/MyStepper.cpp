@@ -102,6 +102,29 @@ float MyStepper::maxSpeed()
 	return _accelStepper.maxSpeed();
 }
 
+void MyStepper::setMaxSpeed(float speed)
+{
+    _accelStepper.setMaxSpeed(speed);
+}
+
+void MyStepper::setAcceleration(float acceleration)
+{
+    _accelStepper.setAcceleration(acceleration);
+}
+
+void MyStepper::moveTo(long absolute)
+{
+    _accelStepper.moveTo(absolute);
+}
+
+boolean MyStepper::runSpeed(){
+    return _accelStepper.runSpeed();
+}
+
+boolean MyStepper::run(){
+    return _accelStepper.run();
+}
+
 long MyStepper::currentPosition()
 {
 	return _accelStepper.currentPosition();
@@ -172,10 +195,6 @@ void MyStepper::setSpeed(float speed)
 /* private methods */
 
 
-void MyStepper::setMaxSpeed(float speed)
-{
-	_accelStepper.setMaxSpeed(speed);
-}
 
 float MyStepper::computeLinearAccl(long totDist, long totTime)
 {
