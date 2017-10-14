@@ -22,11 +22,9 @@ String inString_display_buffer = "";    // string to hold Display info
 
 bool exclude_print_val = true;
 
-
 int current_index = 0;//index of current decoding number
 //long input_value[Input_size];  //inputs value(s) buffer -> moved to main tab
 boolean update_flag = false; //Flag for end of success input string follow /n
-
 
 
 void serial_decode()   // Read serial input: //TODO add serial1
@@ -50,8 +48,6 @@ void serial_decode()   // Read serial input: //TODO add serial1
     }
   */
 }
-
-
 
 
 void char_decode(int inChar)

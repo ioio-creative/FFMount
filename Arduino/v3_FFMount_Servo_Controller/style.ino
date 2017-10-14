@@ -47,8 +47,6 @@ void stepper_style() {
       stepperPos1[1] = input_value[7];
       stepperPos2[1] = input_value[8];
 
-
-
       for (int stepperNumber = 0; stepperNumber < numOfStepper; stepperNumber++) {
         if (steppers[stepperNumber]->distanceToGo() == 0) {
           if (stepperPos1[stepperNumber] >= 0 && stepperPos2[stepperNumber] >= 0 && stepperAccel[stepperNumber] > 0 && stepperSpeed[stepperNumber] > 0) {
@@ -96,14 +94,12 @@ void stepper_style() {
       int stepperNumber;
       stepperNumber = input_value[1];
       if (stepperNumber == 0) {
-        //  stepperSpeed[0] = input_value[1];
-        stepperTime[0] = input_value[2]/1000;
+        stepperTime[0] = input_value[2] / 1000;
         stepperPos[0] = input_value[3];
       } else {
-        stepperTime[1] = input_value[2]/1000;
+        stepperTime[1] = input_value[2] / 1000;
         stepperPos[1] = input_value[3];
       }
-
 
       //for (int stepperNumber = 0; stepperNumber < numOfStepper; stepperNumber++) {
       if (steppers[stepperNumber]->isCompleteTotDist()) {
@@ -115,17 +111,5 @@ void stepper_style() {
       // }
     }
   }
-
 }
 
-//==== Written by Chris Szewa ====
-/* USAGE:
-  stepper1.setMaxSpeed(MAX_SPEED);
-  stepper1.setAcceleration(computeAcceleration(15000, 20000));
-  stepper1.moveTo(15000);
-*/
-/*
-float computeAcceleration(long distanceToMove, long timeToMove)
-{
-  return pow(4.179267E-07 * (timeToMove - (0.24561 * distanceToMove)), -1.0793);
-}*/

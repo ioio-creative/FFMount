@@ -17,13 +17,6 @@ void alarm_check() {
       digitalWrite(DI2_ALARM_RESET_ry, LOW);
     }
 
-
-
   }
-
-
-
-
-
 
 }

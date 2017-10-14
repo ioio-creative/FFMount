@@ -2,7 +2,6 @@
 
 // ============ LED ================
 
-
 #define COLOR_ORDER BRG
 #define CHIPSET     WS2811
 #define NUM_LEDS    34

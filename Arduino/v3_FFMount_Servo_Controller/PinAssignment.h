@@ -50,7 +50,6 @@
 #define RX1 19
 #define TX1 18
 
-
 // ============ LED ================
 
 #define LED_ly 6

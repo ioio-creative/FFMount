@@ -34,7 +34,6 @@ const float minReturnSpeed = 50;
 
 
 //#define ISMEGA
-
 //#include "SoftReset.h" //SoftReset function
 //================ Config ================
 #include "PinAssignment.h" //Pin Config
@@ -113,8 +112,8 @@ void setup() {
     steppers[stepperNumber]->setAcceleration(stepperAccel[stepperNumber]);
     steppers[stepperNumber]->moveTo(stepperPos[stepperNumber]);
 
-      steppers[stepperNumber]->setMinReturnSpeed(minReturnSpeed);  // should be positive
-  steppers[stepperNumber]->setTimeStepInMillis(timeStep);
+    steppers[stepperNumber]->setMinReturnSpeed(minReturnSpeed);  // should be positive
+    steppers[stepperNumber]->setTimeStepInMillis(timeStep);
 
     //steppers[stepperNumber]->setPinsInverted(true, true, true); //(directionInvert,stepInvert,enableInvert)
 #ifdef ISMEGA
@@ -136,7 +135,6 @@ void setup() {
   Serial1.begin(BAUD);
   pinMode(RX1, INPUT_PULLUP);
   // ============  ================
-
 
   pinMode(BrakeLy, OUTPUT);
   pinMode(BrakeRy, OUTPUT);
@@ -166,7 +164,6 @@ void setup() {
   pinMode(DO5_ALRM_ly, INPUT);
   pinMode(DO5_ALRM_ry, INPUT);
 }
-
 
 // ============ ============ ================
 // ============ ====LOOP==== ================
@@ -204,8 +201,6 @@ void loop() {
         steppers[stepperNumber]->setMaxSpeed(0);
         steppers[stepperNumber]->setSpeed(0);
       } else {
-        //  steppers[stepperNumber]->setMaxSpeed(-1 * home_speed);
-        //   steppers[stepperNumber]->setSpeed(-1 * home_speed);
         steppers[stepperNumber]->setMaxSpeed(1 * home_speed);
         steppers[stepperNumber]->setSpeed(1 * home_speed);
       }
@@ -240,33 +235,9 @@ void loop() {
     }
     // ============ ENCODER ================
 
-
     for (int stepperNumber = 0; stepperNumber < numOfStepper; stepperNumber++) {
       encoder[stepperNumber]->read(); //TODO, read to sth?
     }
-
-    // ============  ================
-    /* unsigned long currentMillis = millis();
-
-      if (currentMillis - previousMillis > interval) {
-       // save the last time you blinked the LED
-       previousMillis = currentMillis;
-
-       // if the LED is off turn it on and vice-versa:
-       if (ledState == LOW) {
-         ledState = HIGH;
-       }
-       else {
-         ledState = LOW;
-         Serial.println("C");
-       }
-       // set the LED with the ledState of the variable:
-
-      }
-    */
-
   }
-
-
 }
 

@@ -71,7 +71,7 @@ bool goHome = false;
 bool goHome2 = false;
 
 
-long homeSpeed = -250;
+long homeSpeed = 250;
 long homeMaxSpeed = 250;
 
 long motorSpeed = 500 * 5000;
@@ -230,12 +230,7 @@ void loop() {
       buttonState = reading;
       //   digitalWrite(ledPin, buttonState);
       stepper.setMaxSpeed(homeMaxSpeed);
-      if (isLeft) {
-        stepper.setSpeed(-homeSpeed);
-      }
-      else {
-        stepper.setSpeed(homeSpeed);
-      }
+      stepper.setSpeed(homeSpeed);
       if (buttonState) {
 
         Serial.println("Reached Home L MOTOR");
@@ -250,12 +245,8 @@ void loop() {
       buttonState2 = reading;
       //   digitalWrite(ledPin, buttonState);
       stepper2.setMaxSpeed(homeMaxSpeed);
-      if (isLeft) {
-        stepper2.setSpeed(-homeSpeed);
-      }
-      else {
-        stepper2.setSpeed(homeSpeed);
-      }
+      stepper2.setSpeed(homeSpeed);
+
       if (buttonState2) {
 
         Serial.println("Reached Home R MOTOR");
@@ -289,7 +280,6 @@ void loop() {
     */
     digitalWrite(DI1_SERVO_ON_ly, HIGH);
     digitalWrite(DI1_SERVO_ON_ry, HIGH);
-
 
 
     if (inChar == 'l') {
