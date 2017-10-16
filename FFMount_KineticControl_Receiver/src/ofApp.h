@@ -10,10 +10,10 @@
 #define S_HOST "localhost"
 #define S_PORT 12346
 
-#define NUM_MSG_STRINGS 20
+#define NUM_MSG_STRINGS 8
 
 
-#define NUM_OF_CABLES 32 //Todo Transfer definition /
+#define NUM_OF_CABLES 8 //Todo Transfer definition /
 #define BAUD 57600 //Todo Transfer definition /variables to xml
 
 class SerialMessage

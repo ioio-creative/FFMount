@@ -3,7 +3,7 @@
 
 //======== DEFINITION ===========
 
-//#define USEOSC
+#define USEOSC
 //#define RECEIVER_IS_WINDOWS         // lattePanda / Win10
 
 #define NUM_OF_WINGS 6 //Todo Transfer definition /variables to xml
@@ -34,8 +34,8 @@
 #include "ofxOsc.h"
 #define R_PORT 12346
 
-#define S_HOST "192.168.1.101"
-//#define S_HOST "localhost"
+//#define S_HOST "192.168.1.101"
+#define S_HOST "localhost"
 #define S_PORT 12345
 
 #else

@@ -642,14 +642,14 @@ vector<bool> ofApp::serialSetup(){ //int give the connection status of each cabl
     for(int i=0; i<NUM_OF_SERIAL_TO_INIT; i++){
         allComPort.push_back(i);
     }
-    arduino.push_back(allComPort[17]); //1
-    arduino.push_back(allComPort[21]); //2
-    arduino.push_back(allComPort[2]); //3
-    arduino.push_back(allComPort[3]); //4
-    arduino.push_back(allComPort[5]); //5
-    arduino.push_back(allComPort[20]); //6
-    arduino.push_back(allComPort[27]); //7
-    arduino.push_back(allComPort[6]); //8
+    arduino.push_back(allComPort[22]); //1
+    arduino.push_back(allComPort[23]); //2
+    arduino.push_back(allComPort[24]); //3
+    arduino.push_back(allComPort[25]); //4
+    arduino.push_back(allComPort[26]); //5
+    arduino.push_back(allComPort[27]); //6
+    arduino.push_back(allComPort[28]); //7
+    arduino.push_back(allComPort[29]); //8
     arduino.push_back(allComPort[15]); //9
     arduino.push_back(allComPort[16]); //10
     arduino.push_back(allComPort[19]); //11

@@ -22,7 +22,7 @@ void ofApp::setup(){
     //Serial
     
     for(int i=0; i< NUM_OF_CABLES; i++){
-        working_cable.push_back(0);
+        //working_cable.push_back(0);
         isArduinoConnected.push_back(0);
     }
     isArduinoConnected = serialSetup();
@@ -305,7 +305,7 @@ vector<bool> ofApp::serialSetup(){ //int give the connection status of each cabl
             ofLog() << "devicesInfo[i].getDescription() : " << devicesInfo[i].getDescription();
             ofLog() << "devicesInfo[i].getHardwareId() : " << devicesInfo[i].getHardwareId();
             
-            if(portID.find("FTDI") != std::string::npos || portDesc.find("Arduino") != std::string::npos )
+            if(portID.find("FTDI") != std::string::npos || portDesc.find("Arduino") != std::string::npos || portID.find("USB") != std::string::npos )
             {
                 // Connect to the first matching device.
                 ofx::IO::BufferedSerialDevice device;
@@ -384,7 +384,7 @@ void ofApp::serialWrite(int arduinoID, string sw){
         for(int i=0; i< arraySize; i++){
             
             //    for(int i=0; i< arduino.size(); i++){
-            if(working_cable[i] && isArduinoConnected[i]){
+            if(isArduinoConnected[i]){
                 // The serial device can throw exceptions.
                 try
                 {
@@ -400,6 +400,7 @@ void ofApp::serialWrite(int arduinoID, string sw){
                 {
                     ofLogError("ofApp::update") << exc.what();
                 }
+                ofLog() << ">>> Arduino Write: " <<arduinoID <<  ":  "<<sw;
             }
         }
     }
