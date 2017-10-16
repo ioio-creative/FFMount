@@ -277,7 +277,7 @@ void TimelinePlayer::draw() {
     gui.draw();
     
     ofSetColor(255);
-    movie.draw(400,0,320,180);
+    movie.draw(700,0,320,180);
 }
 
 
@@ -669,3 +669,4 @@ void TimelinePlayer::keyframeTimeSliderChanged(int &x) {
         selectedKeyframe->x = x;
     }
 }
+

@@ -26,6 +26,7 @@ void ofApp::setup(){
     //================== Timeline Player ==================
     timelinePlayer.setup();
     ofAddListener(timelinePlayer.onKeyFrameEntered, this, &ofApp::onKeyframe);
+    timelinePlayer.loadButtonPressed();
     
    // ofLog() << "ffMovie.getDuration() : " << ffmovie.getDuration();
    // timelinePlayer.setDuration(ffMovie.getDuration()*1000);
@@ -60,6 +61,9 @@ void ofApp::setup(){
         updateColor.push_back(255);
     }
     
+    showBeginTrigger = false;
+    
+    
 }
 
 void ofApp::onKeyframe(Keyframe &kf){
@@ -78,7 +82,7 @@ void ofApp::onKeyframe(Keyframe &kf){
         writeStyle(2);
         ofLog() << "RY HAS KEYFRAME : " << kf.timelineId << " " << kf.val << " " << kf.x;
     }else{
-        writeLEDStyle(LEDStyle,LEDParameter0);
+       // writeLEDStyle(LEDStyle,LEDParameter0);
         ofLog() << "LED " << LEDStyle;
     }
 
@@ -309,9 +313,13 @@ void ofApp::update(){
     
     ofSetWindowTitle(ofToString(ofGetFrameRate()));
     
-    //currTime = ofGetElapsedTimeMillis();
+    currMillis = ofGetElapsedTimeMillis();
     
-    
+    if(currMillis - prevShowBeginMillis > SHOW_DELAY_TIME && showBeginTrigger){
+       timelinePlayer.loadButtonPressed();
+       timelinePlayer.playButtonPressed();
+        showBeginTrigger =false;
+    }
     //OSC
 #ifdef USEOSC
     receivedString = readOSC();
@@ -429,7 +437,7 @@ void ofApp::guiDraw(){
             
             currentdisplayLog = ofToString(currentArduinoID) +" EEPROM SAVED";
             serialTrigger = false;
-            prevSerialTriggerMillis =currMillis;
+            prevSerialTriggerMillis = currMillis;
             
             
         }
@@ -491,7 +499,6 @@ void ofApp::guiDraw(){
     guiCableSpeedLy.draw();
     guiCableSpeedRy.draw();
 }
-
 
 //--------------------------------------------------------------
 void ofApp::draw(){
@@ -965,6 +972,14 @@ void ofApp::keyReleased(int key){
 #endif
             break;
             
+        case 'p':
+            isShowBegin(true);
+            break;
+            
+        case 'o':
+            isShowBegin(false);
+            break;
+            
         case 'd':
             debugMode = !debugMode;
             break;
@@ -1012,9 +1027,6 @@ void ofApp::keyReleased(int key){
     
 }
 
-
-
-
 // =========== Style ================
 void ofApp::writeLEDStyle(int s, int ss){
     //ofLog() << "LED Style " << s  << " current arduino " << currentArduinoID;
@@ -1038,7 +1050,7 @@ void ofApp::writeLEDStyle(int s, int ss){
 void ofApp::writeStyle(int s){
     ofLog() << "write Style " << s  << " current arduino " << currentArduinoID;
     
-    if (s==0){
+    if (s == 0){
         
         if(currentStyle == 3){
             
@@ -1125,7 +1137,7 @@ void ofApp::writeStyle(int s){
         }
         
     }
-    else if (s ==1){
+    else if (s == 1){
         for(int i=0; i< NUM_OF_WINGS; i++){
             if(currentStyle == 3){
                 
@@ -1216,7 +1228,7 @@ void ofApp::writeStyle(int s){
             }
         }
         
-    }else if (s ==2){
+    }else if (s == 2){
         if(currentArduinoID <= NUM_OF_WINGS-1 && currentArduinoID >= 0){
             if(currentStyle == 4){
                 
@@ -1439,8 +1451,7 @@ vector<string> ofApp::readOSC(){
 #else
 #endif
 
-
-    //================Other Functions ====================
+//================Other Functions ====================
 
 bool ofApp::is_number(const std::string& s)
 {
@@ -1448,7 +1459,6 @@ bool ofApp::is_number(const std::string& s)
     while (it != s.end() && std::isdigit(*it)) ++it;
     return !s.empty() && it == s.end();
 }
-
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
@@ -1464,6 +1474,20 @@ void ofApp::mousePressed(int x, int y, int button){
 void ofApp::mouseReleased(int x, int y, int button){
     timelinePlayer.mouseReleased(x, y, button);
 }
+//================ Show Control ====================
+//--------------------------------------------------------------
+void ofApp::isShowBegin(bool sb){
+    if(sb){ //begin
+        prevShowBeginMillis = currMillis;
+        showBeginTrigger = true;
+    }
+    else{ //reset
+        timelinePlayer.pauseButtonPressed();
+    }
+    
+}
+
+//==================== Unused ======================
 
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y ){

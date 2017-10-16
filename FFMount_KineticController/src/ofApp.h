@@ -16,6 +16,8 @@
 
 #define MAX_Y_DUR 300 // 30.0 s
 
+#define SHOW_DELAY_TIME 1000 //time to delay video begins after getting serial signal
+
 //======== INCLUDES ===========
 
 #include "ofMain.h"
@@ -41,9 +43,7 @@
 #endif
 
 /*
- 
- TIMELINE
- 
+TODO: Get Signal to be the show
  
  */
 
@@ -244,6 +244,7 @@ class ofApp : public ofBaseApp{
     //================== MISC ==================
     bool serialTrigger; //TO avoid ofxButton cause multiple click and send mutiple serial command;
     long prevSerialTriggerMillis; //TO avoid ofxButton cause multiple click and send mutiple serial command;
+    long prevShowBeginMillis; //
     long currMillis;
     
     bool isEmergencyStop;
@@ -274,5 +275,9 @@ class ofApp : public ofBaseApp{
     
     //================ Video ====================
     ofVideoPlayer 		ffMovie;
+    
+    //================ Show Control ==============
+    void isShowBegin(bool sb);
+    bool showBeginTrigger;
     
 };

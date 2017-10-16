@@ -101,14 +101,14 @@ void stepper_style() {
         stepperPos[1] = input_value[3];
       }
 
-      //for (int stepperNumber = 0; stepperNumber < numOfStepper; stepperNumber++) {
-      if (steppers[stepperNumber]->isCompleteTotDist()) {
-        if (stepperPos[stepperNumber] >= 0 && stepperTime[stepperNumber] > 0) {
-          steppers[stepperNumber]->setMaxSpeed(stepperSpeed[stepperNumber]);
-          steppers[stepperNumber]->reset(-stepperPos[stepperNumber], stepperTime[stepperNumber]);
+      for (int stepperNumber = 0; stepperNumber < numOfStepper; stepperNumber++) {
+        if (steppers[stepperNumber]->isCompleteTotDist()) {
+          if (stepperPos[stepperNumber] >= 0 && stepperTime[stepperNumber] > 0) {
+            steppers[stepperNumber]->setMaxSpeed(stepperSpeed[stepperNumber]);
+            steppers[stepperNumber]->reset(-stepperPos[stepperNumber], stepperTime[stepperNumber]);
+          }
         }
       }
-      // }
     }
   }
 }
