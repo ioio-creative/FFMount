@@ -1705,7 +1705,7 @@ vector<bool> ofApp::serialSetup(){ //int give the connection status of each cabl
 #else
     
     for(int i=0; i< NUM_OF_CABLES; i++){
-        arduino.push_back(true);
+        arduino.push_back(true); //todo should be i instead of true??
         isArduinoConnected.push_back(true);
     }
     

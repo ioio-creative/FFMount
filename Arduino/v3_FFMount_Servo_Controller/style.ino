@@ -88,23 +88,29 @@ void stepper_style() {
       }
     }
     if (style == 4) {
-      //STYLE - MOTOR - TIME - POS
-      stepperSpeed[0] = 500000;
-      stepperSpeed[1] = 500000;
+      //STYLE - POS - TIME - POS - TIME - LED_STYLE - VAL1 - VAL2 - VAL3 - VAL4
+
       int stepperNumber;
-      stepperNumber = input_value[1];
-      if (stepperNumber == 0) {
-        stepperTime[0] = input_value[2] / 1000;
-        stepperPos[0] = input_value[3];
-      } else {
-        stepperTime[1] = input_value[2] / 1000;
-        stepperPos[1] = input_value[3];
-      }
+      //  stepperNumber = input_value[1];
+      // if (stepperNumber == 0) {
+      stepperPos[0] = input_value[1];
+      stepperTime[0] = input_value[2] / 1000;
+
+      //} else {
+      stepperPos[1] = input_value[3];
+      stepperTime[1] = input_value[4] / 1000;
+
+      curLEDStyle  = input_value[5];
+      LEDFactor0 = input_value[6];
+      LEDFactor1 = input_value[7];
+      LEDFactor2 = input_value[8];
+      LEDFactor3 = input_value[9];
+
+      // }
 
       for (int stepperNumber = 0; stepperNumber < numOfStepper; stepperNumber++) {
         if (steppers[stepperNumber]->isCompleteTotDist()) {
           if (stepperPos[stepperNumber] >= 0 && stepperTime[stepperNumber] > 0) {
-            steppers[stepperNumber]->setMaxSpeed(stepperSpeed[stepperNumber]);
             steppers[stepperNumber]->reset(-stepperPos[stepperNumber], stepperTime[stepperNumber]);
           }
         }
