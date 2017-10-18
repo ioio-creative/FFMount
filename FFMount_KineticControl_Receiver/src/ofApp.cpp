@@ -3,7 +3,9 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     
-    ofSetFrameRate(25);
+    debugMode = false;
+    
+    ofSetFrameRate(7);
     // listen on the given port
     
     cout << "listening for osc messages on port " << R_PORT << "\n";
@@ -74,7 +76,9 @@ void ofApp::update(){
                 array.push_back(temp);
             if(array.size()>0){
                 receivedString[i] = array[0];
-                ofLog() << "receivedString[i] :" <<receivedString[i];
+                if(debugMode){
+                    ofLog() << "receivedString[i] :" <<receivedString[i];
+                }
                 reachEnd = false;
                 receivedStringBuffer[i] = "";
             }
@@ -91,7 +95,9 @@ void ofApp::update(){
             //prevReceivedString[i] = receivedString[i];
             displayText[i] = receivedString[i];
             // receivedString[i] = "";
+                            if(debugMode){
             ofLog() << "receivedString and Send: " << receivedString[i];
+                            }
             updateColor[i] = 255;
             
         }
@@ -192,7 +198,9 @@ void ofApp::readOSC(){
                 else{
                     msg_string += "unknown";
                 }
+                if(debugMode){
                 ofLog() << "currentArduinoID : " << currentArduinoID<< " OSCString :  "<< OSCString;
+                }
                 receivedOSCString[currentArduinoID] = OSCString;
                 // if(gotMsg){
                 serialWrite(currentArduinoID, OSCString);
@@ -234,7 +242,9 @@ void ofApp::sendOSC(int ar, string s){
         m.addStringArg(s);
         sender.sendMessage(m, false);
     }
+    if(debugMode) {
     ofLog() << "sending OSC : " << ar << " : " << s;
+    }
 }
 
 
@@ -249,6 +259,10 @@ void ofApp::keyReleased(int key){
     }
     if( key == 'c' || key == 'C'){
         serialWrite(-1, "C");
+    }
+    if( key == 'd' || key == 'd'){
+        debugMode = !debugMode;
+        ofLog() << " debugMode: " << debugMode;
     }
     /*
     if (key == 'd' || key == 'D') {
@@ -305,7 +319,10 @@ vector<bool> ofApp::serialSetup(){ //int give the connection status of each cabl
             ofLog() << "devicesInfo[i].getDescription() : " << devicesInfo[i].getDescription();
             ofLog() << "devicesInfo[i].getHardwareId() : " << devicesInfo[i].getHardwareId();
             
-            if(portID.find("FTDI") != std::string::npos || portDesc.find("Arduino") != std::string::npos || portID.find("USB") != std::string::npos )
+            
+#ifdef _WIN32
+                
+            if(portID.find("FTDI") != std::string::npos || portDesc.find("Arduino") != std::string::npos )
             {
                 // Connect to the first matching device.
                 ofx::IO::BufferedSerialDevice device;
@@ -313,8 +330,8 @@ vector<bool> ofApp::serialSetup(){ //int give the connection status of each cabl
                 //string port = devicesInfo[i].getPort();
                 
                 //myPort= new SerialPort("\\\\.\\COM11",9600);
+
                 
-#ifdef _WIN32
                 bool success = arduino[a].setup("\\\\.\\" + devicesInfo[i].getPort(), BAUD);
                 //define something for Windows (32-bit and 64-bit, this part is common)
 #ifdef _WIN64
@@ -329,6 +346,17 @@ vector<bool> ofApp::serialSetup(){ //int give the connection status of each cabl
 #elif TARGET_OS_IPHONE
                 // iOS device
 #elif TARGET_OS_MAC
+                
+                if(portID.find("FTDI") != std::string::npos || portDesc.find("Arduino") != std::string::npos || portID.find("USB") != std::string::npos )
+                {
+                    // Connect to the first matching device.
+                    ofx::IO::BufferedSerialDevice device;
+                    arduino.push_back(device);
+                    //string port = devicesInfo[i].getPort();
+                    
+                    //myPort= new SerialPort("\\\\.\\COM11",9600);
+
+                
                 bool success = arduino[a].setup(devicesInfo[i], BAUD);
                 // Other kinds of Mac OS
 #else
@@ -400,7 +428,9 @@ void ofApp::serialWrite(int arduinoID, string sw){
                 {
                     ofLogError("ofApp::update") << exc.what();
                 }
-                ofLog() << ">>> Arduino Write: " <<arduinoID <<  ":  "<<sw;
+                if(debugMode) {
+                    ofLog() << ">>> Arduino Write: " <<arduinoID <<  ":  "<<sw;
+                }
             }
         }
     }
@@ -427,8 +457,9 @@ void ofApp::serialWrite(int arduinoID, string sw){
         
     }
     else{ ofLog() << "Arduino: " <<arduinoID << "not connected";} // todo put in gui
-    
-    ofLog() << "Arduino Write: " <<arduinoID <<  ":  "<<sw;
+    if(debugMode) {
+        ofLog() << "Arduino Write: " <<arduinoID <<  ":  "<<sw;
+    }
 }
 
 //--------------------------------------------------------------

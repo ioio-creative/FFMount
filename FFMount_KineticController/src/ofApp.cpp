@@ -973,6 +973,13 @@ void ofApp::keyReleased(int key){
 #else
 #endif
             break;
+        case 'l':
+            writeLEDStyle(tempLEDStyle++, 0);
+            if(tempLEDStyle > 8){
+                tempLEDStyle = 0;
+            }
+            break;
+
             
         case 'p':
             isShowBegin(true);
@@ -1038,7 +1045,7 @@ void ofApp::writeLEDStyle(int s, int ss){
     string toWrite = "";
     
     
-    toWrite+= ofToString((int)s+20);
+    toWrite+= ofToString((int)s+21);
     toWrite+= "-";
     toWrite+= ofToString((int)ss);
     toWrite+= "-";

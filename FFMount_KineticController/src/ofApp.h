@@ -263,6 +263,8 @@ class ofApp : public ofBaseApp{
     ofParameter<int> LEDParameter2;
     ofParameter<int> LEDParameter3;
     
+    int tempLEDStyle;
+    
     
     //================Style ====================
     ofParameter<int> currentStyle;

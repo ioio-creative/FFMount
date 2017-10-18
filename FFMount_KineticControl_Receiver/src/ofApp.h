@@ -103,5 +103,7 @@ class ofApp : public ofBaseApp{
     vector<string> receivedString;
     vector<int> updateColor;
     vector<string> displayText;
+    
+    bool debugMode;
 
 };

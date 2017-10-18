@@ -58,18 +58,18 @@ void loopLED() {
 }
 
 //FORMAT::: intervalTime(30) - fade(30) - MinRange / multiplyRate - MaxRange
-//20 - intervalTime(30) - fade(30) ||| fade out
-//21 - intervalTime(30) ||| fade in
-//22 - empty - empty - rangeMin - rangeMax(5000) ||| brightness according to motor val
-//23 - empty - fade(30) - rangeMin - rangeMax(5000)||| brightness according to motor val, furthest LED brightest
-//24 - intervalTime(30) - fade(10) ||| LED trail shooting out
-//25 - intervalTime(30) - fade(50) - rangeMin - rangeMax(5000) ||| one glowing spot, pos according to motor
-//26 - intervalTime(30) - fade(25) - multiplyRate (15) ||| many glowing spot, pos according to motor
+//1 - intervalTime(30) - fade(30) ||| fade out
+//2 - intervalTime(30) ||| fade in
+//3 - empty - empty - rangeMin - rangeMax(5000) ||| brightness according to motor val
+//4 - empty - fade(30) - rangeMin - rangeMax(5000)||| brightness according to motor val, furthest LED brightest
+//5 - intervalTime(30) - fade(10) ||| LED trail shooting out
+//6 - intervalTime(30) - fade(50) - rangeMin - rangeMax(5000) ||| one glowing spot, pos according to motor
+//7 - intervalTime(30) - fade(25) - multiplyRate (15) ||| many glowing spot, pos according to motor
 
-    
+
 void led_style(int s, long f0, long f1, long f2, long f3)
 {
-  if (s == 0) { //fade out - 20 - intervalTime(30) - fade(30)
+  if (s == 1) { //fade out - 20 - intervalTime(30) - fade(30)
     int intervalTime = f0;
     int fade = f1;
     if (intervalTime == 0) {
@@ -86,7 +86,7 @@ void led_style(int s, long f0, long f1, long f2, long f3)
         leds_ry[i].fadeToBlackBy( fade );
       }
     }
-  } else if (s == 1) { //fade in - 21 - intervalTime(30)
+  } else if (s == 2) { //fade in - 21 - intervalTime(30)
 
     int intervalTime = f0;
     if (intervalTime == 0) {
@@ -96,18 +96,29 @@ void led_style(int s, long f0, long f1, long f2, long f3)
     if (currentMillis - previousMillis2 > intervalTime) {
       previousMillis2 = currentMillis;
       for (int i = 0; i < NUM_LEDS; i++) {
-        if (leds_ly[i].r < maxR && leds_ly[i].g < maxG && leds_ly[i].b < maxB) {
-          leds_ly[i]++;
+        if (leds_ly[i].r < maxR) {
+          leds_ly[i].r++;
         }
-        if (leds_ry[i].r < maxR && leds_ry[i].g < maxG && leds_ry[i].b < maxB) {
-          leds_ry[i]++;
+        if (leds_ly[i].g < maxG) {
+          leds_ly[i].g++;
+        }
+        if (leds_ly[i].b < maxB) {
+          leds_ly[i].b++;
         }
 
-
+        if (leds_ly[i].r < maxR) {
+          leds_ry[i].r++;
+        }
+        if (leds_ly[i].g < maxG) {
+          leds_ry[i].g++;
+        }
+        if (leds_ly[i].b < maxB) {
+          leds_ry[i].b++;
+        }
       }
     }
   }
-  else if (s == 2) { //brightness according to motor val
+  else if (s == 3) { //brightness according to motor val
 
     int rangeMin = f2;
     int rangeMax = f3;
@@ -124,11 +135,11 @@ void led_style(int s, long f0, long f1, long f2, long f3)
       leds_ry[i] = CRGB(n, n, n);
     }
   }
-  else if (s == 3) {//brightness according to motor val, furthest LED brightest
+  else if (s == 4) {//brightness according to motor val, furthest LED brightest
     int fade = f1;
     int rangeMin = f2;
     int rangeMax = f3;
-    
+
 
     if (rangeMax == 0) {
       rangeMax = 5000;
@@ -151,7 +162,7 @@ void led_style(int s, long f0, long f1, long f2, long f3)
       leds_ry[i] = CRGB(n * ((float)i / NUM_LEDS), n * ((float)i / NUM_LEDS), n * ((float)i / NUM_LEDS));
     }
 
-  } else if (s == 4) {//LED trail shooting out
+  } else if (s == 5) {//LED trail shooting out
 
     int intervalTime = f0;
     int fade = f1;
@@ -175,7 +186,7 @@ void led_style(int s, long f0, long f1, long f2, long f3)
       leds_ry.fadeToBlackBy(fade);
       leds_ry[currLED++] = CRGB(maxR, maxG, maxB);
     }
-  } else if (s == 5) { //one glowing spot, pos according to motor
+  } else if (s == 6) { //one glowing spot, pos according to motor
 
     int intervalTime = f0;
     int fade = f1;
@@ -201,7 +212,7 @@ void led_style(int s, long f0, long f1, long f2, long f3)
       leds_ry[map(stepperPos[1], rangeMin, rangeMax, 0, NUM_LEDS)] = CRGB(maxR, maxG, maxB);
     }
   }
-  else if (s == 6) {  //many glowing spot, pos according to motor
+  else if (s == 7) {  //many glowing spot, pos according to motor
 
 
     int intervalTime = f0;

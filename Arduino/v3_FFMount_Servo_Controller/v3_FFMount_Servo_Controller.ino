@@ -29,7 +29,7 @@
 
 */
 const int timeStep = 100;  // ms
-const float minReturnSpeed = 50;
+const float minReturnSpeed = 100;
 
 
 
