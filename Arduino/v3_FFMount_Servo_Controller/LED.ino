@@ -28,6 +28,9 @@ int curLEDStyle = 1;
 long previousMillis1 = 0;
 long previousMillis2 = 0;
 
+bool LEDincrement_ly = true;
+bool LEDincrement_ry = true;
+
 int maxR = 255;
 int maxG = 255;
 int maxB = 255;
@@ -69,9 +72,10 @@ void loopLED() {
 
 void led_style(int s, long f0, long f1, long f2, long f3)
 {
-  if (s == 1) { //fade out - 20 - intervalTime(30) - fade(30)
+  if (s == 1) { //fade out - 21 - intervalTime(30) - fade(30)
     int intervalTime = f0;
     int fade = f1;
+
     if (intervalTime == 0) {
       intervalTime = 30;
     }
@@ -86,9 +90,14 @@ void led_style(int s, long f0, long f1, long f2, long f3)
         leds_ry[i].fadeToBlackBy( fade );
       }
     }
-  } else if (s == 2) { //fade in - 21 - intervalTime(30)
+  } else if (s == 2) { //fade in - 22 - intervalTime(30)
 
     int intervalTime = f0;
+    int minVal = f1;
+    if (minVal == 0) {
+      minVal = 0;
+    }
+
     if (intervalTime == 0) {
       intervalTime = 30;
     }
@@ -96,25 +105,38 @@ void led_style(int s, long f0, long f1, long f2, long f3)
     if (currentMillis - previousMillis2 > intervalTime) {
       previousMillis2 = currentMillis;
       for (int i = 0; i < NUM_LEDS; i++) {
-        if (leds_ly[i].r < maxR) {
-          leds_ly[i].r++;
+        int ll;
+        int rr;
+        if ( leds_ly[i].r >= maxR && leds_ly[i].g >= maxG && leds_ly[i].b >= maxB) {
+          LEDincrement_ly = false;
+        } else if ( leds_ly[i].r <= minVal && leds_ly[i].g <= minVal && leds_ly[i].b <= minVal) {
+          LEDincrement_ly = true;
         }
-        if (leds_ly[i].g < maxG) {
-          leds_ly[i].g++;
-        }
-        if (leds_ly[i].b < maxB) {
-          leds_ly[i].b++;
+        if (LEDincrement_ly) {
+          ll = 1;
+        } else {
+          ll = -1;
         }
 
-        if (leds_ly[i].r < maxR) {
-          leds_ry[i].r++;
+        if ( leds_ry[i].r >= maxR && leds_ry[i].g >= maxG && leds_ry[i].b >= maxB) {
+          LEDincrement_ry = false;
+        } else if ( leds_ry[i].r <= minVal && leds_ry[i].g <= minVal && leds_ry[i].b <= minVal) {
+          LEDincrement_ry = true;
         }
-        if (leds_ly[i].g < maxG) {
-          leds_ry[i].g++;
+        if (LEDincrement_ry) {
+          rr = 1;
+        } else {
+          rr = -1;
         }
-        if (leds_ly[i].b < maxB) {
-          leds_ry[i].b++;
-        }
+
+        leds_ly[i].r += ll;
+        leds_ly[i].g += ll;
+        leds_ly[i].b += ll;
+
+        leds_ry[i].r += rr;
+        leds_ry[i].g += rr;
+        leds_ry[i].b += rr;
+
       }
     }
   }
