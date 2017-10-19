@@ -3,15 +3,13 @@
 MyStepper stepper1(MyStepper::DRIVER, 3, 2);
 MyStepper stepper2(MyStepper::DRIVER, 5, 4);
 
-#define LimitSwitchLy A0 
+#define LimitSwitchLy A0
 #define LimitSwitchRy A1
 long homeMaxSpeed = 250;
 long homeSpeed = -250;
 
 int buttonState;             // the current reading from the input pin
 int buttonState2;
-
-
 
 //MyStepper stepper1(MyStepper::DRIVER, 7, 6);
 //MyStepper stepper2(MyStepper::DRIVER, 9, 8);
@@ -51,7 +49,7 @@ void setup()
   digitalWrite(15, HIGH);
 
 
-    pinMode(LimitSwitchLy, INPUT);
+  pinMode(LimitSwitchLy, INPUT);
   pinMode(LimitSwitchRy, INPUT);
 
 }
@@ -63,10 +61,10 @@ bool goHome = true;
 bool goHome2 = true;
 
 void loop()
-{   
+{
   bool isStepper1Complete = stepper1.isCompleteTotDist();
   bool isStepper2Complete = stepper2.isCompleteTotDist();
-  
+
   if (!isStepper1Complete)
   {
     stepper1.myRun();
@@ -79,8 +77,8 @@ void loop()
 
   if (isStepper1Complete && isStepper2Complete)
   {
-    int nextStepper1Position = random(1000,4000);
-    int nextStepper2Position = random(1000,4000);
+    int nextStepper1Position = random(1000, 4000);
+    int nextStepper2Position = random(1000, 4000);
     float nextTimespan = random(5, 10);
     Serial.println("Next Timespan: " + String(nextTimespan, DEC));
     Serial.println("Next Pos 1: " + String(nextStepper1Position, DEC));
@@ -93,38 +91,38 @@ void loop()
 
 
   //HOME
-  
-    if (goHome) {
-      int reading = digitalRead(LimitSwitchLy);
-      buttonState = reading;
-      //   digitalWrite(ledPin, buttonState);
-      stepper1.setMaxSpeed(homeMaxSpeed);
-        stepper1.setSpeed(-homeSpeed);
-     
-      if (buttonState) {
 
-        Serial.println("Reached Home L MOTOR");
-        stepper1.setSpeed(0);
-        stepper1.setCurrentPosition(0);
-        goHome = false;
-      }
-      stepper1.runSpeed();
-    }
-    if (goHome2) {
-      int reading = digitalRead(LimitSwitchRy);
-      buttonState2 = reading;
-      //   digitalWrite(ledPin, buttonState);
-      stepper2.setMaxSpeed(homeMaxSpeed);
-        stepper2.setSpeed(-homeSpeed);
-   
-      if (buttonState2) {
+  if (goHome) {
+    int reading = digitalRead(LimitSwitchLy);
+    buttonState = reading;
+    //   digitalWrite(ledPin, buttonState);
+    stepper1.setMaxSpeed(homeMaxSpeed);
+    stepper1.setSpeed(-homeSpeed);
 
-        Serial.println("Reached Home R MOTOR");
-        stepper2.setSpeed(0);
-        stepper2.setCurrentPosition(0);
-        goHome2 = false;
-      }
-      stepper2.runSpeed();
+    if (buttonState) {
+
+      Serial.println("Reached Home L MOTOR");
+      stepper1.setSpeed(0);
+      stepper1.setCurrentPosition(0);
+      goHome = false;
     }
+    stepper1.runSpeed();
+  }
+  if (goHome2) {
+    int reading = digitalRead(LimitSwitchRy);
+    buttonState2 = reading;
+    //   digitalWrite(ledPin, buttonState);
+    stepper2.setMaxSpeed(homeMaxSpeed);
+    stepper2.setSpeed(-homeSpeed);
+
+    if (buttonState2) {
+
+      Serial.println("Reached Home R MOTOR");
+      stepper2.setSpeed(0);
+      stepper2.setCurrentPosition(0);
+      goHome2 = false;
+    }
+    stepper2.runSpeed();
+  }
 
 }
