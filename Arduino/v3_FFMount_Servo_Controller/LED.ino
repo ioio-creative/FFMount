@@ -23,7 +23,7 @@ bool gReverseDirection = false;
 
 // ============ LED Style Setup and Loop================
 //LED
-int curLEDStyle;
+int curLEDStyle = 1;
 
 long previousMillis1 = 0;
 long previousMillis2 = 0;

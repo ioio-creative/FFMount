@@ -109,8 +109,14 @@ void stepper_style() {
       // }
 
       for (int stepperNumber = 0; stepperNumber < numOfStepper; stepperNumber++) {
-        if (steppers[stepperNumber]->isCompleteTotDist()) {
-          if (stepperPos[stepperNumber] >= 0 && stepperTime[stepperNumber] > 0) {
+        if (stepperPos[stepperNumber] >= 0 && stepperTime[stepperNumber] > 0) {
+
+          if (steppers[stepperNumber]->isCompleteTotDist()) {
+            if (currentMillis - prevStepperMillis[stepperNumber] > stepperTime[stepperNumber]) {
+              Serial.print("mdone");
+              Serial.print(stepperNumber);
+            }
+            prevStepperMillis[stepperNumber] = currentMillis;
             steppers[stepperNumber]->reset(-stepperPos[stepperNumber], stepperTime[stepperNumber]);
           }
         }

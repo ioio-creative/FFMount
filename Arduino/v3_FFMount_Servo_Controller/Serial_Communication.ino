@@ -189,9 +189,6 @@ void char_decode(int inChar)
       Serial1.print(int_array[i]);
     }
 
-    
-
-    
     Write_Flash();
     Load_To_Variables();
     Serial.print("sa-");
@@ -274,9 +271,11 @@ void char_decode(int inChar)
 
     Serial.print("re");
     Serial1.print("re");
-
-    // soft_restart();
-
+#ifdef ISMEGA
+     soft_restart();
+#else
+    RSTC->RSTC_CR = 0xA5000005; // Reset processor and internal peripherals
+#endif
     exclude_print_val = true;
 
   }

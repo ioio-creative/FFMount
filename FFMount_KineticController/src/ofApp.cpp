@@ -987,6 +987,7 @@ void ofApp::keyReleased(int key){
             
         case 'o':
             isShowBegin(false);
+            serialWrite(-1, "Q");
             break;
             
         case 'd':

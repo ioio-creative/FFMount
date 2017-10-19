@@ -34,15 +34,18 @@ const float minReturnSpeed = 100;
 
 
 //#define ISMEGA
-//#include "SoftReset.h" //SoftReset function
+#ifdef ISMEGA
+    //#include "SoftReset.h" //SoftReset function
+#else
+#endif
 //================ Config ================
 #include "PinAssignment.h" //Pin Config
 #include "config.h" //Pin Config
 //================ Serial ================
 
 // Variables will change:
-int ledState = LOW;             // ledState used to set the LED
 long previousMillis = 0;        // will store last time LED was updated
+long prevStepperMillis[numOfStepper] = {0, 0};
 
 long input_value[Input_size];
 
@@ -68,8 +71,6 @@ long inverseDir[numOfStepper]  = {0, 0};
 long maxPos[numOfStepper]  = {0, 0 };
 long maxSpeed[numOfStepper] = {0, 0};
 long maxAccel[numOfStepper] = {0, 0};
-
-
 
 // ============ ENCODER ================
 #include <Encoder.h>
@@ -124,7 +125,6 @@ void setup() {
 
     // ============ LIMIT SWITCH ================
     pinMode(limitSwitch[stepperNumber], INPUT);
-
   }
 
   // ============ LED ================
