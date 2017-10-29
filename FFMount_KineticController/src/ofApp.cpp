@@ -82,7 +82,15 @@ void ofApp::onKeyframe(Keyframe &kf){
         cableDurRy[currentArduinoID] = timelinePlayer.getTimelineValue(kf.timelineId + 1, kf.x);
         writeStyle(2);
         ofLog() << "RY HAS KEYFRAME : " << kf.timelineId << " " << kf.val << " " << kf.x;
+    }else if(kf.timelineId == 24){ //FAN
+        ofLog() << "FAN " << timelinePlayer.getTimelineValue(kf.timelineId, kf.x);
+        if(timelinePlayer.getTimelineValue(kf.timelineId, kf.x) > 100){
+            serialWrite(FAN_SERIAL, "o");  // 'o' is on, 'f' is off
+        }else{
+            serialWrite(FAN_SERIAL, "f");  // 'o' is on, 'f' is off
+        }
     }else{
+        
         // writeLEDStyle(LEDStyle,LEDParameter0);
         ofLog() << "LED " << LEDStyle;
     }

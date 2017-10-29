@@ -7,6 +7,7 @@
 //#define RECEIVER_IS_WINDOWS         // lattePanda / Win10
 
 #define NUM_OF_WINGS 6 //Todo Transfer definition /variables to xml
+#define FAN_SERIAL 7
 #define NUM_OF_SERIAL_TO_INIT 8  //Com port device size
 #define BAUD 57600 //Todo Transfer definition /variables to xml
 
