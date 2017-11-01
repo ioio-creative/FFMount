@@ -27,6 +27,7 @@ printStatusToSerial	KEYWORD2
 isCompleteTotDist	KEYWORD2
 isCompleteHalfTotDist	KEYWORD2
 setMinReturnSpeed	KEYWORD2
+getTimeSinceLastResetInMillis KEYWORD2
 
 #######################################
 # Constants (LITERAL1)

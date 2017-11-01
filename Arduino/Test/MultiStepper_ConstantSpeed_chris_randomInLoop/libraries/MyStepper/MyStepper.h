@@ -31,7 +31,7 @@ class MyStepper
 	
 	bool myRun();
 	
-	float reset(long newPositionToGo, long totTime);	
+	float reset(long newPositionToGo, float totTime);	
 	
 	void setTimeStepInMillis(int timeStep);
 	
@@ -52,7 +52,8 @@ class MyStepper
 	bool isCompleteHalfTotDist();
 	
 	void setMinReturnSpeed(float speed);
-    
+	
+	long getTimeSinceLastResetInMillis();
     
     //From AcceleStepper
     long distanceToGo();
@@ -60,30 +61,31 @@ class MyStepper
     long targetPosition();
     void stop();
     void setSpeed(float speed);
-    void setMaxSpeed(float speed);
-    void setAcceleration(float acceleration);
-    void moveTo(long absolute);
-    boolean runSpeed();
-    boolean run();
 	
   private:
     AccelStepper _accelStepper;
 	long _totDist;
 	long _halfTotDist;
-	long _totTime;
-	long _halfTotTime;
-	long _linearAccl;
+	float _totTime;
+	float _halfTotTimeInMillis;
+	float _linearAccl;
+	int _signOfLinearAccl;
 	int _timeStepInMillis;
 	long _lastTimeStampInMillis;
 	bool _isPrintTimeStepToSerial;
 	long _processStartTimeStampInMillis;
 	long _processStartPosition;
 	float _minReturnSpeed;
+	float _theoreticalMaxSpeed;
+	float _lastSpeed;
+	long _nextUpdateTimeStepInMillis;
 
+	void setMaxSpeed(float speed);
 
-
-	float computeLinearAccl(long totDist, long totTime);
-	float computeMaxSpeedForLinearAccl(long totDist, long totTime);	
+	float computeLinearAccl(long totDist, float totTime);
+	float computeMaxSpeedForLinearAccl(long totDist, float totTime);
+	float computeSpeedByTimeSinceLastReset();
+	float computeSpeedByTimeSinceLastReset(long currTimeStampInMillis);
 };
 
 // http://forum.arduino.cc/index.php?topic=37804.0

@@ -4,14 +4,14 @@ MyStepper stepper1(MyStepper::DRIVER, 7, 6);
 MyStepper stepper2(MyStepper::DRIVER, 9, 8);
 
 const int timeStep = 100;  // ms
-const float minReturnSpeed = 50;
+const float minReturnSpeed = 0;
 
 // about 1600 = 1 revolution for stepper 1
 
 // stepper 1 parameters
 const long stepper1DistanceToMove = 3000;
-const long stepper1TimeToComplete = 5;  // s
-bool isStepper1PrintTimeStepToSerial = true;
+const float stepper1TimeToComplete = 5;  // s
+bool isStepper1PrintTimeStepToSerial = false;
 bool isStepper1Stopped = false;
 
 
@@ -23,14 +23,7 @@ void setup()
   stepper1.reset(stepper1DistanceToMove, stepper1TimeToComplete);
   stepper1.setTimeStepInMillis(timeStep);
   stepper1.setIsPrintTimeStepToSerial(isStepper1PrintTimeStepToSerial);
-
-  digitalWrite(14, HIGH);
-  digitalWrite(15, HIGH);
 }
-
-long previousMillis = 0;        // will store last time LED was updated
-long interval = 1000;           // interval at which to blink (milliseconds)
-
 
 void loop()
 {   

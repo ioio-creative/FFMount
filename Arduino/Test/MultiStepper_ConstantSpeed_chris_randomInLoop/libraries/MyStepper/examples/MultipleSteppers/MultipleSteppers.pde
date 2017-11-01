@@ -1,7 +1,7 @@
 #include <MyStepper.h>
 
-MyStepper stepper1(7, 6);
-MyStepper stepper2(9, 8);
+MyStepper stepper1(MyStepper::DRIVER, 7, 6);
+MyStepper stepper2(MyStepper::DRIVER, 9, 8);
 
 const int timeStep = 1000;  // ms
 const float minReturnSpeed = 50;
@@ -10,14 +10,14 @@ const float minReturnSpeed = 50;
 
 // stepper 1 parameters
 const long stepper1DistanceToMove = 16000;
-const long stepper1TimeToComplete = 30;  // s
-bool isStepper1PrintTimeStepToSerial = true;
+const float stepper1TimeToComplete = 30;  // s
+bool isStepper1PrintTimeStepToSerial = false;
 bool isStepper1Stopped = false;
 
 // stepper 2 parameters
 const long stepper2DistanceToMove = 32000;
-const long stepper2TimeToComplete = 30;  // s
-bool isStepper2PrintTimeStepToSerial = true;
+const float stepper2TimeToComplete = 30;  // s
+bool isStepper2PrintTimeStepToSerial = false;
 bool isStepper2Stopped = false;
 
 void setup()
