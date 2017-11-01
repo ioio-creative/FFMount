@@ -99,6 +99,10 @@ long stepperPos1[numOfStepper];
 long stepperPos2[numOfStepper];
 bool abPos[numOfStepper];
 
+//style 5
+long stepperTime1[numOfStepper];
+long stepperTime2[numOfStepper];
+
 // ============ ============ ================
 // ============ ====SETUP=== ================
 // ============ ============ ================

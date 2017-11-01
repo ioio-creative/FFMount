@@ -392,12 +392,15 @@ void TimelinePlayer::keyFrameSelected(Keyframe &kf) {
     selectedKeyframe = &kf;
     
     //ofLog() << keyframeSlider.getParameter().toString();// .setup("Keyframe Value", kf.val, 0, 20);
+    
     if(kf.timelineId%2 == 0){
-    keyframeSlider.setMax(KEYFRAME_MAX_VALUE);
-    keyframeSlider.setMin(KEYFRAME_MIN_VALUE);
+        keyframeSlider.setMax(KEYFRAME_MAX_VALUE);
+        keyframeSlider.setMin(KEYFRAME_MIN_VALUE);
+        ofLog() << " Here" ;
     }else{
         keyframeSlider.setMax(300);
         keyframeSlider.setMin(0);
+        ofLog() << " THere"  << (int)kf.timelineId;
     }
     keyframeSlider.set(kf.val);
     

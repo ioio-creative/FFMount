@@ -201,6 +201,25 @@ class ofApp : public ofBaseApp{
     vector<ofParameter<int>> cableDurLy;
     vector<ofParameter<int>> cableDurRy;
     
+    //Cable Pos
+    ofxPanel guiCablePosLy2;
+    ofxPanel guiCablePosRy2;
+    ofParameterGroup parametersCablePos2;
+    
+    vector<ofParameter<int>> cablePosLy2;
+    vector<ofParameter<int>> cablePosRy2;
+    
+    void saveStyle5();
+    void loadStyle5();
+    
+    //Cable Duration
+    ofxPanel guiCableDurLy2;
+    ofxPanel guiCableDurRy2;
+    ofParameterGroup parametersCableDur2;
+    
+    vector<ofParameter<int>> cableDurLy2;
+    vector<ofParameter<int>> cableDurRy2;
+    
     //Cable Pos Offset
     ofxPanel guiCablePosLyOffset;
     ofxPanel guiCablePosRyOffset;
@@ -209,7 +228,6 @@ class ofApp : public ofBaseApp{
     vector<ofParameter<int>> cablePosRyOffset;
     
     bool showOffset;
-    
     
     //Cable Accel
     ofxPanel guiCableAccelLy;
@@ -269,7 +287,9 @@ class ofApp : public ofBaseApp{
     
     //================Style ====================
     ofParameter<int> currentStyle;
-    void writeStyle(int s);
+    int prevStyle;
+    bool isStyleChanged;
+    void writeStyleMode(int s);
     void writeLEDStyle(int s, int ss);
 
     

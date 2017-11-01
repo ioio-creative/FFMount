@@ -122,6 +122,43 @@ void stepper_style() {
         }
       }
     }
+    if (style == 5) {
+      //STYLE - POS_1 - TIME_1 - POS_2 - TIME_2 - - POS_1 - TIME_1 - POS_2 - TIME_2 - LED_STYLE - VAL1 - VAL2 - VAL3 - VAL4
+
+      stepperPos1[0] = input_value[1];
+      stepperTime1[0] = input_value[2] / 1000;
+
+      stepperPos2[0] = input_value[3];
+      stepperTime2[0] = input_value[4] / 1000;
+
+      stepperPos1[1] = input_value[6];
+      stepperTime1[1] = input_value[6] / 1000;
+
+      stepperPos2[1] = input_value[7];
+      stepperTime2[1] = input_value[8] / 1000;
+
+      curLEDStyle  = input_value[9];
+      // LEDFactor0 = input_value[10];
+      // LEDFactor1 = input_value[7];
+      // LEDFactor2 = input_value[8];
+      // LEDFactor3 = input_value[9];
+
+      // }
+
+      for (int stepperNumber = 0; stepperNumber < numOfStepper; stepperNumber++) {
+        if (stepperPos[stepperNumber] >= 0 && stepperTime[stepperNumber] > 0) {
+
+          if (steppers[stepperNumber]->isCompleteTotDist()) {
+            if (abPos[stepperNumber]) {
+              steppers[stepperNumber]->reset(-stepperPos1[stepperNumber], stepperTime1[stepperNumber]);
+            } else {
+              steppers[stepperNumber]->reset(-stepperPos2[stepperNumber], stepperTime2[stepperNumber]);
+            }
+            abPos[stepperNumber] = !abPos[stepperNumber];
+          }
+        }
+      }
+    }
   }
 }
 

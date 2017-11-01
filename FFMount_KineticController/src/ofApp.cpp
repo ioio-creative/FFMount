@@ -10,7 +10,7 @@ void ofApp::setup(){
     
     isArduinoConnected = serialSetup();
     
-    SERIAL_PARAMETERES = {"sa", "lo", "on", "allhm"}; //save, load, online
+    SERIAL_PARAMETERES = {"sa", "lo", "on", "allhm", "mdone"}; //save, load, online
     
     for(int i=0; i < NUM_OF_WINGS; i++){
         isArduinoConnectedBySerial.push_back(false);
@@ -62,7 +62,9 @@ void ofApp::setup(){
     }
     
     showBeginTrigger = false;
+    isStyleChanged = false;
     
+    prevStyle = currentStyle;
     
 }
 
@@ -73,14 +75,14 @@ void ofApp::onKeyframe(Keyframe &kf){
         cableDurLy[currentArduinoID] = timelinePlayer.getTimelineValue(kf.timelineId + 1, kf.x);
         cableDurRy[currentArduinoID] = 0; //means no input
         currentMotor = 0;
-        writeStyle(2);
+        writeStyleMode(2);
         
     }else if(kf.timelineId >= NUM_OF_WINGS *2  && kf.timelineId%2==0 && kf.timelineId < NUM_OF_WINGS *4){ //RY
         currentArduinoID = kf.timelineId /2 - NUM_OF_WINGS;
         currentMotor = 1;
         cableDurLy[currentArduinoID] = 0; //means no input
         cableDurRy[currentArduinoID] = timelinePlayer.getTimelineValue(kf.timelineId + 1, kf.x);
-        writeStyle(2);
+        writeStyleMode(2);
         ofLog() << "RY HAS KEYFRAME : " << kf.timelineId << " " << kf.val << " " << kf.x;
     }else if(kf.timelineId == 24){ //FAN
         ofLog() << "FAN " << timelinePlayer.getTimelineValue(kf.timelineId, kf.x);
@@ -227,6 +229,44 @@ void ofApp::guiSetup(){
         guiCableDurRy.add(cableDurRy[i]);
     }
     
+    //--- Style 5 ----
+
+    //--- Cable Position Control ---
+    
+    parametersCablePos2.setName("cablePosition 2");
+    guiCablePosLy2.setup("guiCablePosLy2", "guiCablePosLy2.xml", ofGetWidth() - 200, 370);
+    guiCablePosRy2.setup("guiCablePosRy2", "guiCablePosRy2.xml", ofGetWidth() - 100, 370);
+    for(int i=0; i< NUM_OF_WINGS; i++){
+        ofParameter<int> a;
+        a.set("P2 Ly " + ofToString(i),0,0,MAX_Y_POS);
+        ofParameter<int> b;
+        b.set("P2 Ry " + ofToString(i),0,0,MAX_Y_POS);
+        cablePosLy2.push_back(a);
+        cablePosRy2.push_back(b);
+        guiCablePosLy2.add(cablePosLy2[i]);
+        guiCablePosRy2.add(cablePosRy2[i]);
+    }
+    
+    //--- Cable Duration Control ---
+    
+    parametersCableDur2.setName("cableDuration 2");
+    guiCableDurLy2.setup("guiCableDurLy2", "guiCableDurLy2.xml", ofGetWidth() - 200, 570);
+    guiCableDurRy2.setup("guiCableDurRy2", "guiCableDurRy2.xml", ofGetWidth() - 100, 570);
+    for(int i=0; i< NUM_OF_WINGS; i++){
+        ofParameter<int> a;
+        a.set("Dur2 Ly " + ofToString(i),0,0,MAX_Y_DUR);
+        ofParameter<int> b;
+        b.set("Dur2 Ry " + ofToString(i),0,0,MAX_Y_DUR);
+        cableDurLy2.push_back(a);
+        cableDurRy2.push_back(b);
+        guiCableDurLy2.add(cableDurLy2[i]);
+        guiCableDurRy2.add(cableDurRy2[i]);
+    }
+    
+        loadStyle5();
+    
+    //--- Style 5 END----
+    
     //--- Cable Position Offset Control ---  //not used??
     showOffset = false;
     
@@ -290,6 +330,18 @@ void ofApp::guiSetup(){
     guiCableDurRy.setWidthElements(guiPosCableW);
     
     
+    //---style 5
+    guiCablePosLy2.setSize(guiPosCableW, guiCableH);
+    guiCablePosLy2.setWidthElements(guiPosCableW);
+    guiCablePosRy2.setSize(guiPosCableW, guiCableH);
+    guiCablePosRy2.setWidthElements(guiPosCableW);
+    
+    guiCableDurLy2.setSize(guiPosCableW, guiCableH);
+    guiCableDurLy2.setWidthElements(guiPosCableW);
+    guiCableDurRy2.setSize(guiPosCableW, guiCableH);
+    guiCableDurRy2.setWidthElements(guiPosCableW);
+    
+    // ---
     guiCablePosLyOffset.setSize(guiPosCableW, guiCableH);
     guiCablePosLyOffset.setWidthElements(guiPosCableW);
     guiCablePosRyOffset.setSize(guiPosCableW, guiCableH);
@@ -328,6 +380,15 @@ void ofApp::update(){
         timelinePlayer.loadButtonPressed();
         timelinePlayer.playButtonPressed();
         showBeginTrigger =false;
+    }
+    
+    if(prevStyle != currentStyle){
+        isStyleChanged = true;
+        prevStyle = currentStyle;
+    }
+    if(isStyleChanged && currentStyle == 5){
+        loadStyle5();
+        isStyleChanged = false;
     }
     //OSC
 #ifdef USEOSC
@@ -378,6 +439,14 @@ void ofApp::update(){
                 isArduinoConnectedBySerial[i] = true;
             }
             
+            if(stringDecode(receivedString[i])[0] == 3){ //all home
+                ofLog() << "device : " << i << " ALL HOME";
+            }
+            
+            if(stringDecode(receivedString[i])[0] == 4){ //Motor Done Movement
+                ofLog() << "device : " << i << " ALL HOME";
+            }
+            
         }
     }
     
@@ -398,20 +467,22 @@ void ofApp::update(){
     
     
     //================== Timeline Player ==================
-    timelinePlayer.update();
-    vector<float> a;
-    a = timelinePlayer.getTimelineTweenValues();
-    
-    for(int i = 0; i < NUM_OF_WINGS; i++){
-        cablePosLy[i] = a[i*2];
-        cablePosRy[i] = a[i*2+(2*NUM_OF_WINGS)];
-    }
-    if(a.size() >=31){
-        LEDStyle =(int)a[26]/100;
-        LEDParameter0 =a[27]/10;
-        LEDParameter1 =a[28]/10;
-        LEDParameter2 =a[29];
-        LEDParameter3 =a[30];
+    if(currentStyle == 4){
+        timelinePlayer.update();
+        vector<float> a;
+        a = timelinePlayer.getTimelineTweenValues();
+        
+        for(int i = 0; i < NUM_OF_WINGS; i++){
+            cablePosLy[i] = a[i*2];
+            cablePosRy[i] = a[i*2+(2*NUM_OF_WINGS)];
+        }
+        if(a.size() >=31){
+            LEDStyle =(int)a[26]/100;
+            LEDParameter0 =a[27]/10;
+            LEDParameter1 =a[28]/10;
+            LEDParameter2 =a[29];
+            LEDParameter3 =a[30];
+        }
     }
     //================== Simulation ==================
     wing.update();
@@ -469,16 +540,16 @@ void ofApp::guiDraw(){
         }
         
         if(style_Btn_all_same){
-            writeStyle(0);//all same = 0, all diff = 1, specific = 2
+            writeStyleMode(0);//all same = 0, all diff = 1, specific = 2
             
         }
         
         if(style_Btn_all){
-            writeStyle(1);//all same = 0, all diff = 1, specific = 2
+            writeStyleMode(1);//all same = 0, all diff = 1, specific = 2
         }
         
         if(style_Btn){
-            writeStyle(2);//all same = 0, all diff = 1, specific = 2
+            writeStyleMode(2);//all same = 0, all diff = 1, specific = 2
             
         }
         
@@ -500,6 +571,15 @@ void ofApp::guiDraw(){
     
     guiCableDurLy.draw();
     guiCableDurRy.draw();
+    
+    //----style 5---
+    guiCablePosLy2.draw();
+    guiCablePosRy2.draw();
+    
+    guiCableDurLy2.draw();
+    guiCableDurRy2.draw();
+    
+    //--
     
     
     guiCableAccelLy.draw();
@@ -960,6 +1040,13 @@ void ofApp::keyPressed(int key){
 void ofApp::keyReleased(int key){
     switch (key){
             
+            
+        case '4':
+            currentStyle = 4;
+            break;
+        case '5':
+            currentStyle = 5;
+            break;
             /*
              
              case 's':
@@ -987,7 +1074,7 @@ void ofApp::keyReleased(int key){
                 tempLEDStyle = 0;
             }
             break;
-
+            
             
         case 'p':
             isShowBegin(true);
@@ -1023,11 +1110,12 @@ void ofApp::keyReleased(int key){
             }
             break;
             
-        case 358: //leftArrow;
+        case 358: //rightArrow;
             page++;
             if(page >= numOfPages ){
                 page = 0;
             }
+            ofLog() << "page " << page;
             break;
             
         case 356: //leftArrow;
@@ -1035,14 +1123,24 @@ void ofApp::keyReleased(int key){
             if(page < 0 ){
                 page = numOfPages-1;
             }
+            ofLog() << "page " << page;
+            break;
+            
+        case 'j':
+            //save style5 xml
+            saveStyle5();
+            break;
+            
+        case 'k':
+            // load style5 xml
+            loadStyle5();
+            
             break;
             
         default:
             break;
             
     }
-    ofLog() << "page " << page;
-    
 }
 
 // =========== Style ================
@@ -1065,7 +1163,7 @@ void ofApp::writeLEDStyle(int s, int ss){
     //  }
 }
 
-void ofApp::writeStyle(int s){
+void ofApp::writeStyleMode(int s){
     ofLog() << "write Style " << s  << " current arduino " << currentArduinoID;
     
     if (s == 0){
@@ -1248,6 +1346,60 @@ void ofApp::writeStyle(int s){
         
     }else if (s == 2){
         if(currentArduinoID <= NUM_OF_WINGS-1 && currentArduinoID >= 0){
+            
+            
+            if(currentStyle == 5){
+                
+                //STYLE - POS_1 - TIME_1 - POS_2 - TIME_2 - - POS_1 - TIME_1 - POS_2 - TIME_2 - LED_STYLE - VAL1 - VAL2 - VAL3 - VAL4
+
+                
+                string writeInTotal = " : ";
+                string toWrite = "";
+                
+                toWrite+= ofToString(currentStyle);
+                toWrite+= "-";
+                
+                toWrite+= ofToString((int)cablePosLy[currentArduinoID]);
+                toWrite+= "-";
+                
+                toWrite+= ofToString((int)cableDurLy[currentArduinoID]*100);
+                toWrite+= "-";
+                
+                toWrite+= ofToString((int)cablePosLy2[currentArduinoID]);
+                toWrite+= "-";
+                
+                toWrite+= ofToString((int)cableDurLy2[currentArduinoID]*100);
+                toWrite+= "-";
+                
+                toWrite+= ofToString((int)cablePosRy[currentArduinoID]);
+                toWrite+= "-";
+                
+                toWrite+= ofToString((int)cableDurRy[currentArduinoID]*100);
+                toWrite+= "-";
+                
+                toWrite+= ofToString((int)cablePosRy2[currentArduinoID]);
+                toWrite+= "-";
+            
+                toWrite+= ofToString((int)cableDurRy2[currentArduinoID]*100);
+                toWrite+= "-";
+                
+                //LED
+                
+                toWrite+= ofToString((int)LEDStyle);
+                toWrite+= "-";
+            
+                
+                writeInTotal=toWrite;
+                
+                serialWrite(currentArduinoID, toWrite);
+                // currentdisplayLog = writeInTotal;
+                
+                
+            }
+            
+
+            
+            
             if(currentStyle == 4){
                 
                 //STYLE - POS - TIME - POS - TIME - LED_STYLE - VAL1 - VAL2 - VAL3 - VAL4
@@ -1274,7 +1426,7 @@ void ofApp::writeStyle(int s){
                 
                 
                 //   }
-
+                
                 //LED
                 
                 toWrite+= ofToString((int)LEDStyle);
@@ -1515,6 +1667,48 @@ void ofApp::isShowBegin(bool sb){
     }
     
 }
+
+//==================== Style 5 ======================
+//--------------------------------------------------------------
+void ofApp::saveStyle5(){
+
+    if(currentStyle == 5){
+        guiCablePosLy.saveToFile("guiCablePosLy.xml");
+        guiCablePosRy.saveToFile("guiCablePosRy.xml");
+        
+        guiCableDurLy.saveToFile("guiCableDurLy.xml");
+        guiCableDurRy.saveToFile("guiCableDurRy.xml");
+        
+        
+        guiCablePosLy2.saveToFile("guiCablePosLy2.xml");
+        guiCablePosRy2.saveToFile("guiCablePosRy2.xml");
+        
+        guiCableDurLy2.saveToFile("guiCableDurLy2.xml");
+        guiCableDurRy2.saveToFile("guiCableDurRy2.xml");
+    }
+
+}
+
+//--------------------------------------------------------------
+void ofApp::loadStyle5(){
+    if(currentStyle == 5){
+        guiCablePosLy.loadFromFile("guiCablePosLy.xml");
+        guiCablePosRy.loadFromFile("guiCablePosRy.xml");
+        
+        guiCableDurLy.loadFromFile("guiCableDurLy.xml");
+        guiCableDurRy.loadFromFile("guiCableDurRy.xml");
+        
+        guiCablePosLy2.loadFromFile("guiCablePosLy2.xml");
+        guiCablePosRy2.loadFromFile("guiCablePosRy2.xml");
+        
+        guiCableDurLy2.loadFromFile("guiCableDurLy2.xml");
+        guiCableDurRy2.loadFromFile("guiCableDurRy2.xml");
+    }
+
+}
+
+
+
 
 //==================== Unused ======================
 

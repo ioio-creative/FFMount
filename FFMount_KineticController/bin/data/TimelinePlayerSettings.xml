@@ -1,0 +1,10 @@
+<group>
+	<Loop>0</Loop>
+	<Layer_to_Draw>0</Layer_to_Draw>
+	<Velocity_Multiplier>1</Velocity_Multiplier>
+	<Graph_ScrollX>0</Graph_ScrollX>
+	<Graph_VScale_Cubic>0.15</Graph_VScale_Cubic>
+	<Graph_HScale_Cubic>0.5</Graph_HScale_Cubic>
+	<Keyframe_Value>0</Keyframe_Value>
+	<Time_Value>0</Time_Value>
+</group>
