@@ -35,7 +35,7 @@ const float minReturnSpeed = 100;
 
 //#define ISMEGA
 #ifdef ISMEGA
-    //#include "SoftReset.h" //SoftReset function
+//#include "SoftReset.h" //SoftReset function
 #else
 #endif
 //================ Config ================
@@ -95,13 +95,16 @@ int LEDFactor2;
 int LEDFactor3;
 
 //style 2
-long stepperPos1[numOfStepper];
-long stepperPos2[numOfStepper];
-bool abPos[numOfStepper];
+//long stepperPos1[numOfStepper];
+//long stepperPos2[numOfStepper];
+
 
 //style 5
-long stepperTime1[numOfStepper];
-long stepperTime2[numOfStepper];
+long stepperTime1[numOfStepper]  = {0, 0};  // Travel Time to POS
+long stepperPos1[numOfStepper]  = {0, 0};
+long stepperTime2[numOfStepper]  = {0, 0};  // Travel Time to POS
+long stepperPos2[numOfStepper]  = {0, 0};
+bool abPos[numOfStepper] = {false, false};
 
 // ============ ============ ================
 // ============ ====SETUP=== ================
@@ -228,13 +231,12 @@ void loop() {
     stepper_style();
 
     for (int stepperNumber = 0; stepperNumber < numOfStepper; stepperNumber++) {
-      if (style != 4) {
+      if (style != 4 && style != 5) {
         steppers[stepperNumber]->run();
       } else {
         if (!steppers[stepperNumber]->isCompleteTotDist()) {
           steppers[stepperNumber]->myRun();
         }
-
       }
     }
     // ============ ENCODER ================

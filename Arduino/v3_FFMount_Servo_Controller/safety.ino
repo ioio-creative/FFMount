@@ -5,7 +5,7 @@ void alarm_check() {
     Serial.print("alarm");
     if (!DO5_ALRM_ly) {
       Serial.println(" ly ");
-      digitalWrite(DI2_ALARM_RESET_ly, HIGH);
+      digitalWrite(DI2_ALARM_RESET_ly, HIGH); 
       delay(500);
       digitalWrite(DI2_ALARM_RESET_ly, LOW);
     }

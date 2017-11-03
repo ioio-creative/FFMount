@@ -115,7 +115,7 @@ void stepper_style() {
             if (currentMillis - prevStepperMillis[stepperNumber] > stepperTime[stepperNumber]) {
               Serial.print("mdone");
               Serial.print(stepperNumber);
-            }
+           }
             prevStepperMillis[stepperNumber] = currentMillis;
             steppers[stepperNumber]->reset(-stepperPos[stepperNumber], stepperTime[stepperNumber]);
           }
@@ -131,7 +131,7 @@ void stepper_style() {
       stepperPos2[0] = input_value[3];
       stepperTime2[0] = input_value[4] / 1000;
 
-      stepperPos1[1] = input_value[6];
+      stepperPos1[1] = input_value[5];
       stepperTime1[1] = input_value[6] / 1000;
 
       stepperPos2[1] = input_value[7];
@@ -146,17 +146,25 @@ void stepper_style() {
       // }
 
       for (int stepperNumber = 0; stepperNumber < numOfStepper; stepperNumber++) {
-        if (stepperPos[stepperNumber] >= 0 && stepperTime[stepperNumber] > 0) {
 
-          if (steppers[stepperNumber]->isCompleteTotDist()) {
-            if (abPos[stepperNumber]) {
+        if (steppers[stepperNumber]->isCompleteTotDist()) {
+
+          Serial.println(abPos[stepperNumber]);
+          if (abPos[stepperNumber]) {
+
+            if (stepperPos1[stepperNumber] >= 0 && stepperTime1[stepperNumber] > 0) {
               steppers[stepperNumber]->reset(-stepperPos1[stepperNumber], stepperTime1[stepperNumber]);
-            } else {
-              steppers[stepperNumber]->reset(-stepperPos2[stepperNumber], stepperTime2[stepperNumber]);
+              abPos[stepperNumber] = !abPos[stepperNumber];
             }
-            abPos[stepperNumber] = !abPos[stepperNumber];
+          } else {
+            if (stepperPos2[stepperNumber] >= 0 && stepperTime2[stepperNumber] > 0) {
+              steppers[stepperNumber]->reset(-stepperPos2[stepperNumber], stepperTime2[stepperNumber]);
+              abPos[stepperNumber] = !abPos[stepperNumber];
+            }
           }
+          
         }
+
       }
     }
   }

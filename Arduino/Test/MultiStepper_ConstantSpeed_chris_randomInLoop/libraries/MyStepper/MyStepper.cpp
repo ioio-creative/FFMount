@@ -158,19 +158,20 @@ long MyStepper::getTimeSinceLastResetInMillis()
 	return millis() - _processStartTimeStampInMillis;
 }
 
-
 /* From AccelStepper */
+
+
 
 long MyStepper::distanceToGo()
 {
     //return _accelStepper.distanceToGo();
-	return _totDist - (currentPosition() - _processStartPosition);
+    return _totDist - (currentPosition() - _processStartPosition);
 }
 
 long MyStepper::targetPosition()
 {
     //return _accelStepper.targetPosition();
-	return _processStartPosition + _totDist;
+    return _processStartPosition + _totDist;
 }
 
 void MyStepper::setCurrentPosition(long position)
@@ -188,18 +189,37 @@ void MyStepper::setSpeed(float speed)
     _accelStepper.setSpeed(speed);
 }
 
+void MyStepper::setMaxSpeed(float speed)
+{
+    _accelStepper.setMaxSpeed(speed);
+}
+
+void MyStepper::setAcceleration(float acceleration)
+{
+    _accelStepper.setAcceleration(acceleration);
+}
+
+void MyStepper::moveTo(long absolute)
+{
+    _accelStepper.moveTo(absolute);
+}
+
+boolean MyStepper::runSpeed(){
+    return _accelStepper.runSpeed();
+}
+
+boolean MyStepper::run(){
+    return _accelStepper.run();
+}
+
+
+
 /* end of From AccelStepper */
 
 /* end of public methods */
 
 
 /* private methods */
-
-
-void MyStepper::setMaxSpeed(float speed)
-{
-	_accelStepper.setMaxSpeed(speed);
-}
 
 float MyStepper::computeLinearAccl(long totDist, float totTime)
 {
