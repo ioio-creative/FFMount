@@ -6,7 +6,7 @@
 #define CHIPSET     WS2811
 #define NUM_LEDS    34
 
-#define BRIGHTNESS  255
+#define BRIGHTNESS  220
 #define FRAMES_PER_SECOND 30
 
 //CRGB leds_ly[NUM_LEDS];
@@ -31,9 +31,17 @@ long previousMillis2 = 0;
 bool LEDincrement_ly = true;
 bool LEDincrement_ry = true;
 
-int maxR = 255;
-int maxG = 255;
-int maxB = 255;
+int maxR = 220;
+int maxG = 220;
+int maxB = 220;
+
+int maxRs6 = 220;
+int maxGs6 = 220;
+int maxBs6 = 220;
+
+int maxRs7 = 200;
+int maxGs7 = 170;
+int maxBs7 = 0;
 
 unsigned long currentMillis = millis();
 
@@ -151,9 +159,9 @@ void led_style(int s, long f0, long f1, long f2, long f3)
 
     int m, n;
     for (int i = 0; i < NUM_LEDS; i++) {
-      m  = map(stepperPos[0], rangeMin, rangeMax, 0, 255);
+      m  = map(abs(steppers[0]->currentPosition()), rangeMin, rangeMax, 0, 255);
       leds_ly[i] = CRGB(m, m, m);
-      n  = map(stepperPos[1], rangeMin, rangeMax, 0, 255);
+      n  = map(abs(steppers[1]->currentPosition()), rangeMin, rangeMax, 0, 255);
       leds_ry[i] = CRGB(n, n, n);
     }
   }
@@ -174,8 +182,8 @@ void led_style(int s, long f0, long f1, long f2, long f3)
 
     int m, n;
     for (int i = 0; i < NUM_LEDS; i++) {
-      m  = map(stepperPos[0], rangeMin, rangeMax, 0, 255);
-      n  = map(stepperPos[1], rangeMin, rangeMax, 0, 255);
+      m  = map(abs(steppers[0]->currentPosition()), rangeMin, rangeMax, 0, 255);
+      n  = map(abs(steppers[1]->currentPosition()), rangeMin, rangeMax, 0, 255);
 
       leds_ly.fadeToBlackBy(fade);
       leds_ry.fadeToBlackBy(fade);
@@ -230,8 +238,8 @@ void led_style(int s, long f0, long f1, long f2, long f3)
 
       leds_ly.fadeToBlackBy(fade); // larger is faster
       leds_ry.fadeToBlackBy(fade); // larger is faster
-      leds_ly[map(stepperPos[0], rangeMin, rangeMax, 0, NUM_LEDS)] = CRGB(maxR, maxG, maxB);
-      leds_ry[map(stepperPos[1], rangeMin, rangeMax, 0, NUM_LEDS)] = CRGB(maxR, maxG, maxB);
+      leds_ly[map(abs(steppers[0]->currentPosition()), rangeMin, rangeMax, 0, NUM_LEDS)] = CRGB(maxRs6, maxGs6, maxBs6);
+      leds_ry[map(abs(steppers[1]->currentPosition()), rangeMin, rangeMax, 0, NUM_LEDS)] = CRGB(maxRs6, maxGs6, maxBs6);
     }
   }
   else if (s == 7) {  //many glowing spot, pos according to motor
@@ -260,12 +268,13 @@ void led_style(int s, long f0, long f1, long f2, long f3)
         currLED = 0;
       }
       leds_ly[random(0, NUM_LEDS)] *= multiplyRate;
+      leds_ry[random(0, NUM_LEDS)] *= multiplyRate;
       for (int i = 0; i < NUM_LEDS; i++) {
         if (leds_ly[i].r == 0 && leds_ly[i].g == 0 && leds_ly[i].b == 0) {
-          leds_ly[i++] = CRGB(maxR / multiplyRate, maxG / multiplyRate, maxB / multiplyRate);
+          leds_ly[i++] = CRGB(maxRs7 / multiplyRate, maxGs7 / multiplyRate, maxBs7 / multiplyRate);
         }
         if (leds_ry[i].r == 0 && leds_ry[i].g == 0 && leds_ry[i].b == 0) {
-          leds_ry[i++] = CRGB(maxR / multiplyRate, maxG / multiplyRate, maxB / multiplyRate);
+          leds_ry[i++] = CRGB(maxRs7 / multiplyRate, maxGs7 / multiplyRate, maxBs7 / multiplyRate);
         }
       }
 

@@ -7,17 +7,21 @@
 //#define RECEIVER_IS_WINDOWS         // lattePanda / Win10
 
 #define NUM_OF_WINGS 6 //Todo Transfer definition /variables to xml
-#define FAN_SERIAL 7
+#define FAN_SERIAL 6
 #define NUM_OF_SERIAL_TO_INIT 8  //Com port device size
 #define BAUD 57600 //Todo Transfer definition /variables to xml
 
-#define MAX_Y_POS 5000
+#define MAX_Y_POS 3500
 #define MAX_Y_SPEED 2000
 #define MAX_Y_ACCEL 2000
 
 #define MAX_Y_DUR 300 // 30.0 s
 
 #define SHOW_DELAY_TIME 1000 //time to delay video begins after getting serial signal
+
+
+
+#define BAUD_CTRLRM 9600 //Todo Transfer definition /variables to xml
 
 //======== INCLUDES ===========
 
@@ -110,6 +114,13 @@ class ofApp : public ofBaseApp{
     void checkArduinoIsConnected();
     bool initOnUpdate; //to check for arduino in update() after setup()
     long checkArduinoMillis; //todo
+    
+    //FROM Control Room
+    ofx::IO::BufferedSerialDevice ctrlrm;
+    string serialReadCtrlrm();
+    string ctrlrmReceivedString;
+    long showDoneMillis;
+    long showDoneDur;
     
 #ifdef USEOSC
     vector<bool> isArduioPort;
@@ -291,6 +302,9 @@ class ofApp : public ofBaseApp{
     bool isStyleChanged;
     void writeStyleMode(int s);
     void writeLEDStyle(int s, int ss);
+    void style3();
+    void style4();
+    void style5();
 
     
     //================Other Functions ====================
