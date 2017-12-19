@@ -29,7 +29,7 @@ void TimelinePlayer::setup() {
         ofAddListener(timeline.keyframeAddedEvent, this, &TimelinePlayer::keyFrameAdded);
         timelines.push_back(timeline);
     }
-
+    
     //-----------------------     GUI      -------------------
     playButton.addListener(this, &TimelinePlayer::playButtonPressed);
     //nextButton.addListener(this, &TimelinePlayer::nextButtonPressed);
@@ -81,19 +81,28 @@ void TimelinePlayer::setup() {
     
     ofLog() << "ffMovie.getDuration() : " << movie.getDuration();
     setDuration(movie.getDuration()*1000);
-
+    
     
     keyframeTimeSlider.addListener(this, &TimelinePlayer::keyframeTimeSliderChanged);
     gui.add(keyframeTimeSlider.set("Time Value", 0, 0, 0));//the slider is disabled at start, enabled when a keyframe is selected
     
+    playheadSlider.addListener(this, &TimelinePlayer::playheadSliderChanged);
+    gui.add(playheadSlider.set("slider", 0, duration, currentTime));
     
+    playheadSlider.setMax(duration);
+    playheadSlider.setMin(0);
 }
 
 //--------------------------------------------------------------
 void TimelinePlayer::update() {
     
-    movie.update();
     
+    
+    playheadSlider = currentTime;
+    
+   if(!isExhibitionMode){
+        movie.update();
+    }
     
     ofBackground(80, 20, 20);
     
@@ -243,7 +252,7 @@ void TimelinePlayer::draw() {
     
     //draw playhead
     ofSetColor(100, 255, 100);
-    ofDrawRectangle(playheadPos - 1, offsetY, 2, 500);
+    ofDrawRectangle(playheadPos - 1, offsetY, 2, ofGetHeight());
     
     ofPopMatrix();
     
@@ -276,8 +285,10 @@ void TimelinePlayer::draw() {
     
     gui.draw();
     
-    ofSetColor(255);
-    movie.draw(700,0,320,180);
+    if(!isExhibitionMode){
+        ofSetColor(255);
+        movie.draw(700,0,320,180);
+    }
 }
 
 
@@ -398,8 +409,8 @@ void TimelinePlayer::keyFrameSelected(Keyframe &kf) {
         keyframeSlider.setMin(KEYFRAME_MIN_VALUE);
         ofLog() << " Here" ;
     }else{
-        keyframeSlider.setMax(300);
-        keyframeSlider.setMin(0);
+        keyframeSlider.setMax(KEYFRAME_MAX_VALUE); //TODO
+        keyframeSlider.setMin(KEYFRAME_MIN_VALUE);
         ofLog() << " THere"  << (int)kf.timelineId;
     }
     keyframeSlider.set(kf.val);
@@ -412,7 +423,7 @@ void TimelinePlayer::keyFrameSelected(Keyframe &kf) {
     }
     
     keyframeTimeSlider.set(kf.x);
-
+    
     
 }
 
@@ -476,8 +487,10 @@ void TimelinePlayer::playButtonPressed() {
     //reloadTimelineFromSave();
     isPlaying = true;
     currentTime = 0;
-    movie.setPosition(0);
-    movie.play();
+    if(!isExhibitionMode){
+        movie.setPosition(0);
+        movie.play();
+    }
 }
 
 //--------------------------------------------------------------
@@ -498,14 +511,29 @@ void TimelinePlayer::pauseButtonPressed() {
         isPlaying = !isPlaying;
         lastPausePlayerTime = currentTime;
         
-        movie.setPaused(true);
-        movie.setPosition((float)currentTime / duration);
+        if(!isExhibitionMode){
+            movie.setPaused(true);
+            movie.setPosition((float)currentTime / duration);
+       }
     } else {
         isPlaying = !isPlaying;
         currentTime = lastPausePlayerTime;
         
-        movie.setPaused(false);
+        if(!isExhibitionMode){
+            movie.setPaused(false);
+        }
     }
+}
+
+void TimelinePlayer::stopButtonPressed() {
+    
+    isPlaying = false;
+    lastPausePlayerTime = currentTime;
+    if(!isExhibitionMode){
+        movie.setPaused(true);
+        movie.setPosition((float)currentTime / duration);
+    }
+    
 }
 
 void TimelinePlayer::mousePressed(int x, int y, int button) {
@@ -538,7 +566,9 @@ void TimelinePlayer::mouseDragged(int x, int y, int button) {
         currentTime = time;
         if (!isPlaying) {
             lastPausePlayerTime = time;
-            movie.setPosition((float)currentTime / duration);
+           if(!isExhibitionMode){
+                movie.setPosition((float)currentTime / duration);
+            }
         }
     }
 }
@@ -605,7 +635,7 @@ void TimelinePlayer::reloadTimelineFromSave() {
         }
     }
     /*
-     //This is how you would load that very same file    
+     //This is how you would load that very same file
      ofxXmlSettings track;
      if (track.loadFile("TimelineData" + ofToString(".xml"))) {
      track.pushTag("track");
@@ -671,5 +701,24 @@ void TimelinePlayer::keyframeTimeSliderChanged(int &x) {
     if (selectedKeyframe->x != nullKeyframe.x) {
         selectedKeyframe->x = x;
     }
+}
+
+
+//todo
+void TimelinePlayer::playheadSliderChanged(int &x) {
+    currentTime = x;
+    if (!isPlaying) {
+        lastPausePlayerTime = x;
+        if(!isExhibitionMode){
+            movie.setPosition((float)currentTime / duration);
+        }
+    }
+}
+
+
+void TimelinePlayer::exhibitionMode(bool t) {
+    
+    isExhibitionMode = t;
+    
 }
 

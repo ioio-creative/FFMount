@@ -3,7 +3,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     
-    ofSetFrameRate(25);
+    ofSetFrameRate(20);
     //================== GUI ==================
     guiSetup();
     //================== Serial ==================
@@ -27,6 +27,9 @@ void ofApp::setup(){
     timelinePlayer.setup();
     ofAddListener(timelinePlayer.onKeyFrameEntered, this, &ofApp::onKeyframe);
     timelinePlayer.loadButtonPressed();
+    
+    isExhibitionMode = true;
+    timelinePlayer.exhibitionMode(isExhibitionMode);
     
     // ofLog() << "ffMovie.getDuration() : " << ffmovie.getDuration();
     // timelinePlayer.setDuration(ffMovie.getDuration()*1000);
@@ -93,8 +96,15 @@ void ofApp::onKeyframe(Keyframe &kf){
         }
     }else{
         
-        // writeLEDStyle(LEDStyle,LEDParameter0);
-        ofLog() << "LED " << LEDStyle;
+        // currentArduinoID = kf.timelineId /2 - NUM_OF_WINGS;
+        //currentMotor = 1;
+        currentArduinoID = 0;
+        cableDurLy[currentArduinoID] = 0; //means no input
+        cableDurRy[currentArduinoID] = 0;//means no input
+        writeStyleMode(0);
+        ofLog() << "LED HAS KEYFRAME : " << kf.timelineId << " " << kf.val << " " << kf.x;
+        //ofLog() << "LED " << LEDStyle;
+        // writeStyleMode(2);
     }
     
 }
@@ -399,7 +409,7 @@ void ofApp::update(){
             ofLog() << "Show Done, Reset";
             showDoneMillis = currMillis;
             isShowBegin(false);
-        
+            
         }
         if(sTemp.find("1") != std::string::npos && currMillis - showDoneMillis > showDoneDur ){
             ofLog() << "Show Begin";
@@ -407,20 +417,20 @@ void ofApp::update(){
             isShowBegin(true);
         }
         /*
-        ctrlrmReceivedString+= ofTrim(sTemp);
-        ofLog() << " ctrlrmReceivedString.size() : "<< sTemp.size();
-        ofLog() << " serialReadCtrlrm AA : " << ofTrim(sTemp);
-        ofLog() << " serialReadCtrlrm VV : " << ctrlrmReceivedString;
-        if(ctrlrmReceivedString.size() >= 4){
-        if(ctrlrmReceivedString == "0000" || ctrlrmReceivedString == "1111"){
-            ofLog() << "ctrlrmReceivedString Done : ";
-            ctrlrmReceivedString = "";
-        }else{
-            ofLog() << "ctrlrmReceivedString NOT Done : ";
-        
-        }
-        }
-        */
+         ctrlrmReceivedString+= ofTrim(sTemp);
+         ofLog() << " ctrlrmReceivedString.size() : "<< sTemp.size();
+         ofLog() << " serialReadCtrlrm AA : " << ofTrim(sTemp);
+         ofLog() << " serialReadCtrlrm VV : " << ctrlrmReceivedString;
+         if(ctrlrmReceivedString.size() >= 4){
+         if(ctrlrmReceivedString == "0000" || ctrlrmReceivedString == "1111"){
+         ofLog() << "ctrlrmReceivedString Done : ";
+         ctrlrmReceivedString = "";
+         }else{
+         ofLog() << "ctrlrmReceivedString NOT Done : ";
+         
+         }
+         }
+         */
     }
     
     
@@ -430,7 +440,7 @@ void ofApp::update(){
 #else
     
     //================== Serial ==================
-
+    
     
     
     for(int i=0; i < arduino.size(); i++){
@@ -706,7 +716,7 @@ void ofApp::draw(){
             //================== Simulation ==================
             //wing.setRotate(1,mouseX);
             wing.setMouseControllable(false);
-            wing.draw(400,0,450,450);
+            wing.draw(400,-100,400,400);
             
             /*  //================== Video ==================
              ofSetColor(255);
@@ -787,31 +797,31 @@ vector<bool> ofApp::serialSetup(){ //int give the connection status of each cabl
             if(portDesc.find("FTA6PDIA") != std::string::npos)
             {
                 
-      
-             
-                    // Connect to the first matching device.
-                    ofx::IO::BufferedSerialDevice device;
+                
+                
+                // Connect to the first matching device.
+                ofx::IO::BufferedSerialDevice device;
+                
+                // ctrlrm.push_back(device);
+                
+                bool success = ctrlrm.setup(devicesInfo[i], BAUD_CTRLRM);
+                
+                if(success)
+                {
+                    connectionStatus[a] = true;
+                    ctrlrm.unregisterAllEvents(this);
+                    ctrlrm.registerAllEvents(this);
                     
-                    // ctrlrm.push_back(device);
-                    
-                    bool success = ctrlrm.setup(devicesInfo[i], BAUD_CTRLRM);
-                    
-                    if(success)
-                    {
-                        connectionStatus[a] = true;
-                        ctrlrm.unregisterAllEvents(this);
-                        ctrlrm.registerAllEvents(this);
-                        
-                        ofLogNotice("ofApp::setup") << "Control Room Signal Successfully setup " << devicesInfo[i];
-                        a++;
-                        ofSleepMillis(100);
-                    }
-                    else
-                    {
-                        ofLogNotice("ofApp::setup") << "Control Room Signal Unable to setup " << devicesInfo[i];
-                    }
-                    
-
+                    ofLogNotice("ofApp::setup") << "Control Room Signal Successfully setup " << devicesInfo[i];
+                    a++;
+                    ofSleepMillis(100);
+                }
+                else
+                {
+                    ofLogNotice("ofApp::setup") << "Control Room Signal Unable to setup " << devicesInfo[i];
+                }
+                
+                
                 
             }
             
@@ -825,7 +835,7 @@ vector<bool> ofApp::serialSetup(){ //int give the connection status of each cabl
     ofSleepMillis(1000); //Keep it - Arduino Mega needs time to initiate (Autoreset issue)
     
     
-
+    
     
     //=== Control ROOM END ===
     
@@ -872,12 +882,27 @@ vector<bool> ofApp::serialSetup(){ //int give the connection status of each cabl
 #else
     
     for(int i=0; i< NUM_OF_WINGS; i++){
+        
         arduino.push_back(i);
         isArduinoConnected.push_back(true);
+        
     }
     
     
 #endif
+    
+#ifdef COMPORT_SWAPPED
+    int tmpArduino;
+    
+    tmpArduino = arduino[4];
+    arduino[4] = arduino[3];
+    arduino[3] = tmpArduino;
+    //isArduinoConnected.push_back(true);
+    
+#endif
+    
+    
+    
     
 #else
     
@@ -899,27 +924,27 @@ vector<bool> ofApp::serialSetup(){ //int give the connection status of each cabl
             if(portDesc.find("USB") != std::string::npos || portDesc.find("Arduino") != std::string::npos || portDesc.find("FTDI") != std::string::npos)
             {
                 
-                                // Connect to the first matching device.
-                    ofx::IO::BufferedSerialDevice device;
+                // Connect to the first matching device.
+                ofx::IO::BufferedSerialDevice device;
+                
+                arduino.push_back(device);
+                
+                bool success = arduino[a].setup(devicesInfo[i], BAUD);
+                
+                if(success)
+                {
+                    connectionStatus[a] = true;
+                    arduino[a].unregisterAllEvents(this);
+                    arduino[a].registerAllEvents(this);
                     
-                    arduino.push_back(device);
-                    
-                    bool success = arduino[a].setup(devicesInfo[i], BAUD);
-                    
-                    if(success)
-                    {
-                        connectionStatus[a] = true;
-                        arduino[a].unregisterAllEvents(this);
-                        arduino[a].registerAllEvents(this);
-                        
-                        ofLogNotice("ofApp::setup") << "Successfully setup " << devicesInfo[i];
-                        a++;
-                        ofSleepMillis(100);
-                    }
-                    else
-                    {
-                        ofLogNotice("ofApp::setup") << "Unable to setup " << devicesInfo[i];
-                    }
+                    ofLogNotice("ofApp::setup") << "Successfully setup " << devicesInfo[i];
+                    a++;
+                    ofSleepMillis(100);
+                }
+                else
+                {
+                    ofLogNotice("ofApp::setup") << "Unable to setup " << devicesInfo[i];
+                }
                 
             }
             
@@ -1023,12 +1048,12 @@ void ofApp::serialWrite(int arduinoID, string sw){
 }
 
 string ofApp::serialReadCtrlrm(){
-
+    
     string combinedStr = "";
     // for(int i=0; i< arduino.size(); i++){
     
     // The serial device can throw exeptions.
-
+    
     try
     {
         // Read all bytes from the device;
@@ -1038,23 +1063,23 @@ string ofApp::serialReadCtrlrm(){
         while (ctrlrm.available() > 0)
         {
             std::size_t sz = ctrlrm.readBytes(buffer, 1024);
-           // ofLog() << "CTRL buffer size: " << sz;
+            // ofLog() << "CTRL buffer size: " << sz;
             for (std::size_t j = 0; j < sz; ++j)
             {
-                 std::cout << buffer[j];
-              //  ofLog() << "CTRL buf: " << buffer[j];
+                std::cout << buffer[j];
+                //  ofLog() << "CTRL buf: " << buffer[j];
                 if(buffer[j] == '1' || buffer[j] == '0'){
                     finalBuffer.push_back(buffer[j]);
                 }
-             /*   if(isalnum(buffer[j]) || buffer[j] == '|' || buffer[j] == '-' ){
-                    finalBuffer.push_back(buffer[j]);
-                }
-               */
+                /*   if(isalnum(buffer[j]) || buffer[j] == '|' || buffer[j] == '-' ){
+                 finalBuffer.push_back(buffer[j]);
+                 }
+                 */
                 
             }
             for(int i = 0; i< finalBuffer.size();i++){
-              //  ofLog() << "CTRL New Buf : " << finalBuffer[i];
-              //  ofLog() << "CTRL New Buf SIZE : " << finalBuffer.size();
+                //  ofLog() << "CTRL New Buf : " << finalBuffer[i];
+                //  ofLog() << "CTRL New Buf SIZE : " << finalBuffer.size();
                 combinedStr += ofToString(finalBuffer[i]);
             }
         }
@@ -1067,9 +1092,9 @@ string ofApp::serialReadCtrlrm(){
     //  }
     
     return combinedStr;
-
-
-
+    
+    
+    
 }
 
 
@@ -1211,7 +1236,10 @@ void ofApp::keyPressed(int key){
 void ofApp::keyReleased(int key){
     switch (key){
             
-            
+        case '1':
+            isExhibitionMode = !isExhibitionMode;
+            timelinePlayer.exhibitionMode(isExhibitionMode);
+            break;
         case '4':
             currentStyle = 4;
             break;
@@ -1253,7 +1281,7 @@ void ofApp::keyReleased(int key){
             
         case 'o':
             isShowBegin(false);
-            serialWrite(-1, "Q");
+        
             break;
             
         case 'd':
@@ -1347,6 +1375,104 @@ void ofApp::writeStyleMode(int s){
     
     if (s == 0){
         
+        
+        if(currentStyle == 5){
+            
+            //STYLE - POS_1 - TIME_1 - POS_2 - TIME_2 - - POS_1 - TIME_1 - POS_2 - TIME_2 - LED_STYLE - VAL1 - VAL2 - VAL3 - VAL4
+            
+            
+            string writeInTotal = " : ";
+            string toWrite = "";
+            
+            toWrite+= ofToString(currentStyle);
+            toWrite+= "-";
+            
+            toWrite+= ofToString((int)cablePosLy[currentArduinoID]);
+            toWrite+= "-";
+            
+            toWrite+= ofToString((int)cableDurLy[currentArduinoID]*100);
+            toWrite+= "-";
+            
+            toWrite+= ofToString((int)cablePosLy2[currentArduinoID]);
+            toWrite+= "-";
+            
+            toWrite+= ofToString((int)cableDurLy2[currentArduinoID]*100);
+            toWrite+= "-";
+            
+            toWrite+= ofToString((int)cablePosRy[currentArduinoID]);
+            toWrite+= "-";
+            
+            toWrite+= ofToString((int)cableDurRy[currentArduinoID]*100);
+            toWrite+= "-";
+            
+            toWrite+= ofToString((int)cablePosRy2[currentArduinoID]);
+            toWrite+= "-";
+            
+            toWrite+= ofToString((int)cableDurRy2[currentArduinoID]*100);
+            toWrite+= "-";
+            
+            //LED
+            
+            toWrite+= ofToString((int)LEDStyle);
+            toWrite+= "-";
+            
+            
+            writeInTotal=toWrite;
+            
+            serialWrite(-1, toWrite);
+            // currentdisplayLog = writeInTotal;
+            
+            
+        }
+        
+        if(currentStyle == 4){
+            
+            //STYLE - POS - TIME - POS - TIME - LED_STYLE - VAL1 - VAL2 - VAL3 - VAL4
+            
+            string writeInTotal = " : ";
+            string toWrite = "";
+            
+            toWrite+= ofToString(currentStyle);
+            toWrite+= "-";
+            
+            // if(currentMotor == 0){
+            toWrite+= ofToString((int)cablePosLy[currentArduinoID]);
+            toWrite+= "-";
+            
+            toWrite+= ofToString((int)cableDurLy[currentArduinoID]*100);
+            toWrite+= "-";
+            
+            toWrite+= ofToString((int)cablePosRy[currentArduinoID]);
+            toWrite+= "-";
+            
+            //  }else{
+            toWrite+= ofToString((int)cableDurRy[currentArduinoID]*100);
+            toWrite+= "-";
+            
+            
+            //   }
+            
+            //LED
+            
+            toWrite+= ofToString((int)LEDStyle);
+            toWrite+= "-";
+            toWrite+= ofToString((int)LEDParameter0);
+            toWrite+= "-";
+            toWrite+= ofToString((int)LEDParameter1);
+            toWrite+= "-";
+            toWrite+= ofToString((int)LEDParameter2);
+            toWrite+= "-";
+            toWrite+= ofToString((int)LEDParameter3);
+            toWrite+= "-";
+            
+            
+            writeInTotal=toWrite;
+            
+            serialWrite(-1, toWrite);
+            
+        }
+        
+        
         if(currentStyle == 3){
             
             string writeInTotal = "LY : ";
@@ -1434,6 +1560,109 @@ void ofApp::writeStyleMode(int s){
     }
     else if (s == 1){
         for(int i=0; i< NUM_OF_WINGS; i++){
+            
+            if(currentStyle == 5){
+                
+                //STYLE - POS_1 - TIME_1 - POS_2 - TIME_2 - - POS_1 - TIME_1 - POS_2 - TIME_2 - LED_STYLE - VAL1 - VAL2 - VAL3 - VAL4
+                
+                
+                string writeInTotal = " : ";
+                string toWrite = "";
+                
+                toWrite+= ofToString(currentStyle);
+                toWrite+= "-";
+                
+                toWrite+= ofToString((int)cablePosLy[i]);
+                toWrite+= "-";
+                
+                toWrite+= ofToString((int)cableDurLy[i]*100);
+                toWrite+= "-";
+                
+                toWrite+= ofToString((int)cablePosLy2[i]);
+                toWrite+= "-";
+                
+                toWrite+= ofToString((int)cableDurLy2[i]*100);
+                toWrite+= "-";
+                
+                toWrite+= ofToString((int)cablePosRy[i]);
+                toWrite+= "-";
+                
+                toWrite+= ofToString((int)cableDurRy[i]*100);
+                toWrite+= "-";
+                
+                toWrite+= ofToString((int)cablePosRy2[i]);
+                toWrite+= "-";
+                
+                toWrite+= ofToString((int)cableDurRy2[i]*100);
+                toWrite+= "-";
+                
+                //LED
+                
+                toWrite+= ofToString((int)LEDStyle);
+                toWrite+= "-";
+                
+                
+                writeInTotal=toWrite;
+                
+                serialWrite(i, toWrite);
+                // currentdisplayLog = writeInTotal;
+                
+                
+            }
+            
+            
+            
+            
+            
+            if(currentStyle == 4){
+                
+                //STYLE - POS - TIME - POS - TIME - LED_STYLE - VAL1 - VAL2 - VAL3 - VAL4
+                
+                string writeInTotal = " : ";
+                string toWrite = "";
+                
+                toWrite+= ofToString(currentStyle);
+                toWrite+= "-";
+                
+                // if(currentMotor == 0){
+                toWrite+= ofToString((int)cablePosLy[i]);
+                toWrite+= "-";
+                
+                toWrite+= ofToString((int)cableDurLy[i]*100);
+                toWrite+= "-";
+                
+                toWrite+= ofToString((int)cablePosRy[i]);
+                toWrite+= "-";
+                
+                //  }else{
+                toWrite+= ofToString((int)cableDurRy[i]*100);
+                toWrite+= "-";
+                
+                
+                //   }
+                
+                //LED
+                
+                toWrite+= ofToString((int)LEDStyle);
+                toWrite+= "-";
+                toWrite+= ofToString((int)LEDParameter0);
+                toWrite+= "-";
+                toWrite+= ofToString((int)LEDParameter1);
+                toWrite+= "-";
+                toWrite+= ofToString((int)LEDParameter2);
+                toWrite+= "-";
+                toWrite+= ofToString((int)LEDParameter3);
+                toWrite+= "-";
+                
+                
+                writeInTotal=toWrite;
+                
+                serialWrite(i, toWrite);
+                
+            }
+            
+            
+            
             if(currentStyle == 3){
                 
                 string writeInTotal = "LY : ";
@@ -1623,11 +1852,6 @@ void ofApp::writeStyleMode(int s){
                 writeInTotal=toWrite;
                 
                 serialWrite(currentArduinoID, toWrite);
-                // currentdisplayLog = writeInTotal;
-                
-                //MovementController
-                
-                //MovementController.getPoints();
                 
             }
             
@@ -1844,7 +2068,8 @@ void ofApp::isShowBegin(bool sb){
         currentStyle = 4;
     }
     else{ //reset
-        timelinePlayer.pauseButtonPressed();
+        timelinePlayer.stopButtonPressed();
+        serialWrite(-1, "Q"); //Reset and Home All
     }
     
 }
@@ -1889,6 +2114,18 @@ void ofApp::loadStyle5(){
 }
 
 
+void ofApp::style3(){
+    
+}
+
+void ofApp::style4(){
+    
+}
+
+void ofApp::style5(){
+    
+}
+
 
 
 //==================== Unused ======================
@@ -1919,6 +2156,6 @@ void ofApp::gotMessage(ofMessage msg){
 }
 
 //--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){ 
+void ofApp::dragEvent(ofDragInfo dragInfo){
     
 }

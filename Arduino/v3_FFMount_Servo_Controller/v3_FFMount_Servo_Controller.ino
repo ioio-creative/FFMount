@@ -26,6 +26,7 @@
 
   //Todo
   -Test Actual code with 4 motor and switches
+  - Style 4 - If input time is 0 igore input value (rather than in reset loop)
 
 */
 const int timeStep = 100;  // ms

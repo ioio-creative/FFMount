@@ -10,7 +10,7 @@
 #include "ofEventUtils.h"
 
 #define KEYFRAME_MIN_VALUE 0
-#define KEYFRAME_MAX_VALUE 5000
+#define KEYFRAME_MAX_VALUE 3400
 #define NUM_TIMELINE 31
 
 
@@ -88,6 +88,7 @@ class
         void saveGUIButtonPressed();
         void loadGUIButtonPressed();
         void pauseButtonPressed();
+        void stopButtonPressed();
         void saveButtonPressed();
         void loadButtonPressed();
         void addKeyButtonPressed();
@@ -118,6 +119,8 @@ class
         void mouseDragged(int x, int y, int button);
         void mouseReleased(int x, int y, int button);
         
+        void exhibitionMode(bool t);
+        
     private:
         void resetGraph(); //reset the fft sum graph and the timelines when playing a new sound
         Keyframe *selectedKeyframe; //selected keyframe for editing its value
@@ -133,6 +136,12 @@ class
         
         ofParameter<int> keyframeTimeSlider;
         void keyframeTimeSliderChanged(int &x);
+        
+        ofParameter<int> playheadSlider;
+        void playheadSliderChanged(int &x);
+        
+        
+        bool isExhibitionMode;
         ofVideoPlayer movie;
     };
 

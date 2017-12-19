@@ -115,7 +115,7 @@ void stepper_style() {
             if (currentMillis - prevStepperMillis[stepperNumber] > stepperTime[stepperNumber]) {
               Serial.print("mdone");
               Serial.print(stepperNumber);
-           }
+            }
             prevStepperMillis[stepperNumber] = currentMillis;
             steppers[stepperNumber]->reset(-stepperPos[stepperNumber], stepperTime[stepperNumber]);
           }
@@ -162,9 +162,7 @@ void stepper_style() {
               abPos[stepperNumber] = !abPos[stepperNumber];
             }
           }
-          
         }
-
       }
     }
   }

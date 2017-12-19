@@ -4,24 +4,25 @@
 //======== DEFINITION ===========
 
 #define USEOSC
-//#define RECEIVER_IS_WINDOWS         // lattePanda / Win10
+//#define RECEIVER_IS_WINDOWS         // lattePanda / Win10 / 32 Comport Specific
 
 #define NUM_OF_WINGS 6 //Todo Transfer definition /variables to xml
-#define FAN_SERIAL 6
+#define FAN_SERIAL 6  // begin from 0
 #define NUM_OF_SERIAL_TO_INIT 8  //Com port device size
 #define BAUD 57600 //Todo Transfer definition /variables to xml
 
-#define MAX_Y_POS 3500
+#define MAX_Y_POS 3400
 #define MAX_Y_SPEED 2000
 #define MAX_Y_ACCEL 2000
 
 #define MAX_Y_DUR 300 // 30.0 s
 
-#define SHOW_DELAY_TIME 1000 //time to delay video begins after getting serial signal
-
-
-
+#define SHOW_DELAY_TIME 0 //time to delay video begins after getting serial signal
 #define BAUD_CTRLRM 9600 //Todo Transfer definition /variables to xml
+
+//exceptional case
+#define COMPORT_SWAPPED
+
 
 //======== INCLUDES ===========
 
@@ -264,6 +265,8 @@ class ofApp : public ofBaseApp{
     
     TimelinePlayer timelinePlayer;
     void onKeyframe(Keyframe &kf);
+    
+    bool isExhibitionMode;
     
     
     //================== Simulation ==================
